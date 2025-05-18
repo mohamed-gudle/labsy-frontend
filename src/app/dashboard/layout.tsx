@@ -3,6 +3,7 @@
 import React from "react";
 import type { ReactNode } from "react";
 import { Sidebar } from "@/components/ui/sidebar";
+import { Home, User, Settings, LogOut } from "lucide-react";
 
 interface DashboardLayoutProps {
     children: ReactNode;
@@ -21,10 +22,10 @@ const Header: React.FC = () => {
 };
 
 const menuItems = [
-    { label: "Home", href: "/dashboard" },
-    { label: "Profile", href: "/dashboard/profile" },
-    { label: "Settings", href: "/dashboard/settings" },
-    { label: "Logout", href: "/logout" },
+    { label: "Home", href: "/dashboard", icon: <Home /> },
+    { label: "Profile", href: "/dashboard/profile", icon: <User /> },
+    { label: "Settings", href: "/dashboard/settings", icon: <Settings /> },
+    { label: "Logout", href: "/logout", icon: <LogOut /> },
 ];
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {

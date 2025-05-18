@@ -38,3 +38,12 @@ You provide accurate, factual, thoughtful answers, and are a genius at reasoning
 - Wrap client components in Suspense with fallback.
 - Use dynamic loading for non-critical components.
 - Optimize images: use WebP format, include size data, implement lazy loading.
+
+## Package Management
+- Use `yarn` as the package manager for this project.
+
+## Icons
+- Use `lucide-react` for icons.
+
+## Logging
+- Log all changes in a `Changelog.md` file.
