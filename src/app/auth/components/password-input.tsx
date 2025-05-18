@@ -10,9 +10,11 @@ interface PasswordInputProps {
   name: string;
   placeholder?: string;
   required?: boolean;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const PasswordInput = ({ id, name, placeholder, required }: PasswordInputProps) => {
+export const PasswordInput = ({ id, name, placeholder, required, value, onChange }: PasswordInputProps) => {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -24,6 +26,8 @@ export const PasswordInput = ({ id, name, placeholder, required }: PasswordInput
         placeholder={placeholder}
         required={required}
         className="pr-10"
+        value={value}
+        onChange={onChange}
       />
       <Button
         type="button"

@@ -6,19 +6,42 @@ import { SocialAuthButtons } from './social-auth-buttons';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { auth } from '@/lib/firebase/config';
 
 export const SignUpForm = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isHuman, setIsHuman] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
+    setError(null);
     if (!isHuman) {
-      alert('Please verify you are not a robot.');
+      setError('Please verify you are not a robot.');
       return;
     }
-    // Add Firebase sign-up logic here
-    console.log('Sign-Up:', { name, email });
+    if (!name || !email || !password) {
+      setError('All fields are required.');
+      return;
+    }
+    setLoading(true);
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      console.log('User signed up:', userCredential.user);
+      if (auth.currentUser) {
+        await updateProfile(auth.currentUser, { displayName: name });
+      }
+      // Optionally: redirect or show success
+    } catch (error) {
+      console.error('Error signing up:', error);
+      
+      setError('Failed to sign up. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -53,6 +76,8 @@ export const SignUpForm = () => {
             name="password"
             placeholder="Minimum 6 characters"
             required
+            value={password}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
           />
         </div>
         <div className="flex items-center space-x-2">
@@ -64,7 +89,10 @@ export const SignUpForm = () => {
           />
           <Label htmlFor="recaptcha">I&apos;m not a robot</Label>
         </div>
-        <Button onClick={handleSignUp} className="w-full">Sign up</Button>
+        {error && <p className="text-red-500 text-sm">{error}</p>}
+        <Button onClick={handleSignUp} className="w-full" disabled={loading}>
+          {loading ? 'Signing up...' : 'Sign up'}
+        </Button>
       </div>
       <p className="text-sm text-gray-600 mt-4">
         By creating your account, you agree to our <a href="#" className="text-blue-500">Terms of Service</a> and <a href="#" className="text-blue-500">Privacy Policy</a>.

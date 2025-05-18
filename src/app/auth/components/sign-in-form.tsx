@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from 'react';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '@/lib/firebase/config';
 import { PasswordInput } from './password-input';
 import { SocialAuthButtons } from './social-auth-buttons';
 import { Button } from '@/components/ui/button';
@@ -9,15 +11,32 @@ import { Label } from '@/components/ui/label';
 
 export const SignInForm = () => {
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isHuman, setIsHuman] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSignIn = () => {
+  const handleSignIn = async () => {
+    setError(null);
     if (!isHuman) {
-      alert('Please verify you are not a robot.');
+      setError('Please verify you are not a robot.');
       return;
     }
-    // Add Firebase sign-in logic here
-    console.log('Sign-In:', { email });
+    if (!email || !password) {
+      setError('Email and password are required.');
+      return;
+    }
+    setLoading(true);
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      // Optionally handle success (e.g., redirect or show message)
+    } catch (error) {
+      console.error('Error signing in:', error);
+      const message = 'Failed to sign in.';
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -42,6 +61,8 @@ export const SignInForm = () => {
             name="password"
             placeholder="Password"
             required
+            value={password}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
           />
         </div>
         <div className="flex items-center space-x-2">
@@ -53,7 +74,10 @@ export const SignInForm = () => {
           />
           <Label htmlFor="recaptcha">I&apos;m not a robot</Label>
         </div>
-        <Button onClick={handleSignIn} className="w-full">Log In</Button>
+        {error && <p className="text-red-500 text-sm">{error}</p>}
+        <Button onClick={handleSignIn} className="w-full" disabled={loading}>
+          {loading ? 'Logging in...' : 'Log In'}
+        </Button>
       </div>
       <p className="text-sm text-gray-600 mt-4">
         <a href="#" className="text-blue-500">Reset your password</a>
