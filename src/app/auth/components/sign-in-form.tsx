@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '@/lib/firebase/config';
+import { useAuth } from '@/components/context/auth-context';
 import { PasswordInput } from './password-input';
 import { SocialAuthButtons } from './social-auth-buttons';
 import { Button } from '@/components/ui/button';
@@ -13,30 +12,20 @@ export const SignInForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isHuman, setIsHuman] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { signIn, loading, error } = useAuth();
+  const [localError, setLocalError] = useState<string | null>(null);
 
   const handleSignIn = async () => {
-    setError(null);
+    setLocalError(null);
     if (!isHuman) {
-      setError('Please verify you are not a robot.');
+      setLocalError('Please verify you are not a robot.');
       return;
     }
     if (!email || !password) {
-      setError('Email and password are required.');
+      setLocalError('Email and password are required.');
       return;
     }
-    setLoading(true);
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      // Optionally handle success (e.g., redirect or show message)
-    } catch (error) {
-      console.error('Error signing in:', error);
-      const message = 'Failed to sign in.';
-      setError(message);
-    } finally {
-      setLoading(false);
-    }
+    await signIn(email, password);
   };
 
   return (
@@ -74,6 +63,7 @@ export const SignInForm = () => {
           />
           <Label htmlFor="recaptcha">I&apos;m not a robot</Label>
         </div>
+        {localError && <p className="text-red-500 text-sm">{localError}</p>}
         {error && <p className="text-red-500 text-sm">{error}</p>}
         <Button onClick={handleSignIn} className="w-full" disabled={loading}>
           {loading ? 'Logging in...' : 'Log In'}

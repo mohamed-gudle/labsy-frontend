@@ -6,42 +6,28 @@ import { SocialAuthButtons } from './social-auth-buttons';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { auth } from '@/lib/firebase/config';
+import { useAuth } from '@/components/context/auth-context';
 
 export const SignUpForm = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isHuman, setIsHuman] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { signUp, loading, error } = useAuth();
+  const [localError, setLocalError] = useState<string | null>(null);
 
   const handleSignUp = async () => {
-    setError(null);
+    setLocalError(null);
     if (!isHuman) {
-      setError('Please verify you are not a robot.');
+      setLocalError('Please verify you are not a robot.');
       return;
     }
     if (!name || !email || !password) {
-      setError('All fields are required.');
+      setLocalError('All fields are required.');
       return;
     }
-    setLoading(true);
-    try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      console.log('User signed up:', userCredential.user);
-      if (auth.currentUser) {
-        await updateProfile(auth.currentUser, { displayName: name });
-      }
-      // Optionally: redirect or show success
-    } catch (error) {
-      console.error('Error signing up:', error);
-      
-      setError('Failed to sign up. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+    await signUp(email, password);
+    // Optionally: update displayName after signUp if needed
   };
 
   return (
@@ -89,6 +75,7 @@ export const SignUpForm = () => {
           />
           <Label htmlFor="recaptcha">I&apos;m not a robot</Label>
         </div>
+        {localError && <p className="text-red-500 text-sm">{localError}</p>}
         {error && <p className="text-red-500 text-sm">{error}</p>}
         <Button onClick={handleSignUp} className="w-full" disabled={loading}>
           {loading ? 'Signing up...' : 'Sign up'}
