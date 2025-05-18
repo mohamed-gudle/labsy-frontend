@@ -11,14 +11,19 @@ import { Home, FileText } from "lucide-react";
 
 export interface SidebarProps {
     className?: string;
+    menuItems?: Array<{
+        label: string;
+        href: string;
+        icon: React.ReactNode;
+    }>;
 }
 
-const menuItems = [
+const defaultMenuItems = [
     { label: "Dashboard", href: "/dashboard", icon: <Home className="h-5 w-5" /> },
     { label: "Example", href: "/dashboard/example", icon: <FileText className="h-5 w-5" /> },
 ];
 
-export function Sidebar({ className }: SidebarProps) {
+export function Sidebar({ className, menuItems = defaultMenuItems }: SidebarProps) {
     const [collapsed, setCollapsed] = React.useState(false);
     const [mobileOpen, setMobileOpen] = React.useState(false);
     const pathname = usePathname();

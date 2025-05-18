@@ -20,10 +20,17 @@ const Header: React.FC = () => {
     );
 };
 
+const menuItems = [
+    { label: "Home", href: "/dashboard" },
+    { label: "Profile", href: "/dashboard/profile" },
+    { label: "Settings", href: "/dashboard/settings" },
+    { label: "Logout", href: "/logout" },
+];
+
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     return (
         <div className="flex min-h-screen bg-zinc-50 dark:bg-zinc-950">
-            <Sidebar />
+            <Sidebar menuItems={menuItems} />
             <div className="flex-1 flex flex-col">
                 <Header />
                 <main className="flex-1 p-4 overflow-y-auto">
