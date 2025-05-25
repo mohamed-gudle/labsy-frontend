@@ -12,7 +12,7 @@ export const SignInForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isHuman, setIsHuman] = useState(false);
-  const { signIn, loading, error } = useAuth();
+  const { signIn, signInWithGoogle, loading, error } = useAuth();
   const [localError, setLocalError] = useState<string | null>(null);
 
   const handleSignIn = async () => {
@@ -78,7 +78,7 @@ export const SignInForm = () => {
       <div className="mt-6">
         <p className="text-center text-gray-500 mb-2">or</p>
         <SocialAuthButtons
-          onGoogleClick={() => console.log('Google Sign-In')}
+          onGoogleClick={() => signInWithGoogle()}
           onFacebookClick={() => console.log('Facebook Sign-In')}
           onYouTubeClick={() => console.log('YouTube Sign-In')}
         />

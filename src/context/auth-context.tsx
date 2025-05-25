@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState, ReactNode, useMemo } from 'react';
-import { onAuthStateChanged, signInWithEmailAndPassword, signOut as firebaseSignOut, createUserWithEmailAndPassword, sendPasswordResetEmail, User } from 'firebase/auth';
+import { onAuthStateChanged, signInWithEmailAndPassword, signOut as firebaseSignOut, createUserWithEmailAndPassword, sendPasswordResetEmail, User, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '@/lib/firebase/config';
 
 interface AuthContextProps {
@@ -11,6 +11,7 @@ interface AuthContextProps {
     signIn: (email: string, password: string) => Promise<void>;
     signOut: () => Promise<void>;
     signUp: (email: string, password: string) => Promise<void>;
+    signInWithGoogle: () => Promise<void>;
     resetPassword: (email: string) => Promise<void>;
 }
 
@@ -54,8 +55,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setError(null);
         setLoading(true);
         try {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            await auth.signInWithPopup(provider);
+            const provider = new GoogleAuthProvider();
+            await signInWithPopup(auth, provider);
         } catch (err: unknown) {
             console.error('Google sign in error:', err);
             if (err && typeof err === 'object' && 'message' in err && typeof (err as { message: unknown }).message === 'string') {
@@ -119,7 +120,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }
     };
 
-    const contextValue = useMemo(() => ({ user, loading, error, signIn, signOut, signUp, resetPassword }), [user, loading, error]);
+    const contextValue = useMemo(() => ({ user, loading, error, signIn, signInWithGoogle, signOut, signUp, resetPassword }), [user, loading, error]);
 
     return (
         <AuthContext.Provider value={contextValue}>

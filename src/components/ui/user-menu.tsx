@@ -1,5 +1,5 @@
+import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { CreditCard, LogOut, Settings, User } from "lucide-react";
-import { Avatar } from "./avatar";
 import { Button } from "./button";
 import {
   DropdownMenu,
@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./dropdown-menu";
-import { AvatarImage } from "@radix-ui/react-avatar";
+import { useAuth } from "@/context/auth-context";
 
 export interface UserMenuProps {
   name?: string;
@@ -16,12 +16,8 @@ export interface UserMenuProps {
   onLogout?: () => void;
 }
 
-export function UserMenu({
-  name = "User Name",
-  email = "user@email.com",
-  imageUrl,
-  onLogout,
-}: UserMenuProps) {
+export function UserMenu({ onLogout }: UserMenuProps) {
+    const { user } = useAuth();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -29,10 +25,12 @@ export function UserMenu({
           variant="ghost"
           className="w-full flex items-center gap-3 px-4 py-3 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-900"
         >
-          <AvatarImage src={imageUrl} alt={name} className="h-8 w-8" />
+          <Avatar >
+            <AvatarImage src={user?.photoURL || ''} alt={user?.displayName || ''} className="h-10 w-10 border border-zinc-300 dark:border-zinc-700 rounded-full"/>
+          </Avatar>
           <div className="flex flex-col items-start min-w-0">
-            <span className="font-medium text-base truncate">{name}</span>
-            <span className="text-xs text-zinc-500 truncate">{email}</span>
+            <span className="font-medium text-base truncate">{user?.displayName}</span>
+            <span className="text-xs text-zinc-500 truncate">{user?.email}</span>
           </div>
         </Button>
       </DropdownMenuTrigger>
