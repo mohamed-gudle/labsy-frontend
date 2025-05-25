@@ -30,7 +30,7 @@ export const SignInForm = () => {
 
   return (
     <div className="max-w-md w-full bg-white p-8 shadow-md rounded-md">
-      <h1 className="text-2xl font-semibold mb-6">Login to Spring by Amaze.</h1>
+      <h1 className="font-poppins text-2xl font-semibold mb-6">Login to Labsy</h1>
       <div className="space-y-4">
         <div>
           <Label htmlFor="email">Email</Label>
