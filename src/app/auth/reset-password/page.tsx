@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { useAuth } from "@/components/context/auth-context";
+import { useAuth } from "@/context/auth-context";
 
 export default function ResetPasswordPage() {
     const [email, setEmail] = useState("");

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { useAuth } from '@/components/context/auth-context';
+import { useAuth } from '@/context/auth-context';
 import { PasswordInput } from './password-input';
 import { SocialAuthButtons } from './social-auth-buttons';
 import { Button } from '@/components/ui/button';

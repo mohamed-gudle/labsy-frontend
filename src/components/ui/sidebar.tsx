@@ -1,22 +1,20 @@
 "use client";
 
-import * as React from "react";
-import { Sheet, SheetContent, SheetTrigger } from "./sheet";
-import { Button } from "./button";
-import { cn } from "../../lib/utils";
-import { Menu } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { ChevronRight, FileText, Home, Menu } from "lucide-react";
 import Link from "next/link";
-import { Home, FileText, ChevronRight } from "lucide-react";
+import { usePathname } from "next/navigation";
+import * as React from "react";
+import { cn } from "../../lib/utils";
+import { Button } from "./button";
 import {
     DropdownMenu,
-    DropdownMenuTrigger,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuSub,
-    DropdownMenuSubTrigger,
-    DropdownMenuSubContent,
+    DropdownMenuTrigger
 } from "./dropdown-menu";
+import { Sheet, SheetContent, SheetTrigger } from "./sheet";
+import { UserMenu } from "./user-menu";
+import { useAuth } from "@/context/auth-context";
 
 export interface SidebarMenuItem {
     label: string;
@@ -89,10 +87,18 @@ function renderMenuItem(item: SidebarMenuItem, collapsed: boolean, pathname: str
     );
 }
 
-export function Sidebar({ className, menuItems = defaultMenuItems }: SidebarProps) {
+export function Sidebar({ className, menuItems = defaultMenuItems }: Readonly<SidebarProps>) {
+    const{ signOut} = useAuth();
     const [collapsed, setCollapsed] = React.useState(false);
     const [mobileOpen, setMobileOpen] = React.useState(false);
     const pathname = usePathname();
+
+    // Mock user data for now
+    const user = {
+        name: "Jane Doe",
+        email: "jane.doe@email.com",
+        imageUrl: undefined, // Replace with real image URL if available
+    };
 
     return (
         <>
@@ -139,6 +145,15 @@ export function Sidebar({ className, menuItems = defaultMenuItems }: SidebarProp
                 <nav className="flex-1 flex flex-col gap-1 mt-2">
                     {menuItems.map((item) => renderMenuItem(item, collapsed, pathname))}
                 </nav>
+                {/* User menu anchored at the bottom */}
+                <div className="mt-auto p-4 border-t">
+                    <UserMenu
+                        name={user.name}
+                        email={user.email}
+                        imageUrl={user.imageUrl}
+                        onLogout={signOut}
+                    />
+                </div>
             </aside>
         </>
     );

@@ -1,4 +1,4 @@
-import { AuthProvider } from '@/components/context/auth-context';
+import { AuthProvider } from '@/context/auth-context';
 import { AuthGuard } from '@/components/auth-guard/auth-guard';
 import React, { Suspense } from 'react';
 

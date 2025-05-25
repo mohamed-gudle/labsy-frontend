@@ -6,7 +6,7 @@ import { SocialAuthButtons } from './social-auth-buttons';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useAuth } from '@/components/context/auth-context';
+import { useAuth } from '@/context/auth-context';
 
 export const SignUpForm = () => {
   const [name, setName] = useState('');

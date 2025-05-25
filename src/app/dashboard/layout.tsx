@@ -1,11 +1,11 @@
 // src/app/dashboard/layout.tsx
 
-import React, { Suspense } from "react";
-import type { ReactNode } from "react";
-import { Sidebar } from "@/components/ui/sidebar";
-import { Home, User, Settings, LogOut } from "lucide-react";
-import { AuthProvider } from "@/components/context/auth-context";
 import { AuthGuard } from "@/components/auth-guard/auth-guard";
+import { AuthProvider } from "@/context/auth-context";
+import { Sidebar } from "@/components/ui/sidebar";
+import { Settings, User } from "lucide-react";
+import type { ReactNode } from "react";
+import React, { Suspense } from "react";
 
 interface DashboardLayoutProps {
     children: ReactNode;
@@ -29,10 +29,6 @@ const menuItems: Array<{
     icon?: ReactNode;
     children?: Array<{ label: string; href: string; icon?: ReactNode }>;
 }> = [
-        { label: "Home", href: "/dashboard", icon: <Home /> },
-        { label: "Profile", href: "/dashboard/profile", icon: <User /> },
-        { label: "Settings", href: "/dashboard/settings", icon: <Settings /> },
-        { label: "Logout", href: "/logout", icon: <LogOut /> },
         { label: "Example", href: "/dashboard/example", icon: <User /> },
         {
             label: "More",
