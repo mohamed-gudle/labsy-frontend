@@ -19,7 +19,7 @@ export function AuthGuard({ children, mode }: AuthGuardProps) {
             if (mode === 'protected' && !user) {
                 router.replace('/auth/sign-in');
             } else if (mode === 'public' && user) {
-                router.replace('/dashboard');
+                router.replace('/dashboard/example');
             }
         }
     }, [user, loading, mode, router]);

@@ -47,3 +47,5 @@ You provide accurate, factual, thoughtful answers, and are a genius at reasoning
 
 ## Logging
 - Log all changes in a `Changelog.md` file.
+
+## Authentication

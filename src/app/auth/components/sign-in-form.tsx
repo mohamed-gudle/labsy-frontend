@@ -70,7 +70,7 @@ export const SignInForm = () => {
         </Button>
       </div>
       <p className="text-sm text-gray-600 mt-4">
-        <a href="#" className="text-blue-500">Reset your password</a>
+        <a href="/auth/reset-password" className="text-blue-500">Reset your password</a>
       </p>
       <p className="text-sm text-gray-600 mt-2">
         New to Spring by Amaze? <a href="/auth/sign-up" className="text-blue-500">Create an account</a>

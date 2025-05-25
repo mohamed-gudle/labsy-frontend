@@ -1,7 +1,7 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { onAuthStateChanged, signInWithEmailAndPassword, signOut as firebaseSignOut, createUserWithEmailAndPassword, User } from 'firebase/auth';
+import React, { createContext, useContext, useEffect, useState, ReactNode, useMemo } from 'react';
+import { onAuthStateChanged, signInWithEmailAndPassword, signOut as firebaseSignOut, createUserWithEmailAndPassword, sendPasswordResetEmail, User } from 'firebase/auth';
 import { auth } from '@/lib/firebase/config';
 
 interface AuthContextProps {
@@ -11,6 +11,7 @@ interface AuthContextProps {
     signIn: (email: string, password: string) => Promise<void>;
     signOut: () => Promise<void>;
     signUp: (email: string, password: string) => Promise<void>;
+    resetPassword: (email: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -83,8 +84,27 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }
     };
 
+    const resetPassword = async (email: string) => {
+        setError(null);
+        setLoading(true);
+        try {
+            await sendPasswordResetEmail(auth, email);
+        } catch (err: unknown) {
+            console.error('Reset password error:', err);
+            if (err && typeof err === 'object' && 'message' in err && typeof (err as { message: unknown }).message === 'string') {
+                setError((err as { message: string }).message);
+            } else {
+                setError('Failed to send reset email.');
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const contextValue = useMemo(() => ({ user, loading, error, signIn, signOut, signUp, resetPassword }), [user, loading, error]);
+
     return (
-        <AuthContext.Provider value={{ user, loading, error, signIn, signOut, signUp }}>
+        <AuthContext.Provider value={contextValue}>
             {children}
         </AuthContext.Provider>
     );

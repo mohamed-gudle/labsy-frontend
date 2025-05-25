@@ -1,12 +1,13 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { onAuthStateChanged, User } from 'firebase/auth';
+import { createContext, useContext, useEffect, useState, ReactNode, useMemo } from 'react';
+import { onAuthStateChanged, User, sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '@/lib/firebase/config';
 
 interface AuthContextProps {
     user: User | null;
     loading: boolean;
+    resetPassword: (email: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -24,8 +25,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return () => unsubscribe();
     }, []);
 
+    const resetPassword = async (email: string) => {
+        await sendPasswordResetEmail(auth, email);
+    };
+
+    const contextValue = useMemo(() => ({ user, loading, resetPassword }), [user, loading]);
+
     return (
-        <AuthContext.Provider value={{ user, loading }}>
+        <AuthContext.Provider value={contextValue}>
             {children}
         </AuthContext.Provider>
     );
