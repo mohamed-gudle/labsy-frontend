@@ -50,6 +50,24 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }
     };
 
+    const signInWithGoogle = async () => {
+        setError(null);
+        setLoading(true);
+        try {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            await auth.signInWithPopup(provider);
+        } catch (err: unknown) {
+            console.error('Google sign in error:', err);
+            if (err && typeof err === 'object' && 'message' in err && typeof (err as { message: unknown }).message === 'string') {
+                setError((err as { message: string }).message);
+            } else {
+                setError('Failed to sign in with Google.');
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const signOut = async () => {
         setError(null);
         setLoading(true);
