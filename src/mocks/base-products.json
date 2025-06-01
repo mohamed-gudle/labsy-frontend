@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "image": "/mock/tshirt.jpg",
+    "description": "A comfortable and stylish unisex tee made from 180 GSM cotton, perfect for everyday wear.",
+    "title": "180 GSM Unisex Relaxed Tee",
+    "brand": "Labsy",
+    "price": "From SAR 33.63",
+    "country": "Saudi Arabia",
+    "fulfillmentTime": "3-5 days Avg. fulfilment time",
+    "colors": ["#E5E5E5", "#111111", "#FFFFFF", "#A32C2C", "#2C4A1B"],
+    "selectedColor": "#FFFFFF"
+  },
+  {
+    "id": 2,
+    "image": "/mock/hoodie.jpg",
+    "title": "Classic Pullover Hoodie",
+    "description": "A cozy pullover hoodie made from 280 GSM cotton, ideal for cooler days.",
+    "brand": "Labsy",
+    "price": "From SAR 79.99",
+    "country": "UAE",
+    "fulfillmentTime": "4-7 days Avg. fulfilment time",
+    "colors": ["#111111", "#E5E5E5", "#2C4A1B"],
+    "selectedColor": "#111111"
+  },
+  {
+    "id": 3,
+    "image": "/mock/tote.jpg",
+    "title": "Eco Canvas Tote Bag",
+    "description": "A durable and eco-friendly canvas tote bag, perfect for shopping or daily use.",
+    "brand": "GreenWear",
+    "price": "From SAR 19.50",
+    "country": "Kuwait",
+    "fulfillmentTime": "2-4 days Avg. fulfilment time",
+    "colors": ["#E5E5E5", "#A32C2C", "#2C4A1B"],
+    "selectedColor": "#E5E5E5"
+  }
+]

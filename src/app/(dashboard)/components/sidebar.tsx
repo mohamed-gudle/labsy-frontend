@@ -1,20 +1,34 @@
 "use client";
 
-import { ChevronRight, FileText, Home, Menu } from "lucide-react";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { useAuth } from "@/context/auth-context";
+
+import {
+    ChevronRight,
+    CreditCard,
+    FileText,
+    Home,
+    LogOut,
+    Menu,
+    Settings,
+    User,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import * as React from "react";
-import { cn } from "../../lib/utils";
-import { Button } from "./button";
+import { Button } from "../../../components/ui/button";
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuTrigger
-} from "./dropdown-menu";
-import { Sheet, SheetContent, SheetTrigger } from "./sheet";
-import { UserMenu } from "./user-menu";
-import { useAuth } from "@/context/auth-context";
+    DropdownMenuTrigger,
+} from "../../../components/ui/dropdown-menu";
+import {
+    Sheet,
+    SheetContent,
+    SheetTrigger,
+} from "../../../components/ui/sheet";
+import { cn } from "../../../lib/utils";
 
 export interface SidebarMenuItem {
     label: string;
@@ -29,11 +43,23 @@ export interface SidebarProps {
 }
 
 const defaultMenuItems = [
-    { label: "Dashboard", href: "/dashboard", icon: <Home className="h-5 w-5" /> },
-    { label: "Example", href: "/dashboard/example", icon: <FileText className="h-5 w-5" /> },
+    {
+        label: "Dashboard",
+        href: "/dashboard",
+        icon: <Home className="h-5 w-5" />,
+    },
+    {
+        label: "Example",
+        href: "/dashboard/example",
+        icon: <FileText className="h-5 w-5" />,
+    },
 ];
 
-function renderMenuItem(item: SidebarMenuItem, collapsed: boolean, pathname: string) {
+function renderMenuItem(
+    item: SidebarMenuItem,
+    collapsed: boolean,
+    pathname: string
+) {
     if (item.children && item.children.length > 0) {
         // Dropdown menu item
         return (
@@ -47,8 +73,12 @@ function renderMenuItem(item: SidebarMenuItem, collapsed: boolean, pathname: str
                         type="button"
                     >
                         {item.icon}
-                        {!collapsed && <span className="flex-1 text-left">{item.label}</span>}
-                        {!collapsed && <ChevronRight className="ml-auto h-4 w-4 opacity-70" />}
+                        {!collapsed && (
+                            <span className="flex-1 text-left">{item.label}</span>
+                        )}
+                        {!collapsed && (
+                            <ChevronRight className="ml-auto h-4 w-4 opacity-70" />
+                        )}
                     </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent side="right" align="start">
@@ -87,18 +117,71 @@ function renderMenuItem(item: SidebarMenuItem, collapsed: boolean, pathname: str
     );
 }
 
-export function Sidebar({ className, menuItems = defaultMenuItems }: Readonly<SidebarProps>) {
-    const{ signOut} = useAuth();
+export function Sidebar({
+    className,
+    menuItems = defaultMenuItems,
+}: Readonly<SidebarProps>) {
+    const { user, signOut } = useAuth();
     const [collapsed, setCollapsed] = React.useState(false);
     const [mobileOpen, setMobileOpen] = React.useState(false);
     const pathname = usePathname();
 
-    // Mock user data for now
-    const user = {
-        name: "Jane Doe",
-        email: "jane.doe@email.com",
-        imageUrl: undefined, // Replace with real image URL if available
-    };
+    const userMenu = (
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <Button
+                    variant="ghost"
+                    className={cn(
+                        "w-full flex items-center gap-3 px-4 py-3 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-900",
+                        collapsed ? "justify-center" : "justify-start"
+                    )}
+                >
+                    <Avatar>
+                        <AvatarImage
+                            src={user?.photoURL || ""}
+                            alt={user?.displayName || ""}
+                            className="h-10 w-10 border border-zinc-300 dark:border-zinc-700 rounded-full"
+                        />
+                    </Avatar>
+                    {!collapsed && (
+                        <div className="flex flex-col items-start min-w-0">
+                            <span className="font-medium text-base truncate">
+                                {user?.displayName}
+                            </span>
+                            <span className="text-xs text-zinc-500 truncate">
+                                {user?.email}
+                            </span>
+                        </div>
+                    )}
+                </Button>
+            </DropdownMenuTrigger>
+            {!collapsed && (
+                <DropdownMenuContent align="end" className="w-56">
+                    <DropdownMenuItem asChild>
+                        <a href="/dashboard/profile" className="flex items-center gap-2">
+                            <User className="h-4 w-4" /> Profile
+                        </a>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                        <a href="/dashboard/settings" className="flex items-center gap-2">
+                            <Settings className="h-4 w-4" /> Settings
+                        </a>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                        <a href="/dashboard/subscription" className="flex items-center gap-2">
+                            <CreditCard className="h-4 w-4" /> Subscription
+                        </a>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                        onClick={signOut}
+                        className="text-red-600 focus:text-red-600"
+                    >
+                        <LogOut className="h-4 w-4" /> Logout
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            )}
+        </DropdownMenu>
+    );
 
     return (
         <>
@@ -146,14 +229,7 @@ export function Sidebar({ className, menuItems = defaultMenuItems }: Readonly<Si
                     {menuItems.map((item) => renderMenuItem(item, collapsed, pathname))}
                 </nav>
                 {/* User menu anchored at the bottom */}
-                <div className="mt-auto p-4 border-t">
-                    <UserMenu
-                        name={user.name}
-                        email={user.email}
-                        imageUrl={user.imageUrl}
-                        onLogout={signOut}
-                    />
-                </div>
+                <div className="mt-auto p-4 border-t">{userMenu}</div>
             </aside>
         </>
     );

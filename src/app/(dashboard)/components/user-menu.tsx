@@ -1,12 +1,12 @@
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { CreditCard, LogOut, Settings, User } from "lucide-react";
-import { Button } from "./button";
+import { Button } from "../../../components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "./dropdown-menu";
+} from "../../../components/ui/dropdown-menu";
 import { useAuth } from "@/context/auth-context";
 
 export interface UserMenuProps {
@@ -17,7 +17,7 @@ export interface UserMenuProps {
 }
 
 export function UserMenu({ onLogout }: UserMenuProps) {
-    const { user } = useAuth();
+  const { user } = useAuth();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -26,7 +26,7 @@ export function UserMenu({ onLogout }: UserMenuProps) {
           className="w-full flex items-center gap-3 px-4 py-3 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-900"
         >
           <Avatar >
-            <AvatarImage src={user?.photoURL || ''} alt={user?.displayName || ''} className="h-10 w-10 border border-zinc-300 dark:border-zinc-700 rounded-full"/>
+            <AvatarImage src={user?.photoURL || ''} alt={user?.displayName || ''} className="h-10 w-10 border border-zinc-300 dark:border-zinc-700 rounded-full" />
           </Avatar>
           <div className="flex flex-col items-start min-w-0">
             <span className="font-medium text-base truncate">{user?.displayName}</span>

@@ -12,6 +12,7 @@ import useImage from "use-image";
 import TShirtBack from "@/components/assets/tshirt-back";
 import { renderToStaticMarkup } from "react-dom/server";
 import Konva from "konva";
+import SideMenu from "./components/side-menu";
 
 interface ClipRect {
   x: number;
@@ -100,6 +101,7 @@ const MyImage: FC<MyImageProps> = ({ clipRect, recenterSignal }) => {
 const TShirtMockupGenerator: FC = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [size, setSize] = useState<number>(800);
+  const [viewportHeight, setViewportHeight] = useState<number>(800);
   // Rectangle clip area state
   const [clipRect] = useState<ClipRect>({
     x: 250,
@@ -124,69 +126,85 @@ const TShirtMockupGenerator: FC = () => {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    const updateHeight = () => setViewportHeight(window.innerHeight);
+    updateHeight(); // Set initial height
+    window.addEventListener("resize", updateHeight);
+    return () => window.removeEventListener("resize", updateHeight);
+  }, []);
+
   const svgString = encodeURIComponent(renderToStaticMarkup(<TShirtBack />));
   const dataUrl = `data:image/svg+xml,${svgString}`;
   const [svgImage] = useImage(dataUrl);
 
   return (
-    <div
-      ref={containerRef}
-      style={{
-        width: "100%",
-        maxWidth: 800,
-        aspectRatio: "1 / 1",
-        margin: "0 auto",
-      }}
-    >
-      <button
-        style={{ margin: 8 }}
-        onClick={() => setRecenterSignal((s) => s + 1)}
+    <div className="flex flex-col md:flex-row gap-6">
+      {/* Side Menu */}
+      <div className="w-full md:w-1/3">
+        <SideMenu />
+      </div>
+
+      {/* Mockup Generator */}
+      <div
+        ref={containerRef}
+        className="w-full md:w-2/3 bg-white shadow-md rounded-lg p-4"
+        style={{
+          maxWidth: 800,
+          aspectRatio: "1 / 1",
+          margin: "0 auto",
+          height: "100vh", // Set the stage to full view height
+        }}
       >
-        Recenter Image
-      </button>
-      <Stage width={size} height={size}>
-        <Layer>
-          <KonvaImage image={svgImage} x={0} y={0} width={800} height={800} />
-        </Layer>
-        {/* Layer showing the printable area boundary */}
-        <Layer>
-          <Rect
-            x={0}
-            y={0}
-            width={800}
-            height={800}
-            fill="rgba(0, 0, 0, 0.2)"
-            globalCompositeOperation="destination-out"
+        <button
+          className="mb-4 px-4 py-2 bg-blue-500 text-white rounded"
+          onClick={() => setRecenterSignal((s) => s + 1)}
+        >
+          Recenter Image
+        </button>
+        <Stage width={size} height={viewportHeight} style={{ backgroundColor: "white" }}>
+          <Layer>
+            <KonvaImage image={svgImage} x={0} y={0} width={800} height={800} />
+          </Layer>
+          {/* Layer showing the printable area boundary */}
+          <Layer>
+            <Rect
+              x={0}
+              y={0}
+              width={800}
+              height={800}
+              fill="rgba(0, 0, 0, 0.2)"
+              globalCompositeOperation="destination-out"
+              clipFunc={(ctx: Konva.Context) => {
+                ctx.beginPath();
+                ctx.rect(clipRect.x, clipRect.y, clipRect.width, clipRect.height);
+                ctx.closePath();
+              }}
+            />
+            <Rect
+              x={clipRect.x}
+              y={clipRect.y}
+              width={clipRect.width}
+              height={clipRect.height}
+              stroke="rgba(255, 255, 255, 0.8)"
+              strokeWidth={2}
+              dash={[5, 5]}
+              perfectDrawEnabled={false}
+              shadowForStrokeEnabled={false}
+            />
+          </Layer>
+
+          {/* Layer with clipped design content */}
+          <Layer
             clipFunc={(ctx: Konva.Context) => {
               ctx.beginPath();
               ctx.rect(clipRect.x, clipRect.y, clipRect.width, clipRect.height);
               ctx.closePath();
             }}
-          />
-          <Rect
-            x={clipRect.x}
-            y={clipRect.y}
-            width={clipRect.width}
-            height={clipRect.height}
-            stroke="rgba(255, 255, 255, 0.8)"
-            strokeWidth={2}
-            dash={[5, 5]}
-            perfectDrawEnabled={false}
-            shadowForStrokeEnabled={false}
-          />
-        </Layer>
-
-        {/* Layer with clipped design content */}
-        <Layer
-          clipFunc={(ctx: Konva.Context) => {
-            ctx.beginPath();
-            ctx.rect(clipRect.x, clipRect.y, clipRect.width, clipRect.height);
-            ctx.closePath();
-          }}
-        >
-          <MyImage clipRect={clipRect} recenterSignal={recenterSignal} />
-        </Layer>
-      </Stage>
+          >
+            <MyImage clipRect={clipRect} recenterSignal={recenterSignal} />
+          </Layer>
+        </Stage>
+      </div>
     </div>
   );
 };

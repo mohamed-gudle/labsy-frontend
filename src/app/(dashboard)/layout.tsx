@@ -1,8 +1,8 @@
 // src/app/dashboard/layout.tsx
 
-import { AuthGuard } from "@/components/auth-guard/auth-guard";
+import { AuthGuard } from "@/guards/auth-guard";
 import { AuthProvider } from "@/context/auth-context";
-import { Sidebar } from "@/components/ui/sidebar";
+import { Sidebar } from "@/app/(dashboard)/components/sidebar";
 import { Settings, User } from "lucide-react";
 import type { ReactNode } from "react";
 import React, { Suspense } from "react";
@@ -10,18 +10,6 @@ import React, { Suspense } from "react";
 interface DashboardLayoutProps {
     children: ReactNode;
 }
-
-const Header: React.FC = () => {
-    return (
-        <header className="flex items-center justify-between px-4 py-3 border-b bg-white dark:bg-zinc-950 dark:border-zinc-800">
-            <div className="flex items-center">
-                {/* Mobile sidebar trigger is inside Sidebar component */}
-                <span className="font-semibold text-xl">Dashboard</span>
-            </div>
-            {/* User menu, can be added here if needed */}
-        </header>
-    );
-};
 
 const menuItems: Array<{
     label: string;
@@ -48,7 +36,6 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                     <div className="flex min-h-screen bg-zinc-50 dark:bg-zinc-950">
                         <Sidebar menuItems={menuItems} />
                         <div className="flex-1 flex flex-col">
-                            <Header />
                             <main className="flex-1 p-4 overflow-y-auto">
                                 {children}
                             </main>
