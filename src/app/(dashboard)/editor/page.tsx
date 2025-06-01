@@ -12,7 +12,6 @@ import useImage from "use-image";
 import TShirtBack from "@/components/assets/tshirt-back";
 import { renderToStaticMarkup } from "react-dom/server";
 import Konva from "konva";
-import SideMenu from "./components/side-menu";
 
 interface ClipRect {
   x: number;
@@ -98,39 +97,151 @@ const MyImage: FC<MyImageProps> = ({ clipRect, recenterSignal }) => {
   );
 };
 
+// Mock SideMenu component - replace with your actual component
+const SideMenu: FC = () => {
+  return (
+    <div className="w-full h-full bg-white rounded-lg p-4">
+      <h2 className="text-lg font-semibold mb-4">Design your product</h2>
+      <p className="text-sm text-gray-500 mb-6">Max file size of 50MB</p>
+
+      {/* Design options */}
+      <div className="flex gap-4 mb-8">
+        <button className="flex flex-col items-center gap-2 p-4 border rounded-lg hover:border-gray-400">
+          <div className="w-8 h-8 bg-gray-200 rounded"></div>
+          <span className="text-sm">Add Image</span>
+        </button>
+        <button className="flex flex-col items-center gap-2 p-4 border rounded-lg hover:border-gray-400">
+          <div className="w-8 h-8 bg-gray-200 rounded"></div>
+          <span className="text-sm">Add Text</span>
+        </button>
+        <button className="flex flex-col items-center gap-2 p-4 border rounded-lg hover:border-gray-400 relative">
+          <div className="w-8 h-8 bg-gray-200 rounded"></div>
+          <span className="text-sm">Design with Adobe Express</span>
+          <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs px-2 py-1 rounded">
+            New
+          </span>
+        </button>
+      </div>
+
+      {/* Color selection */}
+      <div className="mb-8">
+        <h3 className="text-sm font-medium mb-3">Choose product colors</h3>
+        <p className="text-xs text-gray-500 mb-3">
+          Select up to 5 backgrounds for your product
+        </p>
+        <div className="flex gap-2 flex-wrap">
+          {[
+            "#000000",
+            "#FFFFFF",
+            "#4B5563",
+            "#DC2626",
+            "#059669",
+            "#7C3AED",
+            "#F59E0B",
+            "#EC4899",
+            "#3B82F6",
+            "#6B7280",
+          ].map((color) => (
+            <button
+              key={color}
+              className="w-8 h-8 rounded-full border-2 border-gray-300"
+              style={{ backgroundColor: color }}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Pricing */}
+      <div className="mb-8">
+        <h3 className="text-sm font-medium mb-3">Set your pricing</h3>
+        <p className="text-xs text-gray-500 mb-3">
+          Enter your desired retail price for fans from different regions
+        </p>
+        <div className="flex gap-2 mb-3">
+          <button className="px-4 py-2 bg-black text-white rounded-full text-sm">
+            USA
+          </button>
+          <button className="px-4 py-2 border rounded-full text-sm">EUR</button>
+        </div>
+        <div className="flex items-center gap-4">
+          <input
+            type="text"
+            value="$ 22.99"
+            className="border rounded px-3 py-2 w-24"
+            readOnly
+          />
+          <span className="text-sm text-gray-500">$7.09 Profit/Sale</span>
+        </div>
+      </div>
+
+      {/* Advanced section */}
+      <details className="mb-4">
+        <summary className="cursor-pointer text-sm font-medium">
+          Advanced
+        </summary>
+        <div className="mt-4 p-4 bg-gray-50 rounded">
+          {/* Advanced options would go here */}
+        </div>
+      </details>
+    </div>
+  );
+};
+
 const TShirtMockupGenerator: FC = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [size, setSize] = useState<number>(800);
-  const [viewportHeight, setViewportHeight] = useState<number>(800);
-  // Rectangle clip area state
-  const [clipRect] = useState<ClipRect>({
-    x: 250,
-    y: 200,
-    width: 300,
-    height: 300,
+  const stageContainerRef = useRef<HTMLDivElement | null>(null);
+
+  // Virtual size for the scene - adjusted for better proportions
+  const sceneWidth = 400;
+  const sceneHeight = 500;
+
+  // State to track current scale and dimensions
+  const [stageSize, setStageSize] = useState({
+    width: sceneWidth,
+    height: sceneHeight,
+    scale: 1,
   });
+
+  // Adjusted clip rectangle for better positioning
+  const [clipRect] = useState<ClipRect>({
+    x: 125,
+    y: 150,
+    width: 150,
+    height: 200,
+  });
+
+  // Recenter signal state
   const [recenterSignal, setRecenterSignal] = useState<number>(0);
 
-  useEffect(() => {
-    if (!containerRef.current) return;
-    // Use ResizeObserver for container size
-    const observer = new window.ResizeObserver((entries) => {
-      for (const entry of entries) {
-        const width = entry.contentRect.width;
-        setSize(width);
-      }
-    });
-    observer.observe(containerRef.current);
-    // Set initial size
-    setSize(containerRef.current.offsetWidth);
-    return () => observer.disconnect();
-  }, []);
+  // Function to handle resize
+  const updateSize = () => {
+    if (!stageContainerRef.current) return;
 
+    // Get container dimensions
+    const containerWidth = stageContainerRef.current.offsetWidth;
+    const containerHeight = stageContainerRef.current.offsetHeight;
+
+    // Calculate scale to fit within container while maintaining aspect ratio
+    const scaleX = containerWidth / sceneWidth;
+    const scaleY = containerHeight / sceneHeight;
+    const scale = Math.min(scaleX, scaleY, 1); // Don't scale up beyond 1
+
+    // Update state with new dimensions
+    setStageSize({
+      width: sceneWidth * scale,
+      height: sceneHeight * scale,
+      scale: scale,
+    });
+  };
+
+  // Update on mount and when window resizes
   useEffect(() => {
-    const updateHeight = () => setViewportHeight(window.innerHeight);
-    updateHeight(); // Set initial height
-    window.addEventListener("resize", updateHeight);
-    return () => window.removeEventListener("resize", updateHeight);
+    updateSize();
+    window.addEventListener("resize", updateSize);
+
+    return () => {
+      window.removeEventListener("resize", updateSize);
+    };
   }, []);
 
   const svgString = encodeURIComponent(renderToStaticMarkup(<TShirtBack />));
@@ -138,72 +249,100 @@ const TShirtMockupGenerator: FC = () => {
   const [svgImage] = useImage(dataUrl);
 
   return (
-    <div className="flex flex-col md:flex-row gap-6">
-      {/* Side Menu */}
-      <div className="w-full md:w-1/3">
+    <div
+      ref={containerRef}
+      className="flex flex-col lg:flex-row gap-6 w-full h-screen p-4 bg-gray-50"
+    >
+      {/* Side Menu - Fixed width on desktop */}
+      <div className="w-full lg:w-80 lg:max-w-sm overflow-y-auto">
         <SideMenu />
       </div>
 
-      {/* Mockup Generator */}
-      <div
-        ref={containerRef}
-        className="w-full md:w-2/3 bg-white shadow-md rounded-lg p-4"
-        style={{
-          maxWidth: 800,
-          aspectRatio: "1 / 1",
-          margin: "0 auto",
-          height: "100vh", // Set the stage to full view height
-        }}
-      >
-        <button
-          className="mb-4 px-4 py-2 bg-blue-500 text-white rounded"
-          onClick={() => setRecenterSignal((s) => s + 1)}
+      {/* Mockup Generator - Centered and responsive */}
+      <div className="flex-1 flex items-center justify-center bg-white rounded-lg shadow-sm p-4">
+        <div
+          ref={stageContainerRef}
+          className="relative w-full h-full max-w-2xl max-h-[600px] flex items-center justify-center"
         >
-          Recenter Image
-        </button>
-        <Stage width={size} height={viewportHeight} style={{ backgroundColor: "white" }}>
-          <Layer>
-            <KonvaImage image={svgImage} x={0} y={0} width={800} height={800} />
-          </Layer>
-          {/* Layer showing the printable area boundary */}
-          <Layer>
-            <Rect
-              x={0}
-              y={0}
-              width={800}
-              height={800}
-              fill="rgba(0, 0, 0, 0.2)"
-              globalCompositeOperation="destination-out"
-              clipFunc={(ctx: Konva.Context) => {
-                ctx.beginPath();
-                ctx.rect(clipRect.x, clipRect.y, clipRect.width, clipRect.height);
-                ctx.closePath();
-              }}
-            />
-            <Rect
-              x={clipRect.x}
-              y={clipRect.y}
-              width={clipRect.width}
-              height={clipRect.height}
-              stroke="rgba(255, 255, 255, 0.8)"
-              strokeWidth={2}
-              dash={[5, 5]}
-              perfectDrawEnabled={false}
-              shadowForStrokeEnabled={false}
-            />
-          </Layer>
-
-          {/* Layer with clipped design content */}
-          <Layer
-            clipFunc={(ctx: Konva.Context) => {
-              ctx.beginPath();
-              ctx.rect(clipRect.x, clipRect.y, clipRect.width, clipRect.height);
-              ctx.closePath();
+          <Stage
+            width={stageSize.width}
+            height={stageSize.height}
+            scaleX={stageSize.scale}
+            scaleY={stageSize.scale}
+            style={{
+              backgroundColor: "transparent",
+              margin: "auto",
             }}
           >
-            <MyImage clipRect={clipRect} recenterSignal={recenterSignal} />
-          </Layer>
-        </Stage>
+            <Layer>
+              <KonvaImage
+                image={svgImage}
+                x={0}
+                y={0}
+                width={sceneWidth}
+                height={sceneHeight}
+              />
+            </Layer>
+            {/* Layer showing the printable area boundary */}
+            <Layer>
+              <Rect
+                x={0}
+                y={0}
+                width={sceneWidth}
+                height={sceneHeight}
+                fill="rgba(0, 0, 0, 0.1)"
+                globalCompositeOperation="destination-out"
+                clipFunc={(ctx: Konva.Context) => {
+                  ctx.beginPath();
+                  ctx.rect(
+                    clipRect.x,
+                    clipRect.y,
+                    clipRect.width,
+                    clipRect.height
+                  );
+                  ctx.closePath();
+                }}
+              />
+              <Rect
+                x={clipRect.x}
+                y={clipRect.y}
+                width={clipRect.width}
+                height={clipRect.height}
+                stroke="rgba(100, 100, 100, 0.5)"
+                strokeWidth={2}
+                dash={[5, 5]}
+                perfectDrawEnabled={false}
+                shadowForStrokeEnabled={false}
+              />
+            </Layer>
+
+            {/* Layer with clipped design content */}
+            <Layer
+              clipFunc={(ctx: Konva.Context) => {
+                ctx.beginPath();
+                ctx.rect(
+                  clipRect.x,
+                  clipRect.y,
+                  clipRect.width,
+                  clipRect.height
+                );
+                ctx.closePath();
+              }}
+            >
+              <MyImage clipRect={clipRect} recenterSignal={recenterSignal} />
+            </Layer>
+          </Stage>
+
+          {/* Preview and Design buttons */}
+          <div className="absolute bottom-4 right-4 flex gap-2">
+            <button className="px-4 py-2 bg-white border border-gray-300 rounded-full text-sm font-medium hover:bg-gray-50">
+              👁 Preview
+            </button>
+            <button className="px-4 py-2 bg-black text-white rounded-full text-sm font-medium hover:bg-gray-800">
+              ✏️ Design
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

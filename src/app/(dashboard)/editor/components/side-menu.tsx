@@ -10,20 +10,18 @@ const SideMenu: React.FC = () => {
     };
 
     return (
-        <div className="w-full max-w-sm bg-white shadow-md rounded-lg p-4 space-y-6">
+        <div className="w-full max-w-sm bg-white shadow-md rounded-lg p-4 space-y-6 h-full">
             <h2 className="text-xl font-semibold">Design Your Product</h2>
 
             {/* Add Designs Section */}
             <section>
-                <h3 className="text-lg font-medium mb-2">Add Designs</h3>
                 <AddDesigns />
             </section>
 
             {/* Choose Colors Section */}
             <section>
-                <h3 className="text-lg font-medium mb-2">Choose Product Colors</h3>
                 <ChooseColors
-                    colors={["#000000", "#FFFFFF", "#FF0000", "#00FF00", "#0000FF"]}
+                    colors={["#000000", "#FFFbFF", "#FF0000", "#00FF00", "#0000FF"]}
                     onSelectionChange={handleColorSelectionChange}
                 />
             </section>

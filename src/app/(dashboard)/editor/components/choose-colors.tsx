@@ -32,7 +32,7 @@ export const ChooseColors: React.FC<ChooseColorsProps> = ({ colors, onSelectionC
           <button
             key={color}
             className={`w-10 h-10 rounded-full border-2 ${
-              selectedColors.includes(color) ? 'border-black' : 'border-transparent'
+              selectedColors.includes(color) ? 'border-black' : 'border-gray-300'
             }`}
             style={{ backgroundColor: color }}
             onClick={() => handleColorClick(color)}
