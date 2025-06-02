@@ -49,3 +49,51 @@ You provide accurate, factual, thoughtful answers, and are a genius at reasoning
 - Log all changes in a `Changelog.md` file.
 
 ## Authentication
+
+
+
+
+
+### Directory Structure
+- public/
+- app/
+    - Feature/
+        - _components/
+            - ComponentName/
+            - index.tsx
+            - types.ts (component-specific types)
+        - _utils/ (feature-specific utilities)
+        - _lib/
+            - actions/ (SWR fetchers, server actions, API calls)
+            - hooks/ (custom hooks for this feature)
+            - contexts/ (feature-specific contexts)
+        - _types/ (feature-specific types)
+            - index.ts
+            - api.ts (feature API response types)
+            - forms.ts (feature form types)
+        - page.tsx
+        - layout.tsx
+        - loading.tsx
+        - error.tsx
+        - not-found.tsx
+- assets/
+- images/
+- icons/
+- components/
+  - ui/ (shadcn/ui components)
+  - custom-ui/
+- lib/
+  - actions/ (shared backend calls, SWR fetchers)
+  - hooks/ (shared custom hooks)
+  - contexts/ (shared contexts)
+- utils/ (shared utility functions)
+- types/ (only truly global/shared types)
+  - global.d.ts
+  - shared.ts
+- config/
+  - firebase.ts
+  - swr.ts
+  - toast.ts
+- constants/ (shared constants)
+- middleware.ts
+
