@@ -71,6 +71,8 @@ You provide accurate, factual, thoughtful answers, and are a genius at reasoning
             - index.ts
             - api.ts (feature API response types)
             - forms.ts (feature form types)
+        - _form-schemas/ (Zod schemas for forms)
+            - index.ts
         - page.tsx
         - layout.tsx
         - loading.tsx
