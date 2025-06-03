@@ -2,7 +2,7 @@
 
 import { AuthGuard } from "@/guards/auth-guard";
 import { AuthProvider } from "@/context/auth-context";
-import { Sidebar } from "@/app/(dashboard)/components/sidebar";
+import { Sidebar } from "@/app/(dashboard)/_components/sidebar";
 import { Settings, User } from "lucide-react";
 import type { ReactNode } from "react";
 import React, { Suspense } from "react";

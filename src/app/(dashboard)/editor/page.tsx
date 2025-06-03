@@ -13,70 +13,75 @@ import TShirtBack from "@/components/assets/tshirt-back";
 import { renderToStaticMarkup } from "react-dom/server";
 import Konva from "konva";
 
-interface ClipRect {
+interface PrintableArea {
   x: number;
   y: number;
   width: number;
   height: number;
 }
 
-interface MyImageProps {
-  clipRect: ClipRect;
-  recenterSignal: number;
+interface DesignImageLayerProps {
+  printableArea: PrintableArea;
+  recenterDesignSignal: number;
 }
 
-const MyImage: FC<MyImageProps> = ({ clipRect, recenterSignal }) => {
-  const [image] = useImage("/logo-single.png");
+const DesignImageLayer: FC<DesignImageLayerProps> = ({
+  printableArea,
+  recenterDesignSignal,
+}) => {
+  const [designImage] = useImage("/logo-single.png");
   const [isSelected, setSelected] = useState<boolean>(false);
-  const [pos, setPos] = useState<{ x: number; y: number }>({
-    x: clipRect.x + clipRect.width / 2 - 50,
-    y: clipRect.y + clipRect.height / 2 - 50,
+  const [designImagePosition, setDesignImagePosition] = useState<{ x: number; y: number }>({
+    x: printableArea.x + printableArea.width / 2 - 50, 
+    y: printableArea.y + printableArea.height / 2 - 50,
   });
-  const imageRef = useRef<Konva.Image | null>(null);
-  const trRef = useRef<Konva.Transformer | null>(null);
+  const designImageRef = useRef<Konva.Image | null>(null);
+  const transformerRef = useRef<Konva.Transformer | null>(null);
 
   useEffect(() => {
-    if (isSelected && trRef.current && imageRef.current) {
-      trRef.current.nodes([imageRef.current]);
-      trRef.current.getLayer()?.batchDraw();
+    if (isSelected && transformerRef.current && designImageRef.current) {
+      transformerRef.current.nodes([designImageRef.current]);
+      transformerRef.current.getLayer()?.batchDraw();
     }
   }, [isSelected]);
 
-  // Recenter when recenterSignal changes
+  // Recenter when recenterDesignSignal changes
   useEffect(() => {
-    setPos({
-      x: clipRect.x + clipRect.width / 2 - 50,
-      y: clipRect.y + clipRect.height / 2 - 50,
+    setDesignImagePosition({
+      x: printableArea.x + printableArea.width / 2 - 50,
+      y: printableArea.y + printableArea.height / 2 - 50,
     });
-  }, [recenterSignal, clipRect]);
+  }, [recenterDesignSignal, printableArea]);
 
   return (
     <>
       <KonvaImage
-        ref={imageRef}
-        image={image}
-        x={pos.x}
-        y={pos.y}
+        ref={designImageRef}
+        image={designImage}
+        x={designImagePosition.x}
+        y={designImagePosition.y}
         width={100}
         height={100}
         draggable
         dragBoundFunc={(pos) => {
-          // Restrict dragging within clipRect
-          const minX = clipRect.x;
-          const minY = clipRect.y;
-          const maxX = clipRect.x + clipRect.width - 100;
-          const maxY = clipRect.y + clipRect.height - 100;
+          // Restrict dragging within printableArea
+          const minX = printableArea.x;
+          const minY = printableArea.y;
+          const maxX = printableArea.x + printableArea.width - 100;
+          const maxY = printableArea.y + printableArea.height - 100;
           return {
             x: Math.max(minX, Math.min(pos.x, maxX)),
             y: Math.max(minY, Math.min(pos.y, maxY)),
           };
         }}
-        onDragEnd={(e) => setPos({ x: e.target.x(), y: e.target.y() })}
+        onDragEnd={(e) =>
+          setDesignImagePosition({ x: e.target.x(), y: e.target.y() })
+        }
         onClick={() => setSelected(!isSelected)}
       />
       {isSelected && (
         <Transformer
-          ref={trRef}
+          ref={transformerRef}
           boundBoxFunc={(oldBox, newBox) => {
             // Limit minimum size
             if (newBox.width < 50 || newBox.height < 50) return oldBox;
@@ -202,8 +207,8 @@ const TShirtMockupGenerator: FC = () => {
     scale: 1,
   });
 
-  // Adjusted clip rectangle for better positioning
-  const [clipRect] = useState<ClipRect>({
+  // Adjusted printable area for better positioning
+  const [printableArea] = useState<PrintableArea>({
     x: 125,
     y: 150,
     width: 150,
@@ -211,7 +216,7 @@ const TShirtMockupGenerator: FC = () => {
   });
 
   // Recenter signal state
-  const [recenterSignal, setRecenterSignal] = useState<number>(0);
+  const [recenterDesignSignal, setRecenterDesignSignal] = useState<number>(0);
 
   // Function to handle resize
   const updateSize = () => {
@@ -246,7 +251,7 @@ const TShirtMockupGenerator: FC = () => {
 
   const svgString = encodeURIComponent(renderToStaticMarkup(<TShirtBack />));
   const dataUrl = `data:image/svg+xml,${svgString}`;
-  const [svgImage] = useImage(dataUrl);
+  const [baseProductImage] = useImage(dataUrl);
 
   return (
     <div
@@ -276,7 +281,7 @@ const TShirtMockupGenerator: FC = () => {
           >
             <Layer>
               <KonvaImage
-                image={svgImage}
+                image={baseProductImage}
                 x={0}
                 y={0}
                 width={sceneWidth}
@@ -295,19 +300,19 @@ const TShirtMockupGenerator: FC = () => {
                 clipFunc={(ctx: Konva.Context) => {
                   ctx.beginPath();
                   ctx.rect(
-                    clipRect.x,
-                    clipRect.y,
-                    clipRect.width,
-                    clipRect.height
+                    printableArea.x,
+                    printableArea.y,
+                    printableArea.width,
+                    printableArea.height
                   );
                   ctx.closePath();
                 }}
               />
               <Rect
-                x={clipRect.x}
-                y={clipRect.y}
-                width={clipRect.width}
-                height={clipRect.height}
+                x={printableArea.x}
+                y={printableArea.y}
+                width={printableArea.width}
+                height={printableArea.height}
                 stroke="rgba(100, 100, 100, 0.5)"
                 strokeWidth={2}
                 dash={[5, 5]}
@@ -321,15 +326,18 @@ const TShirtMockupGenerator: FC = () => {
               clipFunc={(ctx: Konva.Context) => {
                 ctx.beginPath();
                 ctx.rect(
-                  clipRect.x,
-                  clipRect.y,
-                  clipRect.width,
-                  clipRect.height
+                  printableArea.x,
+                  printableArea.y,
+                  printableArea.width,
+                  printableArea.height
                 );
                 ctx.closePath();
               }}
             >
-              <MyImage clipRect={clipRect} recenterSignal={recenterSignal} />
+              <DesignImageLayer
+                printableArea={printableArea}
+                recenterDesignSignal={recenterDesignSignal}
+              />
             </Layer>
           </Stage>
 

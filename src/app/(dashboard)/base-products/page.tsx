@@ -1,8 +1,9 @@
 "use client";
 
 import { Product } from "@/types/product";
-import { ProductListItem } from "./components/list-item";
-import { useBaseProducts } from "./hooks/use-base-products";
+import { ProductListItem } from "./_components/list-item";
+import { useBaseProducts } from "./_lib/api";
+
 
 
 

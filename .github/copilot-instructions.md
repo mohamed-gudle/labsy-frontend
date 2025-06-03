@@ -2,6 +2,52 @@ You are an expert in TypeScript, Node.js, Next.js App Router, React, Shadcn UI, 
 You also use the latest versions of popular frameworks and libraries such as React & NextJS (with app router).
 You provide accurate, factual, thoughtful answers, and are a genius at reasoning.
 
+
+## Directory Structure
+- public/
+- app/
+    - Feature/
+        - _components/
+            - ComponentName/
+            - index.tsx
+            - types.ts (component-specific types)
+        - _utils/ (feature-specific utilities)
+        - _lib/
+            - actions/ (SWR fetchers, server actions, API calls)
+            - hooks/ (custom hooks for this feature)
+            - contexts/ (feature-specific contexts)
+        - _types/ (feature-specific types)
+            - index.ts
+            - api.ts (feature API response types)
+            - forms.ts (feature form types)
+        - _form-schemas/ (Zod schemas for forms)
+            - index.ts
+        - page.tsx
+        - layout.tsx
+        - loading.tsx
+        - error.tsx
+        - not-found.tsx
+- assets/
+- images/
+- icons/
+- components/
+  - ui/ (shadcn/ui components)
+  - custom-ui/
+- lib/
+  - actions/ (shared backend calls, SWR fetchers)
+  - hooks/ (shared custom hooks)
+  - contexts/ (shared contexts)
+- utils/ (shared utility functions)
+- types/ (only truly global/shared types)
+  - global.d.ts
+  - shared.ts
+- config/
+  - firebase.ts
+  - swr.ts
+  - toast.ts
+- constants/ (shared constants)
+- middleware.ts
+
 ## Approach
 - This project uses Next.js App Router never suggest using the pages router or provide code using the pages router.
 - Follow the user's requirements carefully & to the letter.
@@ -49,53 +95,4 @@ You provide accurate, factual, thoughtful answers, and are a genius at reasoning
 - Log all changes in a `Changelog.md` file.
 
 ## Authentication
-
-
-
-
-
-### Directory Structure
-- public/
-- app/
-    - Feature/
-        - _components/
-            - ComponentName/
-            - index.tsx
-            - types.ts (component-specific types)
-        - _utils/ (feature-specific utilities)
-        - _lib/
-            - actions/ (SWR fetchers, server actions, API calls)
-            - hooks/ (custom hooks for this feature)
-            - contexts/ (feature-specific contexts)
-        - _types/ (feature-specific types)
-            - index.ts
-            - api.ts (feature API response types)
-            - forms.ts (feature form types)
-        - _form-schemas/ (Zod schemas for forms)
-            - index.ts
-        - page.tsx
-        - layout.tsx
-        - loading.tsx
-        - error.tsx
-        - not-found.tsx
-- assets/
-- images/
-- icons/
-- components/
-  - ui/ (shadcn/ui components)
-  - custom-ui/
-- lib/
-  - actions/ (shared backend calls, SWR fetchers)
-  - hooks/ (shared custom hooks)
-  - contexts/ (shared contexts)
-- utils/ (shared utility functions)
-- types/ (only truly global/shared types)
-  - global.d.ts
-  - shared.ts
-- config/
-  - firebase.ts
-  - swr.ts
-  - toast.ts
-- constants/ (shared constants)
-- middleware.ts
 
