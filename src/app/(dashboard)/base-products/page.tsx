@@ -1,12 +1,8 @@
 "use client";
 
-import { Product } from "@/types/product";
+import { BaseItem } from "@/app/base-products/_types/api";
 import { ProductListItem } from "./_components/list-item";
 import { useBaseProducts } from "./_lib/api";
-
-
-
-
 
 export default function BaseProductsPage() {
   const { products, isLoading, error } = useBaseProducts();
@@ -25,7 +21,7 @@ export default function BaseProductsPage() {
   return (
     <main className="p-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {products?.map((product: Product) => (
+        {products?.map((product: BaseItem) => (
           <ProductListItem key={product.id} {...product} />
         ))}
       </div>

@@ -1,38 +1,100 @@
 [
   {
-    "id": 1,
-    "image": "/mock/tshirt.jpg",
-    "description": "A comfortable and stylish unisex tee made from 180 GSM cotton, perfect for everyday wear.",
+    "id": "tshirt-001",
     "title": "180 GSM Unisex Relaxed Tee",
+    "description": "A comfortable and stylish unisex tee made from 180 GSM cotton, perfect for everyday wear.",
+    "image": "/mock/tshirt.jpg",
     "brand": "Labsy",
-    "price": "From SAR 33.63",
-    "country": "Saudi Arabia",
-    "fulfillmentTime": "3-5 days Avg. fulfilment time",
+    "category": "T-shirt",
+    "material": "100% cotton",
+    "manufacturer": "Labsy Apparel",
     "colors": ["#E5E5E5", "#111111", "#FFFFFF", "#A32C2C", "#2C4A1B"],
-    "selectedColor": "#FFFFFF"
+    "country": "Saudi Arabia",
+    "fulfillmentTime": "P3D",
+    "available_sizes": {"S": 100, "M": 120, "L": 80, "XL": 60},
+    "print_areas": [
+      {
+        "name": "Front",
+        "x": 100,
+        "y": 100,
+        "width": 200,
+        "height": 200,
+        "mockup_url": "/mock/tshirt-front.png",
+        "dpi": 300,
+        "printable": true,
+        "description": "Front print area for chest designs."
+      },
+      {
+        "name": "Back",
+        "x": 20,
+        "y": 40,
+        "width": 210,
+        "height": 297,
+        "mockup_url": "/mock/tshirt-back.webp",
+        "dpi": 300,
+        "printable": true,
+        "description": "Back print area for large designs."
+      }
+    ],
+    "base_cost": 25.0,
+    "print_cost_per_cm2": 0.05
   },
   {
-    "id": 2,
-    "image": "/mock/hoodie.jpg",
+    "id": "hoodie-001",
     "title": "Classic Pullover Hoodie",
     "description": "A cozy pullover hoodie made from 280 GSM cotton, ideal for cooler days.",
+    "image": "/mock/hoodie.jpg",
     "brand": "Labsy",
-    "price": "From SAR 79.99",
-    "country": "UAE",
-    "fulfillmentTime": "4-7 days Avg. fulfilment time",
+    "category": "Hoodie",
+    "material": "80% cotton, 20% polyester",
+    "manufacturer": "Labsy Apparel",
     "colors": ["#111111", "#E5E5E5", "#2C4A1B"],
-    "selectedColor": "#111111"
+    "country": "UAE",
+    "fulfillmentTime": "P5D",
+    "available_sizes": {"M": 50, "L": 70, "XL": 40},
+    "print_areas": [
+      {
+        "name": "Front",
+        "x": 25,
+        "y": 35,
+        "width": 200,
+        "height": 250,
+        "mockup_url": "/mock/hoodie-front.webp",
+        "dpi": 300,
+        "printable": true,
+        "description": "Front print area for hoodie."
+      }
+    ],
+    "base_cost": 60.0,
+    "print_cost_per_cm2": 0.07
   },
   {
-    "id": 3,
-    "image": "/mock/tote.jpg",
+    "id": "tote-001",
     "title": "Eco Canvas Tote Bag",
     "description": "A durable and eco-friendly canvas tote bag, perfect for shopping or daily use.",
+    "image": "/mock/tote.jpg",
     "brand": "GreenWear",
-    "price": "From SAR 19.50",
-    "country": "Kuwait",
-    "fulfillmentTime": "2-4 days Avg. fulfilment time",
+    "category": "Tote Bag",
+    "material": "100% organic cotton",
+    "manufacturer": "GreenWear",
     "colors": ["#E5E5E5", "#A32C2C", "#2C4A1B"],
-    "selectedColor": "#E5E5E5"
+    "country": "Kuwait",
+    "fulfillmentTime": "P2D",
+    "available_sizes": {"One Size": 200},
+    "print_areas": [
+      {
+        "name": "Front",
+        "x": 15,
+        "y": 20,
+        "width": 180,
+        "height": 220,
+        "mockup_url": "/mock/tote-front.webp",
+        "dpi": 300,
+        "printable": true,
+        "description": "Front print area for tote bag."
+      }
+    ],
+    "base_cost": 10.0,
+    "print_cost_per_cm2": 0.03
   }
 ]

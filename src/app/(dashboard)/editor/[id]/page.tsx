@@ -1,24 +1,19 @@
 "use client";
 
-import { useEffect, useRef, useState, FC } from "react";
+import { getColorName } from "@/utils/color-namer";
+import Konva from "konva";
+import { useParams } from "next/navigation";
+import { FC, useEffect, useRef, useState } from "react";
 import {
+  Image as KonvaImage,
   Layer,
   Rect,
   Stage,
-  Image as KonvaImage,
   Transformer,
 } from "react-konva";
 import useImage from "use-image";
-import TShirtBack from "@/components/assets/tshirt-back";
-import { renderToStaticMarkup } from "react-dom/server";
-import Konva from "konva";
-
-interface PrintableArea {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
+import { useBaseProduct } from "../../base-products/_lib/api";
+import { PrintableArea } from "@/app/base-products/_types/api";
 
 interface DesignImageLayerProps {
   printableArea: PrintableArea;
@@ -31,8 +26,11 @@ const DesignImageLayer: FC<DesignImageLayerProps> = ({
 }) => {
   const [designImage] = useImage("/logo-single.png");
   const [isSelected, setSelected] = useState<boolean>(false);
-  const [designImagePosition, setDesignImagePosition] = useState<{ x: number; y: number }>({
-    x: printableArea.x + printableArea.width / 2 - 50, 
+  const [designImagePosition, setDesignImagePosition] = useState<{
+    x: number;
+    y: number;
+  }>({
+    x: printableArea.x + printableArea.width / 2 - 50,
     y: printableArea.y + printableArea.height / 2 - 50,
   });
   const designImageRef = useRef<Konva.Image | null>(null);
@@ -102,8 +100,13 @@ const DesignImageLayer: FC<DesignImageLayerProps> = ({
   );
 };
 
+interface SideMenuProps {
+  setColor: (color: string) => void;
+  colors: string[];
+}
+
 // Mock SideMenu component - replace with your actual component
-const SideMenu: FC = () => {
+const SideMenu: FC<SideMenuProps> = ({ colors, setColor }) => {
   return (
     <div className="w-full h-full bg-white rounded-lg p-4">
       <h2 className="text-lg font-semibold mb-4">Design your product</h2>
@@ -135,22 +138,15 @@ const SideMenu: FC = () => {
           Select up to 5 backgrounds for your product
         </p>
         <div className="flex gap-2 flex-wrap">
-          {[
-            "#000000",
-            "#FFFFFF",
-            "#4B5563",
-            "#DC2626",
-            "#059669",
-            "#7C3AED",
-            "#F59E0B",
-            "#EC4899",
-            "#3B82F6",
-            "#6B7280",
-          ].map((color) => (
+          {colors.map((color) => (
             <button
-              key={color}
+              key={getColorName(color)}
               className="w-8 h-8 rounded-full border-2 border-gray-300"
               style={{ backgroundColor: color }}
+              onClick={() => {
+                // Handle color selection logic here
+                setColor(color);
+              }}
             />
           ))}
         </div>
@@ -193,6 +189,16 @@ const SideMenu: FC = () => {
 };
 
 const TShirtMockupGenerator: FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const { product, isLoading, error } = useBaseProduct(id);
+  const [baseProductImage] = useImage(
+    product?.print_areas?.[0]?.mockup_url as string
+  );
+  const [selectedColor, setSelectedColor] = useState<string>(
+    product?.colors?.[0] || "#FFFFFF"
+  );
+  const printableArea = product?.print_areas?.[0];
+
   const containerRef = useRef<HTMLDivElement | null>(null);
   const stageContainerRef = useRef<HTMLDivElement | null>(null);
 
@@ -207,31 +213,17 @@ const TShirtMockupGenerator: FC = () => {
     scale: 1,
   });
 
-  // Adjusted printable area for better positioning
-  const [printableArea] = useState<PrintableArea>({
-    x: 125,
-    y: 150,
-    width: 150,
-    height: 200,
-  });
-
   // Recenter signal state
   const [recenterDesignSignal, setRecenterDesignSignal] = useState<number>(0);
 
   // Function to handle resize
   const updateSize = () => {
     if (!stageContainerRef.current) return;
-
-    // Get container dimensions
     const containerWidth = stageContainerRef.current.offsetWidth;
     const containerHeight = stageContainerRef.current.offsetHeight;
-
-    // Calculate scale to fit within container while maintaining aspect ratio
     const scaleX = containerWidth / sceneWidth;
     const scaleY = containerHeight / sceneHeight;
     const scale = Math.min(scaleX, scaleY, 1); // Don't scale up beyond 1
-
-    // Update state with new dimensions
     setStageSize({
       width: sceneWidth * scale,
       height: sceneHeight * scale,
@@ -239,19 +231,49 @@ const TShirtMockupGenerator: FC = () => {
     });
   };
 
-  // Update on mount and when window resizes
   useEffect(() => {
     updateSize();
     window.addEventListener("resize", updateSize);
-
     return () => {
       window.removeEventListener("resize", updateSize);
     };
   }, []);
 
-  const svgString = encodeURIComponent(renderToStaticMarkup(<TShirtBack />));
-  const dataUrl = `data:image/svg+xml,${svgString}`;
-  const [baseProductImage] = useImage(dataUrl);
+  // --- Overlay color mask logic ---
+  const [colorOverlayImage, setColorOverlayImage] =
+    useState<HTMLImageElement | null>(null);
+
+  useEffect(() => {
+    // Create an offscreen canvas
+    const canvas = document.createElement("canvas");
+    canvas.width = sceneWidth;
+    canvas.height = sceneHeight;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    // Fill with selected color
+    ctx.fillStyle = selectedColor;
+    ctx.globalAlpha = 1;
+    ctx.fillRect(0, 0, sceneWidth, sceneHeight);
+    // Set composite mode to mask with t-shirt
+    ctx.globalCompositeOperation = "destination-in";
+    if (baseProductImage) {
+      ctx.drawImage(baseProductImage, 0, 0, sceneWidth, sceneHeight);
+    }
+    // Create image from canvas
+    const img = new window.Image();
+    img.src = canvas.toDataURL();
+    img.onload = () => setColorOverlayImage(img);
+  }, [baseProductImage, selectedColor]);
+
+  if (isLoading) {
+    return <div className="text-center text-gray-500">Loading...</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="text-center text-red-500">Error: {error.message}</div>
+    );
+  }
 
   return (
     <div
@@ -260,7 +282,7 @@ const TShirtMockupGenerator: FC = () => {
     >
       {/* Side Menu - Fixed width on desktop */}
       <div className="w-full lg:w-80 lg:max-w-sm overflow-y-auto">
-        <SideMenu />
+        <SideMenu setColor={setSelectedColor} colors={product?.colors as string[]} />
       </div>
 
       {/* Mockup Generator - Centered and responsive */}
@@ -287,6 +309,20 @@ const TShirtMockupGenerator: FC = () => {
                 width={sceneWidth}
                 height={sceneHeight}
               />
+              {/* Color overlay as KonvaImage, masked and blended */}
+              {colorOverlayImage && (
+                <KonvaImage
+                  image={colorOverlayImage}
+                  x={0}
+                  y={0}
+                  width={sceneWidth}
+                  height={sceneHeight}
+                  opacity={1}
+                  globalCompositeOperation={
+                    "multiply" as globalThis.CanvasRenderingContext2D["globalCompositeOperation"]
+                  }
+                />
+              )}
             </Layer>
             {/* Layer showing the printable area boundary */}
             <Layer>
@@ -300,19 +336,19 @@ const TShirtMockupGenerator: FC = () => {
                 clipFunc={(ctx: Konva.Context) => {
                   ctx.beginPath();
                   ctx.rect(
-                    printableArea.x,
-                    printableArea.y,
-                    printableArea.width,
-                    printableArea.height
+                    printableArea?.x as number,
+                    printableArea?.y as number,
+                    printableArea?.width as number,
+                    printableArea?.height as number
                   );
                   ctx.closePath();
                 }}
               />
               <Rect
-                x={printableArea.x}
-                y={printableArea.y}
-                width={printableArea.width}
-                height={printableArea.height}
+                x={printableArea?.x}
+                y={printableArea?.y}
+                width={printableArea?.width}
+                height={printableArea?.height}
                 stroke="rgba(100, 100, 100, 0.5)"
                 strokeWidth={2}
                 dash={[5, 5]}
@@ -326,16 +362,16 @@ const TShirtMockupGenerator: FC = () => {
               clipFunc={(ctx: Konva.Context) => {
                 ctx.beginPath();
                 ctx.rect(
-                  printableArea.x,
-                  printableArea.y,
-                  printableArea.width,
-                  printableArea.height
+                  printableArea?.x as number,
+                  printableArea?.y as number,
+                  printableArea?.width as number,
+                  printableArea?.height as number
                 );
                 ctx.closePath();
               }}
             >
               <DesignImageLayer
-                printableArea={printableArea}
+                printableArea={printableArea as PrintableArea}
                 recenterDesignSignal={recenterDesignSignal}
               />
             </Layer>
