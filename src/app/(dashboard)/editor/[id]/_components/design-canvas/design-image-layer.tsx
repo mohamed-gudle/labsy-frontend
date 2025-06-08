@@ -21,7 +21,7 @@ export const DesignImageLayer = ({
   designState,
   onDesignStateChange,
 }: DesignImageLayerProps) => {
-  const [designImage] = useImage("/logo-single.png");
+  const [designImage] = useImage(designState.imageUrl || "/logo-single.png");
   const designImageRef = useRef<Konva.Image | null>(null);
   const transformerRef = useRef<Konva.Transformer | null>(null);
 
@@ -42,15 +42,15 @@ export const DesignImageLayer = ({
       ...designState,
       position: newPosition,
     });
-  }, [recenterDesignSignal, printableArea]);
+  }, [recenterDesignSignal, printableArea, designState, onDesignStateChange]);
 
   const handleTransformEnd = () => {
     if (!designImageRef.current) return;
-    
+
     const node = designImageRef.current;
     const scaleX = node.scaleX();
     const scaleY = node.scaleY();
-    
+
     onDesignStateChange({
       ...designState,
       position: { x: node.x(), y: node.y() },

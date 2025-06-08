@@ -12,13 +12,42 @@ import { useCanvasSize } from "../../_hooks/use-canva-size";
 export const DesignCanvas = ({
   currentPrintArea,
   selectedColor,
-  designState,
-  onDesignStateChange,
+  designStates,
+  addDesignState,
+  updateDesignState,
   recenterDesignSignal,
 }: DesignCanvasProps) => {
   const { stageContainerRef, stageSize, sceneWidth, sceneHeight } = useCanvasSize();
   const [baseProductImage] = useImage(currentPrintArea?.mockup_url as string);
   const colorOverlayImage = useColorOverlay(baseProductImage, selectedColor, sceneWidth, sceneHeight);
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const data = e.dataTransfer.getData("application/json");
+    if (!data) return;
+    try {
+      const design = JSON.parse(data);
+      // Add a new design at the drop position
+      const rect = (e.target as HTMLDivElement).getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      addDesignState({
+        id: design.id,
+        name: design.name,
+        imageUrl: design.imageUrl,
+        position: { x, y },
+        scale: { x: 1, y: 1 },
+        rotation: 0,
+        isSelected: false,
+      });
+    } catch {
+      // Invalid data
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+  };
 
   if (!currentPrintArea) {
     return (
@@ -33,6 +62,8 @@ export const DesignCanvas = ({
       <div
         ref={stageContainerRef}
         className="relative w-full h-full max-w-2xl max-h-[600px] flex items-center justify-center"
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
       >
         <Stage
           width={stageSize.width}
@@ -67,7 +98,7 @@ export const DesignCanvas = ({
               />
             )}
           </Layer>
-          
+
           {/* Design layer */}
           <Layer
             clipFunc={(ctx: Konva.Context) => {
@@ -90,7 +121,7 @@ export const DesignCanvas = ({
               fill="rgba(0, 0, 0, 0.1)"
               globalCompositeOperation="destination-out"
             />
-            
+
             {/* Dashed border for printable area */}
             <Rect
               x={currentPrintArea.x}
@@ -103,14 +134,17 @@ export const DesignCanvas = ({
               perfectDrawEnabled={false}
               shadowForStrokeEnabled={false}
             />
-            
+
             {/* Design content */}
-            <DesignImageLayer
-              printableArea={currentPrintArea}
-              recenterDesignSignal={recenterDesignSignal}
-              designState={designState}
-              onDesignStateChange={onDesignStateChange}
-            />
+            {designStates.map((state, i) => (
+              <DesignImageLayer
+                key={state.id || i}
+                printableArea={currentPrintArea}
+                recenterDesignSignal={recenterDesignSignal}
+                designState={state}
+                onDesignStateChange={(newState) => updateDesignState(i, newState)}
+              />
+            ))}
           </Layer>
         </Stage>
 

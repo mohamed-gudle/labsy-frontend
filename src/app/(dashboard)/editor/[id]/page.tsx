@@ -3,10 +3,12 @@
 import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useBaseProduct } from "../../base-products/_lib/api";
-import { useDesignStates } from "./_hooks/use-design-states";
+
+import { UploadedDesignsProvider } from "./_components/side-menu/_utils/uploaded-designs-context";
 
 import { DesignCanvas } from "./_components/design-canvas/design-canva";
 import { SideMenu } from "./_components/side-menu/side-menu";
+import { useDesignStates } from "./_hooks/use-design-states";
 
 export default function DesignPage() {
   const { id } = useParams<{ id: string }>();
@@ -21,6 +23,7 @@ export default function DesignPage() {
   const {
     currentPrintAreaIndex,
     getCurrentDesignState,
+    addDesignState,
     updateDesignState,
     handlePrintAreaChange,
   } = useDesignStates(product?.print_areas);
@@ -66,30 +69,33 @@ export default function DesignPage() {
   }
 
   const currentPrintArea = product.print_areas[currentPrintAreaIndex];
-  const currentDesignState = getCurrentDesignState();
+  const currentDesignStates = getCurrentDesignState();
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6 w-full h-screen p-4 bg-gray-50">
-      {/* Side Menu */}
-      <div className="w-full lg:w-80 lg:max-w-sm">
-        <SideMenu
-          colors={product.colors || []}
-          printAreas={product.print_areas}
-          currentPrintAreaIndex={currentPrintAreaIndex}
+    <UploadedDesignsProvider>
+      <div className="flex flex-col lg:flex-row gap-6 w-full h-screen p-4 bg-gray-50">
+        {/* Side Menu */}
+        <div className="w-full lg:w-80 lg:max-w-sm">
+          <SideMenu
+            colors={product.colors || []}
+            printAreas={product.print_areas}
+            currentPrintAreaIndex={currentPrintAreaIndex}
+            selectedColor={selectedColor}
+            onColorChange={setSelectedColor}
+            onPrintAreaChange={handlePrintAreaChange}
+          />
+        </div>
+
+        {/* Design Canvas */}
+        <DesignCanvas
+          currentPrintArea={currentPrintArea}
           selectedColor={selectedColor}
-          onColorChange={setSelectedColor}
-          onPrintAreaChange={handlePrintAreaChange}
+          designStates={currentDesignStates}
+          addDesignState={addDesignState}
+          updateDesignState={updateDesignState}
+          recenterDesignSignal={recenterDesignSignal}
         />
       </div>
-
-      {/* Design Canvas */}
-      <DesignCanvas
-        currentPrintArea={currentPrintArea}
-        selectedColor={selectedColor}
-        designState={currentDesignState}
-        onDesignStateChange={updateDesignState}
-        recenterDesignSignal={recenterDesignSignal}
-      />
-    </div>
+    </UploadedDesignsProvider>
   );
 }

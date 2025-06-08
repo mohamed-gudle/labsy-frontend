@@ -1,9 +1,10 @@
 "use client";
 
 import { PrintableArea } from "@/app/base-products/_types/api";
+import { useUploadedDesigns } from "./_utils/uploaded-designs-context";
 import { ColorPicker } from "./color-picker";
+import { DesignPicker } from "./design-picker";
 import { DesignTools } from "./design-tools";
-import { PricingSection } from "./pricing-section";
 import { PrintAreaSelector } from "./print-area-selector";
 
 export interface SideMenuProps {
@@ -23,6 +24,8 @@ export const SideMenu = ({
   onColorChange,
   onPrintAreaChange,
 }: SideMenuProps) => {
+  const { designs: uploadedDesigns } = useUploadedDesigns();
+
   return (
     <div className="w-full h-full bg-white rounded-lg p-4 overflow-y-auto">
       <div className="mb-6 flex flex-col gap-2">
@@ -42,20 +45,7 @@ export const SideMenu = ({
         onColorChange={onColorChange}
       />
 
-      <PricingSection />
-
-      {/* Advanced section */}
-      <details className="mb-4">
-        <summary className="cursor-pointer text-sm font-medium">
-          Advanced
-        </summary>
-        <div className="mt-4 p-4 bg-gray-50 rounded">
-          {/* Advanced options would go here */}
-          <p className="text-xs text-gray-500">
-            Advanced settings coming soon...
-          </p>
-        </div>
-      </details>
+      <DesignPicker designs={uploadedDesigns} />
     </div>
   );
 };

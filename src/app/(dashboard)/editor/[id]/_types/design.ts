@@ -6,6 +6,9 @@ export interface DesignState {
   scale: { x: number; y: number };
   rotation: number;
   isSelected: boolean;
+  imageUrl?: string; // Add imageUrl for custom design images
+  name?: string;
+  id?: string;
 }
 
 export interface CanvasSize {
@@ -17,8 +20,9 @@ export interface CanvasSize {
 export interface DesignCanvasProps {
   currentPrintArea: PrintableArea;
   selectedColor: string;
-  designState: DesignState;
-  onDesignStateChange: (state: DesignState) => void;
+  designStates: DesignState[];
+  addDesignState: (state: DesignState) => void;
+  updateDesignState: (index: number, state: DesignState) => void;
   recenterDesignSignal: number;
 }
 
