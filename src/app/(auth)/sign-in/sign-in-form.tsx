@@ -79,8 +79,8 @@ export const SignInForm = () => {
         <p className="text-center text-gray-500 mb-2">or</p>
         <SocialAuthButtons
           onGoogleClick={() => signInWithGoogle()}
-          onFacebookClick={() => console.log('Facebook Sign-In')}
-          onYouTubeClick={() => console.log('YouTube Sign-In')}
+          onFacebookClick={() => {/* TODO: Implement Facebook Sign-In */ }}
+          onYouTubeClick={() => {/* TODO: Implement YouTube Sign-In */ }}
         />
       </div>
     </div>

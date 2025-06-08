@@ -1,8 +1,6 @@
 "use client";
 
-import { DesignToolsDialog } from "./desing-tools-dialog";
-
-
+import { DesignToolsDialog } from "./design-tools-dialog";
 
 export const DesignTools = () => {
   return (

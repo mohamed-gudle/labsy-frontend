@@ -1,10 +1,11 @@
-import { BaseItem } from "@/app/base-products/_types/api";
+
 import useSWR from "swr";
+import { BaseItem } from "../_types/api";
 
 export function useBaseProducts() {
   const { data, error, isLoading } = useSWR("/api/base-products", async () => {
-    const data: BaseItem[] = (await import("@/mocks/base-products.json"))
-      .default;
+    const data = (await import("@/mocks/base-products.json"))
+      .default as unknown as BaseItem[];
 
     return data || [];
   });
@@ -19,8 +20,8 @@ export function useBaseProduct(id: string) {
   const { data, error, isLoading } = useSWR(
     `/api/base-products/${id}`,
     async () => {
-      const data: BaseItem[] = (await import("@/mocks/base-products.json"))
-        .default;
+      const data = (await import("@/mocks/base-products.json"))
+        .default as unknown as BaseItem[];
 
       return data.find((item) => item.id === id) || null;
     }

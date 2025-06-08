@@ -1,6 +1,6 @@
 "use client";
 
-import { BaseItem } from "@/app/base-products/_types/api";
+import { BaseItem } from "@/app/(dashboard)/base-products/_types/api";
 import { ProductListItem } from "./_components/list-item";
 import { useBaseProducts } from "./_lib/api";
 

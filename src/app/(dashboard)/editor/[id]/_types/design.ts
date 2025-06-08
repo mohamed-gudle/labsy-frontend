@@ -1,4 +1,4 @@
-import { PrintableArea } from "./design";
+import { PrintableArea } from "@/app/(dashboard)/base-products/_types/api";
 
 // Design-specific types
 export interface DesignState {
@@ -18,12 +18,10 @@ export interface CanvasSize {
 }
 
 export interface DesignCanvasProps {
-  currentPrintArea: PrintableArea;
+  printArea: PrintableArea;
   selectedColor: string;
-  designStates: DesignState[];
-  addDesignState: (state: DesignState) => void;
-  updateDesignState: (index: number, state: DesignState) => void;
-  recenterDesignSignal: number;
+  designs: DesignState[];
+  onDesignUpdate: (index: number, design: DesignState) => void;
 }
 
 export interface SideMenuProps {
@@ -36,4 +34,4 @@ export interface SideMenuProps {
 }
 
 // Re-export PrintableArea for convenience
-export type { PrintableArea } from "@/app/base-products/_types/api";
+export type { PrintableArea } from "@/app/(dashboard)/base-products/_types/api";

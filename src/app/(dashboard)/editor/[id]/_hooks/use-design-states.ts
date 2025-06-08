@@ -1,48 +1,71 @@
 import { useState, useCallback } from 'react';
 import { DesignState, PrintableArea } from '../_types/design';
 
-
 export const useDesignStates = (printAreas: PrintableArea[] = []) => {
-  const [designStates, setDesignStates] = useState<Record<number, DesignState[]>>({});
+  // Store designs per print area - persists across print area switches
+  const [designsByPrintArea, setDesignsByPrintArea] = useState<Record<number, DesignState[]>>({});
   const [currentPrintAreaIndex, setCurrentPrintAreaIndex] = useState<number>(0);
 
-  const getCurrentDesignState = useCallback((): DesignState[] => {
-    const currentPrintArea = printAreas[currentPrintAreaIndex];
-    if (!currentPrintArea) return [];
-    return designStates[currentPrintAreaIndex] || [];
-  }, [printAreas, currentPrintAreaIndex, designStates]);
+  // Get designs for current print area
+  const currentDesigns = designsByPrintArea[currentPrintAreaIndex] || [];
 
-  const addDesignState = useCallback((newState: DesignState) => {
-    setDesignStates(prev => ({
+  const addDesign = useCallback((design: DesignState) => {
+    setDesignsByPrintArea(prev => ({
       ...prev,
-      [currentPrintAreaIndex]: [...(prev[currentPrintAreaIndex] || []), newState],
+      [currentPrintAreaIndex]: [...(prev[currentPrintAreaIndex] || []), design],
     }));
   }, [currentPrintAreaIndex]);
 
-  const updateDesignState = useCallback((index: number, newState: DesignState) => {
-    setDesignStates(prev => ({
+  const updateDesign = useCallback((index: number, updatedDesign: DesignState) => {
+    setDesignsByPrintArea(prev => ({
       ...prev,
-      [currentPrintAreaIndex]: prev[currentPrintAreaIndex].map((d, i) => i === index ? newState : d),
+      [currentPrintAreaIndex]: prev[currentPrintAreaIndex]?.map((design, i) =>
+        i === index ? updatedDesign : design
+      ) || [],
     }));
   }, [currentPrintAreaIndex]);
 
-  const handlePrintAreaChange = useCallback((newIndex: number) => {
-    // Deselect all designs before switching
-    if (designStates[currentPrintAreaIndex]) {
-      setDesignStates(prev => ({
-        ...prev,
-        [currentPrintAreaIndex]: prev[currentPrintAreaIndex].map(d => ({ ...d, isSelected: false })),
-      }));
-    }
+  const removeDesign = useCallback((index: number) => {
+    setDesignsByPrintArea(prev => ({
+      ...prev,
+      [currentPrintAreaIndex]: prev[currentPrintAreaIndex]?.filter((_, i) => i !== index) || [],
+    }));
+  }, [currentPrintAreaIndex]);
+
+  const switchPrintArea = useCallback((newIndex: number) => {
+    // Deselect all designs in current area before switching
+    setDesignsByPrintArea(prev => ({
+      ...prev,
+      [currentPrintAreaIndex]: prev[currentPrintAreaIndex]?.map(design => ({
+        ...design,
+        isSelected: false
+      })) || [],
+    }));
+
     setCurrentPrintAreaIndex(newIndex);
-  }, [currentPrintAreaIndex, designStates]);
+  }, [currentPrintAreaIndex]);
+
+  const clearCurrentArea = useCallback(() => {
+    setDesignsByPrintArea(prev => ({
+      ...prev,
+      [currentPrintAreaIndex]: [],
+    }));
+  }, [currentPrintAreaIndex]);
 
   return {
+    // Current state
     currentPrintAreaIndex,
-    designStates,
-    getCurrentDesignState,
-    addDesignState,
-    updateDesignState,
-    handlePrintAreaChange,
+    currentDesigns,
+    currentPrintArea: printAreas[currentPrintAreaIndex],
+
+    // Actions
+    addDesign,
+    updateDesign,
+    removeDesign,
+    switchPrintArea,
+    clearCurrentArea,
+
+    // All designs (for advanced use cases)
+    allDesigns: designsByPrintArea,
   };
 };

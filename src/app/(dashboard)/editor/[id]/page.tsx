@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { useBaseProduct } from "../../base-products/_lib/api";
 
@@ -15,29 +15,25 @@ export default function DesignPage() {
   const { id } = useParams<{ id: string }>();
   const { product, isLoading, error } = useBaseProduct(id);
 
-  // Color state
-  const [selectedColor, setSelectedColor] = useState<string>(
-    product?.colors?.[0] || "#FFFFFF"
-  );
-
-  // Design state management
+  // Design state management with persistence across print areas
   const {
     currentPrintAreaIndex,
-    getCurrentDesignState,
-    addDesignState,
-    updateDesignState,
-    handlePrintAreaChange,
+    currentDesigns,
+    currentPrintArea,
+    addDesign,
+    updateDesign,
+    switchPrintArea,
   } = useDesignStates(product?.print_areas);
 
-  // Recenter signal
-  const [recenterDesignSignal] = useState<number>(0);
+  // Color state
+  const [selectedColor, setSelectedColor] = useState<string>("#FFFFFF");
 
-  // Update selected color when product loads
-  useState(() => {
-    if (product?.colors?.[0] && selectedColor === "#FFFFFF") {
+  // Initialize color when product loads
+  useEffect(() => {
+    if (product?.colors?.[0]) {
       setSelectedColor(product.colors[0]);
     }
-  });
+  }, [product?.colors]);
 
   if (isLoading) {
     return (
@@ -69,15 +65,15 @@ export default function DesignPage() {
     );
   }
 
-  const currentPrintArea = product.print_areas[currentPrintAreaIndex];
-  const currentDesignStates = getCurrentDesignState();
-
   // Handler for when a design is selected from the DesignPicker
   const handleDesignSelect = (design: Design) => {
+    if (!currentPrintArea) return;
+
     // Center the design in the current print area
     const centerX = currentPrintArea.x + currentPrintArea.width / 2 - 50;
     const centerY = currentPrintArea.y + currentPrintArea.height / 2 - 50;
-    addDesignState({
+
+    addDesign({
       id: design.id,
       name: design.name,
       imageUrl: design.imageUrl,
@@ -99,19 +95,17 @@ export default function DesignPage() {
             currentPrintAreaIndex={currentPrintAreaIndex}
             selectedColor={selectedColor}
             onColorChange={setSelectedColor}
-            onPrintAreaChange={handlePrintAreaChange}
+            onPrintAreaChange={switchPrintArea}
             onDesignSelect={handleDesignSelect}
           />
         </div>
 
         {/* Design Canvas */}
         <DesignCanvas
-          currentPrintArea={currentPrintArea}
+          printArea={currentPrintArea}
           selectedColor={selectedColor}
-          designStates={currentDesignStates}
-          addDesignState={addDesignState}
-          updateDesignState={updateDesignState}
-          recenterDesignSignal={recenterDesignSignal}
+          designs={currentDesigns}
+          onDesignUpdate={updateDesign}
         />
       </div>
     </UploadedDesignsProvider>

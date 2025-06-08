@@ -10,14 +10,12 @@ import { DesignState, PrintableArea } from "../../_types/design";
 
 interface DesignImageLayerProps {
   printableArea: PrintableArea;
-  recenterDesignSignal: number;
   designState: DesignState;
   onDesignStateChange: (state: DesignState) => void;
 }
 
 export const DesignImageLayer = ({
   printableArea,
-  recenterDesignSignal,
   designState,
   onDesignStateChange,
 }: DesignImageLayerProps) => {
@@ -31,19 +29,6 @@ export const DesignImageLayer = ({
       transformerRef.current.getLayer()?.batchDraw();
     }
   }, [designState.isSelected]);
-
-  // Recenter when recenterDesignSignal changes
-  useEffect(() => {
-    const newPosition = {
-      x: printableArea.x + printableArea.width / 2 - 50,
-      y: printableArea.y + printableArea.height / 2 - 50,
-    };
-    onDesignStateChange({
-      ...designState,
-      position: newPosition,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [recenterDesignSignal, printableArea]);
 
   const handleTransformEnd = () => {
     if (!designImageRef.current) return;

@@ -26,18 +26,20 @@ import { DesignToolsDialogState } from "./types";
 const uploadSchema = z.object({
   file: z
     .instanceof(File)
+    .optional()
     .refine(
-      (file: File) =>
-        ["image/png", "image/jpeg", "image/svg+xml"].includes(file.type),
+      (file: File | undefined) =>
+        !file || ["image/png", "image/jpeg", "image/svg+xml"].includes(file.type),
       "Unsupported file format. Only PNG, JPEG, and SVG are allowed."
     )
-    .refine(async (file: File) => {
+    .refine(async (file: File | undefined) => {
+      if (!file) return true;
       const img = document.createElement("img");
       img.src = URL.createObjectURL(file);
       await new Promise((resolve) => (img.onload = resolve));
-      const dpi = (img.width / (file.size / 1024)) * 0.0254;
+      // Check minimum resolution requirements
       return img.width >= 3000 && img.height >= 3000;
-    }, "Image quality is too low. Minimum dimensions are 4000x4000px and 300 DPI."),
+    }, "Image quality is too low. Minimum dimensions are 3000x3000px."),
 });
 
 const DesignToolsDialog = () => {
@@ -112,7 +114,7 @@ const DesignToolsDialog = () => {
     fileInputRef.current?.click();
   };
 
-  const onSubmit = async (data: { file: File }): Promise<void> => {
+  const onSubmit = async (): Promise<void> => {
     setState((prev) => ({ ...prev, uploadStatus: "uploading" }));
     try {
       const design = await uploadDesign();
@@ -198,10 +200,9 @@ const DesignToolsDialog = () => {
                 onDrop={handleDrop}
                 className={`
                   relative border-2 border-dashed rounded-xl p-8 text-center transition-all cursor-pointer
-                  ${
-                    state.isDragging
-                      ? "border-blue-400 bg-blue-50"
-                      : "border-gray-300 hover:border-gray-400 hover:bg-gray-50"
+                  ${state.isDragging
+                    ? "border-blue-400 bg-blue-50"
+                    : "border-gray-300 hover:border-gray-400 hover:bg-gray-50"
                   }
                 `}
               >

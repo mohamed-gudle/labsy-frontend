@@ -10,17 +10,16 @@ import { useCanvasSize } from "../../_hooks/use-canva-size";
 
 
 export const DesignCanvas = ({
-  currentPrintArea,
+  printArea,
   selectedColor,
-  designStates,
-  updateDesignState,
-  recenterDesignSignal,
+  designs,
+  onDesignUpdate,
 }: DesignCanvasProps) => {
   const { stageContainerRef, stageSize, sceneWidth, sceneHeight } = useCanvasSize();
-  const [baseProductImage] = useImage(currentPrintArea?.mockup_url as string);
+  const [baseProductImage] = useImage(printArea?.mockup_url as string);
   const colorOverlayImage = useColorOverlay(baseProductImage, selectedColor, sceneWidth, sceneHeight);
 
-  if (!currentPrintArea) {
+  if (!printArea) {
     return (
       <div className="flex items-center justify-center h-full text-gray-500">
         No print area available
@@ -73,10 +72,10 @@ export const DesignCanvas = ({
             clipFunc={(ctx: Konva.Context) => {
               ctx.beginPath();
               ctx.rect(
-                currentPrintArea.x,
-                currentPrintArea.y,
-                currentPrintArea.width,
-                currentPrintArea.height
+                printArea.x,
+                printArea.y,
+                printArea.width,
+                printArea.height
               );
               ctx.closePath();
             }}
@@ -93,10 +92,10 @@ export const DesignCanvas = ({
 
             {/* Dashed border for printable area */}
             <Rect
-              x={currentPrintArea.x}
-              y={currentPrintArea.y}
-              width={currentPrintArea.width}
-              height={currentPrintArea.height}
+              x={printArea.x}
+              y={printArea.y}
+              width={printArea.width}
+              height={printArea.height}
               stroke="rgba(100, 100, 100, 0.5)"
               strokeWidth={2}
               dash={[5, 5]}
@@ -105,13 +104,12 @@ export const DesignCanvas = ({
             />
 
             {/* Design content */}
-            {designStates.map((state, i) => (
+            {designs.map((design, index) => (
               <DesignImageLayer
-                key={state.id || i}
-                printableArea={currentPrintArea}
-                recenterDesignSignal={recenterDesignSignal}
-                designState={state}
-                onDesignStateChange={(newState) => updateDesignState(i, newState)}
+                key={design.id || index}
+                printableArea={printArea}
+                designState={design}
+                onDesignStateChange={(updatedDesign) => onDesignUpdate(index, updatedDesign)}
               />
             ))}
           </Layer>
@@ -129,7 +127,7 @@ export const DesignCanvas = ({
 
         {/* Debug info */}
         <div className="absolute top-4 left-4 bg-black bg-opacity-50 text-white text-xs p-2 rounded">
-          Current: {currentPrintArea.name || 'Untitled Area'}
+          Current: {printArea.name || 'Untitled Area'}
         </div>
       </div>
     </div>

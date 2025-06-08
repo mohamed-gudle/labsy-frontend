@@ -5,7 +5,8 @@ import { MapPin, Clock } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import React from 'react';
-import { BaseItem } from '@/app/base-products/_types/api';
+import { BaseItem } from '../_types/api';
+
 
 
 

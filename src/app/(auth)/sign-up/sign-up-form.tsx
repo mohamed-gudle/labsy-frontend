@@ -90,9 +90,9 @@ export const SignUpForm = () => {
       <div className="mt-6">
         <p className="text-center text-gray-500 mb-2">or</p>
         <SocialAuthButtons
-          onGoogleClick={() => console.log('Google Sign-Up')}
-          onFacebookClick={() => console.log('Facebook Sign-Up')}
-          onYouTubeClick={() => console.log('YouTube Sign-Up')}
+          onGoogleClick={() => {/* TODO: Implement Google Sign-Up */ }}
+          onFacebookClick={() => {/* TODO: Implement Facebook Sign-Up */ }}
+          onYouTubeClick={() => {/* TODO: Implement YouTube Sign-Up */ }}
         />
       </div>
     </div>

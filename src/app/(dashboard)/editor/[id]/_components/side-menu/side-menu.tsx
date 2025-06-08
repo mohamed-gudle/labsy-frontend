@@ -1,6 +1,6 @@
 "use client";
 
-import { PrintableArea } from "@/app/base-products/_types/api";
+import { PrintableArea } from "@/app/(dashboard)/base-products/_types/api";
 import { useUploadedDesigns } from "./_utils/uploaded-designs-context";
 import { ColorPicker } from "./color-picker";
 import { DesignPicker } from "./design-picker";
