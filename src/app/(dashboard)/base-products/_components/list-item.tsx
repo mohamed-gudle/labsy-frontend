@@ -4,17 +4,12 @@ import Image from 'next/image';
 import { MapPin, Clock } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 import React from 'react';
 import { BaseItem } from '../_types/api';
 
-
-
-
-interface ProductListItemProps extends BaseItem {
-  onColorSelect?: (color: string) => void;
-}
-
-export const ProductListItem: React.FC<ProductListItemProps> = ({
+export const ProductListItem: React.FC<BaseItem> = ({
+  id,
   title,
   image,
   brand,
@@ -24,15 +19,7 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({
   available_sizes,
   print_areas,
   base_cost,
-  onColorSelect,
 }) => {
-  const [selectedColor, setSelectedColor] = React.useState(colors[0] || '');
-
-  const handleColorSelect = (color: string) => {
-    setSelectedColor(color);
-    onColorSelect?.(color);
-  };
-
   return (
     <Card className="w-full max-w-xs p-4 flex flex-col gap-3 rounded-xl shadow-sm border border-gray-100 bg-white">
       <div className="w-full aspect-[1/1] relative rounded-lg overflow-hidden bg-gray-50">
@@ -65,24 +52,26 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({
           <span className="text-xs">{fulfillmentTime}</span>
         </div>
       </div>
-      <div className="flex items-center gap-2 mt-2">
-        {colors.map((color) => (
-          <Button
-            key={color}
-            type="button"
-            size="icon"
-            variant="ghost"
-            className={`w-6 h-6 rounded-full border-2 ${selectedColor === color ? 'border-gray-900' : 'border-gray-200'
-              } p-0 flex items-center justify-center`}
-            style={{ backgroundColor: color }}
-            aria-label={`Select color ${color}`}
-            onClick={() => handleColorSelect(color)}
-          >
-            {selectedColor === color && (
-              <span className="block w-2.5 h-2.5 rounded-full border border-white bg-white" />
-            )}
+      {/* Available colors display */}
+      {colors && colors.length > 0 && (
+        <div className="flex items-center gap-2 mt-2">
+          <span className="text-xs text-gray-500">Colors:</span>
+          {colors.map((color, index) => (
+            <div
+              key={`${color}-${index}`}
+              className="w-4 h-4 rounded-full border border-gray-200"
+              style={{ backgroundColor: color }}
+              title={color}
+            />
+          ))}
+        </div>
+      )}
+      <div className="mt-4">
+        <Link href={`/editor/${id}`}>
+          <Button className="w-full">
+            Start Designing
           </Button>
-        ))}
+        </Link>
       </div>
       {/* Optionally show available sizes */}
       {available_sizes && Object.keys(available_sizes).length > 0 && (
