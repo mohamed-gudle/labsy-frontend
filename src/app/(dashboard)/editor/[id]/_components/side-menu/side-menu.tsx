@@ -15,7 +15,6 @@ export interface SideMenuProps {
   onPrintAreaChange: (index: number) => void;
 }
 
-
 export const SideMenu = ({
   colors,
   printAreas,
@@ -26,16 +25,16 @@ export const SideMenu = ({
 }: SideMenuProps) => {
   return (
     <div className="w-full h-full bg-white rounded-lg p-4 overflow-y-auto">
-      <h2 className="text-lg font-semibold mb-4">Design your product</h2>
-      <p className="text-sm text-gray-500 mb-6">Max file size of 50MB</p>
+      <div className="mb-6 flex flex-col gap-2">
+        <h2 className="text-md font-semibold">Design Editor</h2>
+        <DesignTools />
+      </div>
 
       <PrintAreaSelector
         printAreas={printAreas}
         currentPrintAreaIndex={currentPrintAreaIndex}
         onPrintAreaChange={onPrintAreaChange}
       />
-
-      <DesignTools />
 
       <ColorPicker
         colors={colors}
