@@ -2,6 +2,7 @@
 
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/context/auth-context";
+import { useSidebar } from "../_context/sidebar-context";
 
 import {
     ChevronRight,
@@ -122,8 +123,7 @@ export function Sidebar({
     menuItems = defaultMenuItems,
 }: Readonly<SidebarProps>) {
     const { user, signOut } = useAuth();
-    const [collapsed, setCollapsed] = React.useState(false);
-    const [mobileOpen, setMobileOpen] = React.useState(false);
+    const { collapsed, setCollapsed, mobileOpen, setMobileOpen } = useSidebar();
     const pathname = usePathname();
 
     const userMenu = (
@@ -208,7 +208,7 @@ export function Sidebar({
             {/* Desktop Sidebar */}
             <aside
                 className={cn(
-                    "hidden md:flex flex-col h-screen bg-white dark:bg-zinc-950 border-r transition-all duration-200",
+                    "hidden md:flex flex-col fixed left-0 top-0 h-screen bg-white dark:bg-zinc-950 border-r transition-all duration-200 z-10",
                     collapsed ? "w-20" : "w-64",
                     className
                 )}
@@ -219,7 +219,7 @@ export function Sidebar({
                         variant="ghost"
                         size="icon"
                         aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-                        onClick={() => setCollapsed((c) => !c)}
+                        onClick={() => setCollapsed(!collapsed)}
                     >
                         <span className="sr-only">Toggle sidebar</span>
                         <Menu className="h-5 w-5" />

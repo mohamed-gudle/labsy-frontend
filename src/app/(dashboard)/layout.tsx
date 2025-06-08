@@ -2,7 +2,8 @@
 
 import { AuthGuard } from "@/guards/auth-guard";
 import { AuthProvider } from "@/context/auth-context";
-import { Sidebar } from "@/app/(dashboard)/_components/sidebar";
+import { SidebarProvider } from "./_context/sidebar-context";
+import { DashboardContent } from "./_components/dashboard-content";
 import { Settings, User } from "lucide-react";
 import type { ReactNode } from "react";
 import React, { Suspense } from "react";
@@ -33,14 +34,11 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         <AuthProvider>
             <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><span>Loading...</span></div>}>
                 <AuthGuard mode="protected">
-                    <div className="flex min-h-screen bg-zinc-50 dark:bg-zinc-950">
-                        <Sidebar menuItems={menuItems} />
-                        <div className="flex-1 flex flex-col">
-                            <main className="flex-1 p-4 overflow-y-auto">
-                                {children}
-                            </main>
-                        </div>
-                    </div>
+                    <SidebarProvider>
+                        <DashboardContent menuItems={menuItems}>
+                            {children}
+                        </DashboardContent>
+                    </SidebarProvider>
                 </AuthGuard>
             </Suspense>
         </AuthProvider>
