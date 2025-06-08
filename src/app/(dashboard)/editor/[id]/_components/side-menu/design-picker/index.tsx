@@ -9,15 +9,10 @@ interface DesignPickerProps {
 }
 
 export const DesignPicker: React.FC<DesignPickerProps> = ({ designs, onDesignSelect }) => {
-    const handleDragStart = (e: React.DragEvent<HTMLDivElement>, design: Design) => {
-        e.dataTransfer.setData("application/json", JSON.stringify(design));
-        e.dataTransfer.effectAllowed = "copy";
-    };
-
     return (
         <div className="mb-8">
             <h3 className="text-sm font-medium mb-3">Select a design</h3>
-            <p className="text-xs text-gray-500 mb-3">Drag a design onto the canvas</p>
+            <p className="text-xs text-gray-500 mb-3">Click a design to add it to the canvas</p>
             {designs.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-24 text-gray-400">
                     <ImageIcon className="w-8 h-8 mb-2" />
@@ -28,9 +23,7 @@ export const DesignPicker: React.FC<DesignPickerProps> = ({ designs, onDesignSel
                     {designs.map((design) => (
                         <Card
                             key={design.id}
-                            className="p-1 flex items-center justify-center cursor-grab hover:shadow-lg transition border border-gray-200"
-                            draggable
-                            onDragStart={(e) => handleDragStart(e, design)}
+                            className="p-1 flex items-center justify-center cursor-pointer hover:shadow-lg transition border border-gray-200"
                             onClick={() => onDesignSelect?.(design)}
                             title={design.name}
                         >

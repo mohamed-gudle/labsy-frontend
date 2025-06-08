@@ -9,6 +9,7 @@ import { UploadedDesignsProvider } from "./_components/side-menu/_utils/uploaded
 import { DesignCanvas } from "./_components/design-canvas/design-canva";
 import { SideMenu } from "./_components/side-menu/side-menu";
 import { useDesignStates } from "./_hooks/use-design-states";
+import type { Design } from "./_components/side-menu/design-picker/types";
 
 export default function DesignPage() {
   const { id } = useParams<{ id: string }>();
@@ -71,6 +72,22 @@ export default function DesignPage() {
   const currentPrintArea = product.print_areas[currentPrintAreaIndex];
   const currentDesignStates = getCurrentDesignState();
 
+  // Handler for when a design is selected from the DesignPicker
+  const handleDesignSelect = (design: Design) => {
+    // Center the design in the current print area
+    const centerX = currentPrintArea.x + currentPrintArea.width / 2 - 50;
+    const centerY = currentPrintArea.y + currentPrintArea.height / 2 - 50;
+    addDesignState({
+      id: design.id,
+      name: design.name,
+      imageUrl: design.imageUrl,
+      position: { x: centerX, y: centerY },
+      scale: { x: 1, y: 1 },
+      rotation: 0,
+      isSelected: true,
+    });
+  };
+
   return (
     <UploadedDesignsProvider>
       <div className="flex flex-col lg:flex-row gap-6 w-full h-screen p-4 bg-gray-50">
@@ -83,6 +100,7 @@ export default function DesignPage() {
             selectedColor={selectedColor}
             onColorChange={setSelectedColor}
             onPrintAreaChange={handlePrintAreaChange}
+            onDesignSelect={handleDesignSelect}
           />
         </div>
 

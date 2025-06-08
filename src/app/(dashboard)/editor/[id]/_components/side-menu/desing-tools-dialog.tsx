@@ -52,26 +52,39 @@ const DesignToolsDialog = () => {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { control, handleSubmit, formState, setValue, trigger, reset } = useForm({
-    resolver: zodResolver(uploadSchema),
-  });
+  const { control, handleSubmit, formState, setValue, trigger, reset } =
+    useForm({
+      resolver: zodResolver(uploadSchema),
+    });
   const uploadDesign = useUploadDesign();
 
   const handleFile = async (file: File) => {
     const validationError = validateFile(file);
     if (validationError) {
-      setState((prev) => ({ ...prev, error: validationError, uploadStatus: "error" }));
+      setState((prev) => ({
+        ...prev,
+        error: validationError,
+        uploadStatus: "error",
+      }));
       setValue("file", undefined);
       await trigger("file");
       return;
     }
 
-    setState((prev) => ({ ...prev, error: "", preview: URL.createObjectURL(file), uploadStatus: "idle" }));
+    setState((prev) => ({
+      ...prev,
+      error: "",
+      preview: URL.createObjectURL(file),
+      uploadStatus: "idle",
+    }));
     setValue("file", file);
     await trigger("file");
   };
 
-  const handleDragEvents = (e: React.DragEvent<HTMLDivElement>, isDragging: boolean) => {
+  const handleDragEvents = (
+    e: React.DragEvent<HTMLDivElement>,
+    isDragging: boolean
+  ) => {
     e.preventDefault();
     e.stopPropagation();
     setState((prev) => ({ ...prev, isDragging }));
@@ -102,26 +115,36 @@ const DesignToolsDialog = () => {
   const onSubmit = async (data: { file: File }): Promise<void> => {
     setState((prev) => ({ ...prev, uploadStatus: "uploading" }));
     try {
-      await uploadDesign(data.file);
-      // Add to uploaded designs context
-      const url = state.preview || URL.createObjectURL(data.file);
-      addDesign({
-        id: Date.now().toString(),
-        name: data.file.name,
-        imageUrl: url,
-      });
+      const design = await uploadDesign();
+      addDesign(design);
       setState((prev) => ({ ...prev, uploadStatus: "success" }));
       setTimeout(() => {
-        setState({ isOpen: false, preview: null, isDragging: false, uploadStatus: "idle", error: "" });
+        setState({
+          isOpen: false,
+          preview: null,
+          isDragging: false,
+          uploadStatus: "idle",
+          error: "",
+        });
         if (fileInputRef.current) fileInputRef.current.value = "";
       }, 1500);
     } catch {
-      setState((prev) => ({ ...prev, uploadStatus: "error", error: "Upload failed. Please try again." }));
+      setState((prev) => ({
+        ...prev,
+        uploadStatus: "error",
+        error: "Upload failed. Please try again.",
+      }));
     }
   };
 
   const closeDialog = (): void => {
-    setState({ isOpen: false, preview: null, isDragging: false, uploadStatus: "idle", error: "" });
+    setState({
+      isOpen: false,
+      preview: null,
+      isDragging: false,
+      uploadStatus: "idle",
+      error: "",
+    });
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
@@ -175,7 +198,11 @@ const DesignToolsDialog = () => {
                 onDrop={handleDrop}
                 className={`
                   relative border-2 border-dashed rounded-xl p-8 text-center transition-all cursor-pointer
-                  ${state.isDragging ? "border-blue-400 bg-blue-50" : "border-gray-300 hover:border-gray-400 hover:bg-gray-50"}
+                  ${
+                    state.isDragging
+                      ? "border-blue-400 bg-blue-50"
+                      : "border-gray-300 hover:border-gray-400 hover:bg-gray-50"
+                  }
                 `}
               >
                 {!state.preview ? (
@@ -184,8 +211,12 @@ const DesignToolsDialog = () => {
                       <FileImage size={48} className="text-gray-400" />
                     </div>
                     <div>
-                      <p className="text-gray-600 font-medium">Drag & drop your design here</p>
-                      <p className="text-sm text-gray-500 mt-1">or click to browse files</p>
+                      <p className="text-gray-600 font-medium">
+                        Drag & drop your design here
+                      </p>
+                      <p className="text-sm text-gray-500 mt-1">
+                        or click to browse files
+                      </p>
                     </div>
                     <Button
                       type="button"
@@ -196,7 +227,9 @@ const DesignToolsDialog = () => {
                       <FolderOpen size={16} />
                       Browse Files
                     </Button>
-                    <p className="text-xs text-gray-500">PNG, JPEG, SVG • Min 4000x4000px • 300 DPI</p>
+                    <p className="text-xs text-gray-500">
+                      PNG, JPEG, SVG • Min 4000x4000px • 300 DPI
+                    </p>
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -209,7 +242,11 @@ const DesignToolsDialog = () => {
                       <button
                         type="button"
                         onClick={() => {
-                          setState((prev) => ({ ...prev, preview: null, uploadStatus: "idle" }));
+                          setState((prev) => ({
+                            ...prev,
+                            preview: null,
+                            uploadStatus: "idle",
+                          }));
                           setValue("file", undefined);
                           trigger("file");
                         }}
@@ -218,15 +255,22 @@ const DesignToolsDialog = () => {
                         <X size={14} />
                       </button>
                     </div>
-                    <p className="text-sm text-gray-600 font-medium">Ready to upload</p>
+                    <p className="text-sm text-gray-600 font-medium">
+                      Ready to upload
+                    </p>
                   </div>
                 )}
 
                 {state.isDragging && (
                   <div className="absolute inset-0 bg-blue-100/80 border-2 border-blue-400 border-dashed rounded-xl flex items-center justify-center">
                     <div className="text-center">
-                      <Upload size={32} className="text-blue-600 mx-auto mb-2" />
-                      <p className="text-blue-700 font-medium">Drop your file here</p>
+                      <Upload
+                        size={32}
+                        className="text-blue-600 mx-auto mb-2"
+                      />
+                      <p className="text-blue-700 font-medium">
+                        Drop your file here
+                      </p>
                     </div>
                   </div>
                 )}
@@ -236,7 +280,10 @@ const DesignToolsDialog = () => {
 
           {(state.error || formState.errors.file?.message) && (
             <div className="p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
-              <AlertCircle size={16} className="text-red-500 mt-0.5 flex-shrink-0" />
+              <AlertCircle
+                size={16}
+                className="text-red-500 mt-0.5 flex-shrink-0"
+              />
               <p className="text-sm text-red-700">
                 {state.error}
                 {state.error && formState.errors.file?.message && <br />}
@@ -248,13 +295,22 @@ const DesignToolsDialog = () => {
           {state.uploadStatus === "success" && (
             <div className="p-3 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2">
               <Check size={16} className="text-green-500" />
-              <p className="text-sm text-green-700">Design uploaded successfully!</p>
+              <p className="text-sm text-green-700">
+                Design uploaded successfully!
+              </p>
             </div>
           )}
 
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={closeDialog}>Cancel</Button>
-            <Button type="submit" disabled={!formState.isValid || state.uploadStatus === "uploading"}>
+            <Button type="button" variant="outline" onClick={closeDialog}>
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              disabled={
+                !formState.isValid || state.uploadStatus === "uploading"
+              }
+            >
               {state.uploadStatus === "uploading" ? (
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
@@ -272,4 +328,3 @@ const DesignToolsDialog = () => {
 };
 
 export { DesignToolsDialog };
-

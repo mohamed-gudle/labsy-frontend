@@ -6,6 +6,7 @@ import { ColorPicker } from "./color-picker";
 import { DesignPicker } from "./design-picker";
 import { DesignTools } from "./design-tools";
 import { PrintAreaSelector } from "./print-area-selector";
+import type { Design } from "./design-picker/types";
 
 export interface SideMenuProps {
   colors: string[];
@@ -14,6 +15,7 @@ export interface SideMenuProps {
   selectedColor: string;
   onColorChange: (color: string) => void;
   onPrintAreaChange: (index: number) => void;
+  onDesignSelect: (design: Design) => void;
 }
 
 export const SideMenu = ({
@@ -23,6 +25,7 @@ export const SideMenu = ({
   selectedColor,
   onColorChange,
   onPrintAreaChange,
+  onDesignSelect,
 }: SideMenuProps) => {
   const { designs: uploadedDesigns } = useUploadedDesigns();
 
@@ -45,7 +48,10 @@ export const SideMenu = ({
         onColorChange={onColorChange}
       />
 
-      <DesignPicker designs={uploadedDesigns} />
+      <DesignPicker
+        designs={uploadedDesigns}
+        onDesignSelect={onDesignSelect}
+      />
     </div>
   );
 };

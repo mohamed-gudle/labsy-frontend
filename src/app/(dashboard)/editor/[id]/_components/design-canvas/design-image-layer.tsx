@@ -42,7 +42,8 @@ export const DesignImageLayer = ({
       ...designState,
       position: newPosition,
     });
-  }, [recenterDesignSignal, printableArea, designState, onDesignStateChange]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [recenterDesignSignal, printableArea]);
 
   const handleTransformEnd = () => {
     if (!designImageRef.current) return;
