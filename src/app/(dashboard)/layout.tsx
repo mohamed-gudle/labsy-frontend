@@ -18,13 +18,13 @@ const menuItems: Array<{
     icon?: ReactNode;
     children?: Array<{ label: string; href: string; icon?: ReactNode }>;
 }> = [
-        { label: "Example", href: "/dashboard/example", icon: <User /> },
+        { label: "Base Products", href: "/base-products", icon: <User /> },
         {
-            label: "More",
-            icon: <Settings />, // Example icon
+            label: "Admin",
+            icon: <Settings />,
             children: [
-                { label: "Subitem 1", href: "/dashboard/more/subitem1", icon: <User /> },
-                { label: "Subitem 2", href: "/dashboard/more/subitem2", icon: <Settings /> },
+                { label: "Add Product", href: "/admin/products/new", icon: <User /> },
+                { label: "Manage Products", href: "/admin/products", icon: <Settings /> },
             ],
         },
     ];
