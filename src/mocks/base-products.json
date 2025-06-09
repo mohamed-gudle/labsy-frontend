@@ -19,7 +19,7 @@
         "y": 100,
         "width": 200,
         "height": 200,
-        "mockup_url": "/mocks/REG_FIT_TEES/FRONT_SS.png",
+        "mockup_url": "/mock/tshirt-front.png",
         "dpi": 300,
         "printable": true,
         "description": "Front print area for chest designs."
