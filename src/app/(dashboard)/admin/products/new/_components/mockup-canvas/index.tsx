@@ -37,6 +37,8 @@ export const MockupCanvas: React.FC<MockupCanvasProps> = ({
   const stageRef = useRef<Konva.Stage>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const objectUrlRef = useRef<string | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [canvasSize, setCanvasSize] = useState({ width: 600, height: 500 });
 
   // Clean up object URL on unmount or when file changes
   useEffect(() => {
@@ -48,11 +50,23 @@ export const MockupCanvas: React.FC<MockupCanvasProps> = ({
     };
   }, []);
 
-  // Canvas dimensions
-  const canvasWidth = 600;
-  const canvasHeight = 500;
-  const maxImageWidth = canvasWidth - 40;
-  const maxImageHeight = canvasHeight - 40;
+  // Responsive canvas size
+  useEffect(() => {
+    const updateSize = () => {
+      if (containerRef.current) {
+        const width = Math.min(containerRef.current.offsetWidth, 900); // max width
+        const height = Math.round(width * 5 / 6); // keep aspect ratio ~6:5
+        setCanvasSize({ width, height });
+      }
+    };
+    updateSize();
+    const ro = new window.ResizeObserver(updateSize);
+    if (containerRef.current) ro.observe(containerRef.current);
+    return () => ro.disconnect();
+  }, []);
+
+  const maxImageWidth = canvasSize.width - 40;
+  const maxImageHeight = canvasSize.height - 40;
 
   // Calculate image display size and position
   const getImageDisplayInfo = useCallback(() => {
@@ -68,8 +82,8 @@ export const MockupCanvas: React.FC<MockupCanvasProps> = ({
       displayWidth = maxImageHeight * aspectRatio;
     }
 
-    const x = (canvasWidth - displayWidth) / 2;
-    const y = (canvasHeight - displayHeight) / 2;
+    const x = (canvasSize.width - displayWidth) / 2;
+    const y = (canvasSize.height - displayHeight) / 2;
 
     return {
       x,
@@ -79,7 +93,7 @@ export const MockupCanvas: React.FC<MockupCanvasProps> = ({
       scaleX: displayWidth / mockupImage.width,
       scaleY: displayHeight / mockupImage.height,
     };
-  }, [mockupImage, maxImageWidth, maxImageHeight]);
+  }, [mockupImage, maxImageWidth, maxImageHeight, canvasSize.width, canvasSize.height]);
 
   const imageDisplayInfo = getImageDisplayInfo();
 
@@ -197,11 +211,11 @@ export const MockupCanvas: React.FC<MockupCanvasProps> = ({
     const startY = imageDisplayInfo.y % gridSize;
 
     // Vertical lines
-    for (let i = startX; i < canvasWidth; i += gridSize) {
+    for (let i = startX; i < canvasSize.width; i += gridSize) {
       lines.push(
         <Line
           key={`v-${i}`}
-          points={[i, 0, i, canvasHeight]}
+          points={[i, 0, i, canvasSize.height]}
           stroke="rgba(0,0,0,0.1)"
           strokeWidth={1}
         />
@@ -209,11 +223,11 @@ export const MockupCanvas: React.FC<MockupCanvasProps> = ({
     }
 
     // Horizontal lines
-    for (let i = startY; i < canvasHeight; i += gridSize) {
+    for (let i = startY; i < canvasSize.height; i += gridSize) {
       lines.push(
         <Line
           key={`h-${i}`}
-          points={[0, i, canvasWidth, i]}
+          points={[0, i, canvasSize.width, i]}
           stroke="rgba(0,0,0,0.1)"
           strokeWidth={1}
         />
@@ -221,7 +235,7 @@ export const MockupCanvas: React.FC<MockupCanvasProps> = ({
     }
 
     return lines;
-  }, [gridVisible, zoom, imageDisplayInfo]);
+  }, [gridVisible, zoom, imageDisplayInfo, canvasSize.width, canvasSize.height]);
 
   const renderSelection = useCallback(() => {
     if (!imageDisplayInfo) return null;
@@ -271,17 +285,17 @@ export const MockupCanvas: React.FC<MockupCanvasProps> = ({
         </div>
 
         {/* Canvas */}
-        <div className="relative">
+        <div ref={containerRef} className="relative w-full">
           {mockupImage ? (
-            <div className="border border-gray-300 rounded-lg overflow-hidden">
+            <div className="border border-gray-300 rounded-lg overflow-hidden w-full" style={{ height: canvasSize.height }}>
               <Stage
                 ref={stageRef}
-                width={canvasWidth}
-                height={canvasHeight}
+                width={canvasSize.width}
+                height={canvasSize.height}
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
-                style={{ backgroundColor: "#f8f9fa" }}
+                style={{ backgroundColor: "#f8f9fa", width: "100%", height: "100%" }}
               >
                 {/* Grid Layer */}
                 <Layer>
@@ -309,8 +323,8 @@ export const MockupCanvas: React.FC<MockupCanvasProps> = ({
             </div>
           ) : (
             <div
-              className="border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 flex items-center justify-center"
-              style={{ width: canvasWidth, height: canvasHeight }}
+              className="border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 flex items-center justify-center w-full"
+              style={{ width: "100%", height: canvasSize.height }}
             >
               <div className="text-center">
                 <Upload size={48} className="mx-auto text-gray-400 mb-4" />
