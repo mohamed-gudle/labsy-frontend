@@ -93,23 +93,37 @@ export default function NewProductPage() {
             const Icon = step.icon;
             const isActive = state.currentStep === step.key;
             const isCompleted = index < currentStepIndex;
-            
+            let circleClass = '';
+            if (isActive) {
+              circleClass = 'bg-blue-600 border-blue-600 text-white';
+            } else if (isCompleted) {
+              circleClass = 'bg-green-600 border-green-600 text-white';
+            } else {
+              circleClass = 'bg-gray-100 border-gray-300 text-gray-400';
+            }
+            let textClass = '';
+            if (isActive) {
+              textClass = 'text-blue-600';
+            } else if (isCompleted) {
+              textClass = 'text-green-600';
+            } else {
+              textClass = 'text-gray-400';
+            }
+            // Allow navigation to current or previous steps only
+            const isStepEnabled = index <= currentStepIndex;
             return (
-              <div key={step.key} className="flex items-center">
-                <div className={`
-                  flex items-center justify-center w-10 h-10 rounded-full border-2 transition-colors
-                  ${isActive 
-                    ? 'bg-blue-600 border-blue-600 text-white' 
-                    : isCompleted 
-                      ? 'bg-green-600 border-green-600 text-white'
-                      : 'bg-gray-100 border-gray-300 text-gray-400'
-                  }
-                `}>
+              <button
+                key={step.key}
+                type="button"
+                onClick={() => isStepEnabled && goToStep(step.key)}
+                disabled={!isStepEnabled}
+                className={`flex items-center bg-transparent border-none outline-none focus:ring-2 focus:ring-blue-400 disabled:opacity-60 disabled:cursor-not-allowed`}
+                style={{ cursor: isStepEnabled ? 'pointer' : 'not-allowed' }}
+              >
+                <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 transition-colors ${circleClass}`}>
                   <Icon size={20} />
                 </div>
-                <span className={`ml-2 text-sm font-medium ${
-                  isActive ? 'text-blue-600' : isCompleted ? 'text-green-600' : 'text-gray-400'
-                }`}>
+                <span className={`ml-2 text-sm font-medium ${textClass}`}>
                   {step.label}
                 </span>
                 {index < STEPS.length - 1 && (
@@ -117,162 +131,96 @@ export default function NewProductPage() {
                     index < currentStepIndex ? 'bg-green-600' : 'bg-gray-300'
                   }`} />
                 )}
-              </div>
+              </button>
             );
           })}
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        {/* Main Form Area */}
-        <div className="lg:col-span-3">
-          <Card className="p-6">
-            {state.currentStep === 'basic' && (
-              <BasicProductForm
-                data={state.productData}
-                errors={state.validationErrors}
-                onChange={updateProductData}
-                onValidationError={setValidationErrors}
-              />
-            )}
+      {/* Main Content - make form full width, remove sidebar */}
+      <div className="w-full">
+        <Card className="p-6 w-full">
+          {state.currentStep === 'basic' && (
+            <BasicProductForm
+              data={state.productData}
+              errors={state.validationErrors}
+              onChange={updateProductData}
+              onValidationError={setValidationErrors}
+            />
+          )}
 
-            {state.currentStep === 'print-areas' && (
-              <PrintAreaManager
-                productData={state.productData}
-                currentEditingIndex={state.currentEditingAreaIndex}
-                onChange={updateProductData}
-                onEditingIndexChange={(index) => 
-                  setState(prev => ({ ...prev, currentEditingAreaIndex: index }))
-                }
-                errors={state.validationErrors}
-                onValidationError={setValidationErrors}
-              />
-            )}            {state.currentStep === 'review' && state.productData && (
-              <ReviewAndSubmit
-                data={state.productData as CompleteProductFormData}
-                onSubmit={async () => {
-                  setState(prev => ({ ...prev, isSubmitting: true }));
-                  
-                  // Convert UI data to schema format
-                  const schemaData: CompleteProductFormData = {
-                    ...state.productData,
-                    print_areas: state.productData.print_areas?.map(area => ({
-                      name: area.name,
-                      mockup_file: area.mockup_file,
-                      x: area.x,
-                      y: area.y,
-                      width: area.width,
-                      height: area.height,
-                      dpi: area.dpi,
-                      printable: area.printable,
-                      description: area.description
-                    })) || []
-                  } as CompleteProductFormData;
-                  
-                  // Validate complete product data
-                  const validation = completeProductSchema.safeParse(schemaData);
-                  if (!validation.success) {
-                    console.error('Validation failed:', validation.error);
-                    setState(prev => ({ ...prev, isSubmitting: false }));
-                    return;
-                  }
-                  
-                  // Add actual upload logic here
-                  await new Promise(resolve => setTimeout(resolve, 2000));
-                  
+          {state.currentStep === 'print-areas' && (
+            <PrintAreaManager
+              productData={state.productData}
+              currentEditingIndex={state.currentEditingAreaIndex}
+              onChange={updateProductData}
+              onEditingIndexChange={(index) => 
+                setState(prev => ({ ...prev, currentEditingAreaIndex: index }))
+              }
+              errors={state.validationErrors}
+              onValidationError={setValidationErrors}
+            />
+          )}
+          {state.currentStep === 'review' && state.productData && (
+            <ReviewAndSubmit
+              data={state.productData as CompleteProductFormData}
+              onSubmit={async () => {
+                setState(prev => ({ ...prev, isSubmitting: true }));
+                // Convert UI data to schema format
+                const schemaData: CompleteProductFormData = {
+                  ...state.productData,
+                  print_areas: state.productData.print_areas?.map(area => ({
+                    name: area.name,
+                    mockup_file: area.mockup_file,
+                    x: area.x,
+                    y: area.y,
+                    width: area.width,
+                    height: area.height,
+                    dpi: area.dpi,
+                    printable: area.printable,
+                    description: area.description
+                  })) || []
+                } as CompleteProductFormData;
+                // Validate complete product data
+                const validation = completeProductSchema.safeParse(schemaData);
+                if (!validation.success) {
+                  console.error('Validation failed:', validation.error);
                   setState(prev => ({ ...prev, isSubmitting: false }));
-                  console.log('Product submitted successfully!');
-                }}
-                onBack={goToPreviousStep}
-              />
+                  return;
+                }
+                // Add actual upload logic here
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                setState(prev => ({ ...prev, isSubmitting: false }));
+                console.log('Product submitted successfully!');
+              }}
+              onBack={goToPreviousStep}
+            />
+          )}
+
+          {/* Navigation Buttons (moved below form for full width) */}
+          <div className="flex flex-col md:flex-row gap-2 mt-8">
+            {state.currentStep !== 'basic' && (
+              <Button
+                variant="outline"
+                onClick={goToPreviousStep}
+                className="w-full md:w-auto"
+              >
+                <ChevronLeft size={16} className="mr-2" />
+                Previous
+              </Button>
             )}
-          </Card>
-        </div>
-
-        {/* Sidebar */}
-        <div className="lg:col-span-1">
-          <Card className="p-6 sticky top-6">
-            <h3 className="text-lg font-semibold mb-4">Progress</h3>
-            
-            {/* Step Navigation */}
-            <div className="space-y-3 mb-6">
-              {STEPS.map((step, index) => {
-                const Icon = step.icon;
-                const isActive = state.currentStep === step.key;
-                const isCompleted = index < currentStepIndex;
-                
-                return (
-                  <button
-                    key={step.key}
-                    onClick={() => goToStep(step.key)}
-                    disabled={index > currentStepIndex + 1}
-                    className={`
-                      w-full flex items-center p-3 rounded-lg text-left transition-colors
-                      ${isActive 
-                        ? 'bg-blue-50 text-blue-700 border border-blue-200' 
-                        : isCompleted
-                          ? 'bg-green-50 text-green-700 border border-green-200 hover:bg-green-100'
-                          : 'bg-gray-50 text-gray-500 border border-gray-200 hover:bg-gray-100'
-                      }
-                      ${index > currentStepIndex + 1 ? 'opacity-50 cursor-not-allowed' : ''}
-                    `}
-                  >
-                    <Icon size={16} className="mr-3" />
-                    <span className="text-sm font-medium">{step.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Navigation Buttons */}
-            <div className="space-y-3">
-              {state.currentStep !== 'basic' && (
-                <Button
-                  variant="outline"
-                  onClick={goToPreviousStep}
-                  className="w-full"
-                >
-                  <ChevronLeft size={16} className="mr-2" />
-                  Previous
-                </Button>
-              )}
-
-              {state.currentStep !== 'review' && (
-                <Button
-                  onClick={goToNextStep}
-                  disabled={!canGoNext()}
-                  className="w-full"
-                >
-                  Next
-                  <ChevronRight size={16} className="ml-2" />
-                </Button>
-              )}
-            </div>
-
-            {/* Product Summary */}
-            {state.productData.title && (
-              <div className="mt-6 pt-6 border-t border-gray-200">
-                <h4 className="text-sm font-semibold text-gray-900 mb-3">Product Summary</h4>
-                <div className="space-y-2 text-sm text-gray-600">
-                  <div>
-                    <span className="font-medium">Title:</span> {state.productData.title}
-                  </div>
-                  {state.productData.brand && (
-                    <div>
-                      <span className="font-medium">Brand:</span> {state.productData.brand}
-                    </div>
-                  )}
-                  {state.productData.print_areas && (
-                    <div>
-                      <span className="font-medium">Print Areas:</span> {state.productData.print_areas.length}
-                    </div>
-                  )}
-                </div>
-              </div>
+            {state.currentStep !== 'review' && (
+              <Button
+                onClick={goToNextStep}
+                disabled={!canGoNext()}
+                className="w-full md:w-auto"
+              >
+                Next
+                <ChevronRight size={16} className="ml-2" />
+              </Button>
             )}
-          </Card>
-        </div>
+          </div>
+        </Card>
       </div>
     </div>
   );
