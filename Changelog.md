@@ -24,6 +24,10 @@
 - Updated `src/app/auth/components/social-auth-buttons.tsx` to use SVG icons from `public/icons/` (Google, YouTube, Facebook) via Next.js Image component instead of lucide-react icons.
 - Wrapped `/dashboard` and `/auth` layouts in AuthGuard and Suspense for protected/public route enforcement.
 - Fixed color initialization logic to use proper `useEffect` instead of incorrect `useState` usage.
+- Improved print area configuration step layout in `src/app/(dashboard)/admin/products/new/page.tsx`:
+  - Now uses a responsive two-column layout: print area list/properties sidebar on the left, canvas on the right (desktop); stacks vertically on mobile.
+  - Canvas area is given more space for better usability.
+  - Ensures print area configuration is more user-friendly and visually balanced across screen sizes.
 
 ### Fixed
 - Resolved `Module not found: Can't resolve 'canvas'` error from `konva`/`react-konva` in Next.js by aliasing 'canvas' to an empty module in `next.config.ts`.

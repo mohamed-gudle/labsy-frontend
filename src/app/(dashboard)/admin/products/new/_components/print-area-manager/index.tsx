@@ -91,7 +91,7 @@ export const PrintAreaManager: React.FC<PrintAreaManagerProps> = ({
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-6 gap-8 min-h-[600px]">
         {/* Left: Print Areas List + Properties */}
-        <div className="lg:col-span-1 flex flex-col gap-6">
+        <div className="lg:col-span-2 flex flex-col gap-6">
           <Card className="p-4">
             <h3 className="text-lg font-semibold mb-4">Print Areas ({printAreas.length})</h3>
             <PrintAreaList
@@ -123,7 +123,7 @@ export const PrintAreaManager: React.FC<PrintAreaManagerProps> = ({
         </div>
 
         {/* Center: Main Canvas Area (dominant) */}
-        <div className="lg:col-span-5 flex items-center justify-center">
+        <div className="lg:col-span-4 flex items-start justify-center">
           <div className="w-full max-w-4xl">
             {currentPrintArea ? (
               <MockupCanvas

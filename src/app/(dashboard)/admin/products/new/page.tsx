@@ -65,10 +65,10 @@ export default function NewProductPage() {
   const canGoNext = () => {
     switch (state.currentStep) {
       case 'basic':
-        return state.productData.title && 
-               state.productData.description && 
-               state.productData.brand &&
-               state.productData.main_image;
+        return state.productData.title &&
+          state.productData.description &&
+          state.productData.brand &&
+          state.productData.main_image;
       case 'print-areas':
         return state.productData.print_areas && state.productData.print_areas.length > 0;
       default:
@@ -127,9 +127,8 @@ export default function NewProductPage() {
                   {step.label}
                 </span>
                 {index < STEPS.length - 1 && (
-                  <div className={`w-12 h-px mx-4 ${
-                    index < currentStepIndex ? 'bg-green-600' : 'bg-gray-300'
-                  }`} />
+                  <div className={`w-12 h-px mx-4 ${index < currentStepIndex ? 'bg-green-600' : 'bg-gray-300'
+                    }`} />
                 )}
               </button>
             );
@@ -150,13 +149,12 @@ export default function NewProductPage() {
           )}
 
           {state.currentStep === 'print-areas' && (
+            // Use PrintAreaManager for the entire step (it already handles sidebar + canvas responsively)
             <PrintAreaManager
               productData={state.productData}
               currentEditingIndex={state.currentEditingAreaIndex}
               onChange={updateProductData}
-              onEditingIndexChange={(index) => 
-                setState(prev => ({ ...prev, currentEditingAreaIndex: index }))
-              }
+              onEditingIndexChange={(index) => setState(prev => ({ ...prev, currentEditingAreaIndex: index }))}
               errors={state.validationErrors}
               onValidationError={setValidationErrors}
             />
