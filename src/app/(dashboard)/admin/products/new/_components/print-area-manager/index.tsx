@@ -39,7 +39,7 @@ export const PrintAreaManager: React.FC<PrintAreaManagerProps> = ({
       printable: true,
       description: "",
       mockup_file: new File([], "placeholder.jpg", { type: "image/jpeg" }),
-    };    const newPrintAreas = [...printAreas, newPrintArea];
+    }; const newPrintAreas = [...printAreas, newPrintArea];
     onChange({ print_areas: newPrintAreas });
     onEditingIndexChange(newPrintAreas.length - 1);
   };
@@ -53,7 +53,7 @@ export const PrintAreaManager: React.FC<PrintAreaManagerProps> = ({
   const deletePrintArea = (index: number) => {
     const newPrintAreas = printAreas.filter((_, i) => i !== index);
     onChange({ print_areas: newPrintAreas });
-    
+
     // Adjust editing index
     if (currentEditingIndex >= index) {
       const newIndex = Math.max(0, currentEditingIndex - 1);
@@ -88,9 +88,10 @@ export const PrintAreaManager: React.FC<PrintAreaManagerProps> = ({
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Print Areas List */}
-        <div className="lg:col-span-1">
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-6 gap-8 min-h-[600px]">
+        {/* Left: Print Areas List + Properties */}
+        <div className="lg:col-span-1 flex flex-col gap-6">
           <Card className="p-4">
             <h3 className="text-lg font-semibold mb-4">Print Areas ({printAreas.length})</h3>
             <PrintAreaList
@@ -102,51 +103,58 @@ export const PrintAreaManager: React.FC<PrintAreaManagerProps> = ({
               onDuplicate={duplicatePrintArea}
             />
           </Card>
+          <Card className="p-4">
+            {currentPrintArea ? (
+              <PrintAreaSidebar
+                printArea={currentPrintArea}
+                onUpdate={(updates) => updatePrintArea(currentEditingIndex, updates)}
+                errors={errors}
+                onValidationError={onValidationError}
+              />
+            ) : (
+              <>
+                <h3 className="text-lg font-semibold mb-4">Print Area Details</h3>
+                <p className="text-gray-500 text-sm">
+                  Select a print area to view and edit its properties
+                </p>
+              </>
+            )}
+          </Card>
         </div>
 
-        {/* Main Canvas Area */}
-        <div className="lg:col-span-2">
-          {currentPrintArea ? (
-            <MockupCanvas
-              printArea={currentPrintArea}
-              onPrintAreaUpdate={(updates) => 
-                updatePrintArea(currentEditingIndex, updates)
-              }
-              errors={errors}
-              onValidationError={onValidationError}
-            />
-          ) : (
-            <Card className="p-8 text-center">
-              <div className="text-gray-500">
-                <Plus size={48} className="mx-auto mb-4 text-gray-300" />
-                <h3 className="text-lg font-semibold mb-2">No Print Area Selected</h3>
-                <p className="mb-4">Select a print area from the list or add a new one to get started</p>
-                <Button onClick={addNewPrintArea} variant="outline">
-                  Add Your First Print Area
-                </Button>
-              </div>
-            </Card>
-          )}
+        {/* Center: Main Canvas Area (dominant) */}
+        <div className="lg:col-span-5 flex items-center justify-center">
+          <div className="w-full max-w-4xl">
+            {currentPrintArea ? (
+              <MockupCanvas
+                printArea={currentPrintArea}
+                onPrintAreaUpdate={(updates) =>
+                  updatePrintArea(currentEditingIndex, updates)
+                }
+                errors={errors}
+                onValidationError={onValidationError}
+              />
+            ) : (
+              <Card className="p-8 text-center">
+                <div className="text-gray-500">
+                  <Plus size={48} className="mx-auto mb-4 text-gray-300" />
+                  <h3 className="text-lg font-semibold mb-2">No Print Area Selected</h3>
+                  <p className="mb-4">Select a print area from the list or add a new one to get started</p>
+                  <Button onClick={addNewPrintArea} variant="outline">
+                    Add Your First Print Area
+                  </Button>
+                </div>
+              </Card>
+            )}
+          </div>
         </div>
+      </div>
 
-        {/* Print Area Details Sidebar */}
-        <div className="lg:col-span-1">
-          {currentPrintArea ? (
-            <PrintAreaSidebar
-              printArea={currentPrintArea}
-              onUpdate={(updates) => updatePrintArea(currentEditingIndex, updates)}
-              errors={errors}
-              onValidationError={onValidationError}
-            />
-          ) : (
-            <Card className="p-4">
-              <h3 className="text-lg font-semibold mb-4">Print Area Details</h3>
-              <p className="text-gray-500 text-sm">
-                Select a print area to view and edit its properties
-              </p>
-            </Card>
-          )}
-        </div>
+      {/* Navigation Buttons at Bottom */}
+      <div className="flex justify-end gap-4 pt-6 border-t mt-8">
+        {/* You may want to pass these as props or context, or implement them here if available */}
+        {/* <Button variant="outline">Previous</Button>
+        <Button>Next</Button> */}
       </div>
     </div>
   );

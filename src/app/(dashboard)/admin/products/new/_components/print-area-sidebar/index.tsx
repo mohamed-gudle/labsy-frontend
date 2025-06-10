@@ -12,8 +12,6 @@ import { PrintableAreaInput } from '../../_types/admin-new';
 interface PrintAreaSidebarProps {
   printArea: PrintableAreaInput;
   onUpdate: (updates: Partial<PrintableAreaInput>) => void;
-  errors: Record<string, string>;
-  onValidationError: (errors: Record<string, string>) => void;
 }
 
 export function PrintAreaSidebar({
@@ -27,6 +25,7 @@ export function PrintAreaSidebar({
   const updateField = (field: keyof PrintableAreaInput, value: string | number | boolean) => {
     onUpdate({ [field]: value });
   };
+  
   const updateCoordinate = (coord: 'x' | 'y' | 'width' | 'height', value: string) => {
     const numValue = parseFloat(value) || 0;
     const pixelValue = mmToPixel(numValue);
@@ -34,16 +33,16 @@ export function PrintAreaSidebar({
   };
 
   return (
-    <Card className="w-80 h-fit">
+    <Card className="w-full h-fit max-w-sm min-w-0">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-sm">Print Area Properties</CardTitle>
-          <Badge variant="secondary" className="text-xs">
+          <CardTitle className="text-sm truncate">Print Area Properties</CardTitle>
+          <Badge variant="secondary" className="text-xs shrink-0 ml-2">
             {printArea.name}
           </Badge>
         </div>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 overflow-hidden">
         {/* Basic Info */}
         <div className="space-y-3">
           <div>
@@ -81,7 +80,7 @@ export function PrintAreaSidebar({
           </h4>
           
           <div className="grid grid-cols-2 gap-2">
-            <div>
+            <div className="min-w-0">
               <Label htmlFor="area-x" className="text-xs">X Position</Label>
               <Input
                 id="area-x"
@@ -92,7 +91,7 @@ export function PrintAreaSidebar({
                 step="0.1"
               />
             </div>
-            <div>
+            <div className="min-w-0">
               <Label htmlFor="area-y" className="text-xs">Y Position</Label>
               <Input
                 id="area-y"
@@ -106,7 +105,7 @@ export function PrintAreaSidebar({
           </div>
 
           <div className="grid grid-cols-2 gap-2">
-            <div>
+            <div className="min-w-0">
               <Label htmlFor="area-width" className="text-xs">Width</Label>
               <Input
                 id="area-width"
@@ -117,7 +116,7 @@ export function PrintAreaSidebar({
                 step="0.1"
               />
             </div>
-            <div>
+            <div className="min-w-0">
               <Label htmlFor="area-height" className="text-xs">Height</Label>
               <Input
                 id="area-height"
