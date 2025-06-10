@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback, useRef, useEffect } from "react";
+import React, { useState, useCallback, useRef, useEffect, useMemo } from "react";
 import { Stage, Layer, Image as KonvaImage, Rect, Line } from "react-konva";
 import useImage from "use-image";
 import { PrintableAreaInput, PrintAreaSelection, MockupImageInfo } from "../../_types/admin-new";
@@ -36,19 +36,8 @@ export const MockupCanvas: React.FC<MockupCanvasProps> = ({
 
   const stageRef = useRef<Konva.Stage>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const objectUrlRef = useRef<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [canvasSize, setCanvasSize] = useState({ width: 600, height: 500 });
-
-  // Clean up object URL on unmount or when file changes
-  useEffect(() => {
-    return () => {
-      if (objectUrlRef.current) {
-        URL.revokeObjectURL(objectUrlRef.current);
-        objectUrlRef.current = null;
-      }
-    };
-  }, []);
 
   // Responsive canvas size
   useEffect(() => {
@@ -95,7 +84,7 @@ export const MockupCanvas: React.FC<MockupCanvasProps> = ({
     };
   }, [mockupImage, maxImageWidth, maxImageHeight, canvasSize.width, canvasSize.height]);
 
-  const imageDisplayInfo = getImageDisplayInfo();
+  const imageDisplayInfo = useMemo(() => getImageDisplayInfo(), [getImageDisplayInfo]);
 
   // Update image info when mockup changes
   useEffect(() => {
@@ -105,10 +94,10 @@ export const MockupCanvas: React.FC<MockupCanvasProps> = ({
         height: imageDisplayInfo.height,
         naturalWidth: mockupImage.width,
         naturalHeight: mockupImage.height,
-        url: printArea.mockup_file ? URL.createObjectURL(printArea.mockup_file) : printArea.mockup_url || "",
+        url: printArea.mockup_url || "",
       });
     }
-  }, [mockupImage, imageDisplayInfo, printArea.mockup_file, printArea.mockup_url]);
+  }, [mockupImage, imageDisplayInfo, printArea.mockup_url]);
 
   // Convert canvas coordinates to image coordinates
   const canvasToImageCoords = useCallback((canvasX: number, canvasY: number) => {
@@ -184,12 +173,7 @@ export const MockupCanvas: React.FC<MockupCanvasProps> = ({
   }, [isSelecting, selection, onPrintAreaUpdate]);
 
   const handleFileUpload = useCallback((file: File) => {
-    // Clean up previous object URL
-    if (objectUrlRef.current) {
-      URL.revokeObjectURL(objectUrlRef.current);
-    }
     const url = URL.createObjectURL(file);
-    objectUrlRef.current = url;
     onPrintAreaUpdate({ mockup_file: file, mockup_url: url });
   }, [onPrintAreaUpdate]);
 

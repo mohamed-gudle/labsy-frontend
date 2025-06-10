@@ -180,7 +180,7 @@ export default function NewProductPage() {
                   })) || []
                 } as CompleteProductFormData;
                 // Validate complete product data
-                const validation = completeProductSchema.safeParse(schemaData);
+                const validation = await completeProductSchema.safeParseAsync(schemaData);
                 if (!validation.success) {
                   console.error('Validation failed:', validation.error);
                   setState(prev => ({ ...prev, isSubmitting: false }));
@@ -189,6 +189,7 @@ export default function NewProductPage() {
                 // Add actual upload logic here
                 await new Promise(resolve => setTimeout(resolve, 2000));
                 setState(prev => ({ ...prev, isSubmitting: false }));
+                console.log(schemaData);
                 console.log('Product submitted successfully!');
               }}
               onBack={goToPreviousStep}

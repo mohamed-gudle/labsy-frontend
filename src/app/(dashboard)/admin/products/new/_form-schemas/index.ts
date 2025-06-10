@@ -76,7 +76,7 @@ export const printAreaSchema = z.object({
       "Only JPEG, PNG, and WebP images are allowed"
     )
     .refine(async (file) => {
-      return new Promise((resolve) => {
+      return new Promise<boolean>((resolve) => {
         const img = new Image();
         img.onload = () => {
           // Require minimum resolution for print quality
@@ -136,14 +136,14 @@ export type CompleteProductFormData = z.infer<typeof completeProductSchema>;
 export type UpdatePrintAreaFormData = z.infer<typeof updatePrintAreaSchema>;
 
 // Form step validation
-export const validateStep = (step: string, data: any) => {
+export const validateStep = async (step: string, data: unknown) => {
   switch (step) {
     case 'basic':
       return basicProductSchema.safeParse(data);
     case 'print-areas':
-      return z.array(printAreaSchema).safeParse(data);
+      return await z.array(printAreaSchema).safeParseAsync(data);
     case 'complete':
-      return completeProductSchema.safeParse(data);
+      return await completeProductSchema.safeParseAsync(data);
     default:
       return { success: false, error: { message: 'Invalid step' } };
   }
