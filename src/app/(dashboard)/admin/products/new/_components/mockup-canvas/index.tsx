@@ -27,7 +27,7 @@ export const MockupCanvas: React.FC<MockupCanvasProps> = ({
     y: printArea.y,
     width: printArea.width,
     height: printArea.height,
-  });  const [isSelecting, setIsSelecting] = useState(false);
+  }); const [isSelecting, setIsSelecting] = useState(false);
   const [dragStart, setDragStart] = useState<{ x: number; y: number } | null>(null);
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState({ x: 0, y: 0 });
@@ -126,7 +126,7 @@ export const MockupCanvas: React.FC<MockupCanvasProps> = ({
     if (!pos) return;
 
     const imageCoords = canvasToImageCoords(pos.x, pos.y);
-    
+
     setIsSelecting(true);
     setDragStart({ x: pos.x, y: pos.y });
     setSelection({
@@ -342,7 +342,7 @@ export const MockupCanvas: React.FC<MockupCanvasProps> = ({
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
             <h4 className="text-sm font-semibold text-blue-800 mb-1">How to select print area:</h4>
             <p className="text-sm text-blue-700">
-              Click and drag on the mockup image to select the printable area. 
+              Click and drag on the mockup image to select the printable area.
               The coordinates will be automatically updated in real-time.
             </p>
           </div>
