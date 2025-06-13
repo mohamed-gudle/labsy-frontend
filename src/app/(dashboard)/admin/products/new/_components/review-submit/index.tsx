@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, Upload, CheckCircle, AlertCircle } from 'lucide-react';
-import { CompleteProductFormData } from '../../_form-schemas';
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Loader2, Upload, CheckCircle, AlertCircle } from "lucide-react";
+import { CompleteProductFormData } from "../../_form-schemas";
 
 interface ReviewAndSubmitProps {
   data: CompleteProductFormData;
@@ -14,7 +14,11 @@ interface ReviewAndSubmitProps {
   onBack: () => void;
 }
 
-export function ReviewAndSubmit({ data, onSubmit, onBack }: ReviewAndSubmitProps) {
+export function ReviewAndSubmit({
+  data,
+  onSubmit,
+  onBack,
+}: ReviewAndSubmitProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -24,18 +28,20 @@ export function ReviewAndSubmit({ data, onSubmit, onBack }: ReviewAndSubmitProps
       setSubmitError(null);
       await onSubmit();
     } catch (error) {
-      setSubmitError(error instanceof Error ? error.message : 'Failed to submit product');
+      setSubmitError(
+        error instanceof Error ? error.message : "Failed to submit product"
+      );
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return '0 Bytes';
+    if (bytes === 0) return "0 Bytes";
     const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const sizes = ["Bytes", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   };
 
   return (
@@ -53,32 +59,26 @@ export function ReviewAndSubmit({ data, onSubmit, onBack }: ReviewAndSubmitProps
         <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <h4 className="font-medium text-sm text-muted-foreground">Product Name</h4>
-              <p className="font-medium">{data.title || data.name}</p>
-            </div>
-            <div>
-              <h4 className="font-medium text-sm text-muted-foreground">SKU</h4>
-              <p className="font-mono text-sm">{data.sku}</p>
+              <h4 className="font-medium text-sm text-muted-foreground">
+                Product Name
+              </h4>
+              <p className="font-medium">{data.title}</p>
             </div>
           </div>
 
           <div>
-            <h4 className="font-medium text-sm text-muted-foreground mb-2">Description</h4>
+            <h4 className="font-medium text-sm text-muted-foreground mb-2">
+              Description
+            </h4>
             <p className="text-sm text-muted-foreground">{data.description}</p>
           </div>
 
           <div className="grid grid-cols-3 gap-4">
             <div>
-              <h4 className="font-medium text-sm text-muted-foreground">Category</h4>
+              <h4 className="font-medium text-sm text-muted-foreground">
+                Category
+              </h4>
               <p className="text-sm">{data.category}</p>
-            </div>
-            <div>
-              <h4 className="font-medium text-sm text-muted-foreground">Type</h4>
-              <p className="text-sm capitalize">{data.type}</p>
-            </div>
-            <div>
-              <h4 className="font-medium text-sm text-muted-foreground">Brand</h4>
-              <p className="text-sm">{data.brand}</p>
             </div>
           </div>
         </CardContent>
@@ -92,7 +92,9 @@ export function ReviewAndSubmit({ data, onSubmit, onBack }: ReviewAndSubmitProps
         <CardContent className="space-y-4">
           {/* Main Images */}
           <div>
-            <h4 className="font-medium text-sm text-muted-foreground mb-2">Main Product Images</h4>
+            <h4 className="font-medium text-sm text-muted-foreground mb-2">
+              Main Product Images
+            </h4>
             <div className="grid grid-cols-4 gap-3">
               {data.images?.map((image, index) => (
                 <div key={index} className="relative">
@@ -111,10 +113,15 @@ export function ReviewAndSubmit({ data, onSubmit, onBack }: ReviewAndSubmitProps
 
           {/* Mockup Files */}
           <div>
-            <h4 className="font-medium text-sm text-muted-foreground mb-2">Mockup Files</h4>
+            <h4 className="font-medium text-sm text-muted-foreground mb-2">
+              Mockup Files
+            </h4>
             <div className="space-y-2">
               {data.print_areas?.map((area, index) => (
-                <div key={index} className="flex items-center justify-between p-3 border rounded">
+                <div
+                  key={index}
+                  className="flex items-center justify-between p-3 border rounded"
+                >
                   <div className="flex items-center space-x-3">
                     {area.mockup_file && (
                       <img
@@ -126,7 +133,9 @@ export function ReviewAndSubmit({ data, onSubmit, onBack }: ReviewAndSubmitProps
                     <div>
                       <p className="font-medium text-sm">{area.name}</p>
                       <p className="text-xs text-muted-foreground">
-                        {area.mockup_file ? formatFileSize(area.mockup_file.size) : 'No file'}
+                        {area.mockup_file
+                          ? formatFileSize(area.mockup_file.size)
+                          : "No file"}
                       </p>
                     </div>
                   </div>
@@ -152,7 +161,10 @@ export function ReviewAndSubmit({ data, onSubmit, onBack }: ReviewAndSubmitProps
           <CardContent>
             <div className="flex flex-wrap gap-2">
               {data.colors?.map((color, index) => (
-                <div key={index} className="flex items-center space-x-2 p-2 border rounded">
+                <div
+                  key={index}
+                  className="flex items-center space-x-2 p-2 border rounded"
+                >
                   <div
                     className="w-4 h-4 rounded-full border"
                     style={{ backgroundColor: color.hex }}
@@ -188,10 +200,15 @@ export function ReviewAndSubmit({ data, onSubmit, onBack }: ReviewAndSubmitProps
         <CardContent>
           <div className="space-y-3">
             {data.print_areas?.map((area, index) => (
-              <div key={index} className="flex items-center justify-between p-3 border rounded">
+              <div
+                key={index}
+                className="flex items-center justify-between p-3 border rounded"
+              >
                 <div>
                   <h4 className="font-medium">{area.name}</h4>
-                  <p className="text-sm text-muted-foreground">{area.description}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {area.description}
+                  </p>
                 </div>
                 <div className="text-right space-y-1">
                   <div className="flex items-center space-x-2">
@@ -201,7 +218,7 @@ export function ReviewAndSubmit({ data, onSubmit, onBack }: ReviewAndSubmitProps
                       <AlertCircle className="h-4 w-4 text-yellow-500" />
                     )}
                     <span className="text-xs">
-                      {area.printable ? 'Printable' : 'Non-printable'}
+                      {area.printable ? "Printable" : "Non-printable"}
                     </span>
                   </div>
                   <p className="text-xs text-muted-foreground">
@@ -228,7 +245,11 @@ export function ReviewAndSubmit({ data, onSubmit, onBack }: ReviewAndSubmitProps
           Back to Print Areas
         </Button>
 
-        <Button onClick={handleSubmit} disabled={isSubmitting} className="min-w-32">
+        <Button
+          onClick={handleSubmit}
+          disabled={isSubmitting}
+          className="min-w-32"
+        >
           {isSubmitting ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />

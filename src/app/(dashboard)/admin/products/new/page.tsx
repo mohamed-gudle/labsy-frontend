@@ -23,7 +23,6 @@ export default function NewProductPage() {
       available_sizes: {},
       print_areas: [],
       base_cost: 0,
-      print_cost_per_cm2: 0.05,
     },
     currentStep: 'basic',
     currentEditingAreaIndex: -1,
@@ -67,7 +66,6 @@ export default function NewProductPage() {
       case 'basic':
         return state.productData.title &&
           state.productData.description &&
-          state.productData.brand &&
           state.productData.main_image;
       case 'print-areas':
         return state.productData.print_areas && state.productData.print_areas.length > 0;
@@ -82,13 +80,13 @@ export default function NewProductPage() {
     <div className="container mx-auto py-8 px-4 max-w-7xl">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Add New Product</h1>
+        <h1 className="text-xl font-bold text-gray-900 mb-2">Add New Product</h1>
         <p className="text-gray-600">Create a new base product with print areas for customization</p>
       </div>
 
       {/* Progress Steps */}
       <div className="mb-8">
-        <div className="flex items-center justify-between max-w-2xl">
+        <div className="flex items-center justify-between">
           {STEPS.map((step, index) => {
             const Icon = step.icon;
             const isActive = state.currentStep === step.key;
@@ -109,15 +107,14 @@ export default function NewProductPage() {
             } else {
               textClass = 'text-gray-400';
             }
-            // Allow navigation to current or previous steps only
             const isStepEnabled = index <= currentStepIndex;
-            return (
+            return [
               <button
                 key={step.key}
                 type="button"
                 onClick={() => isStepEnabled && goToStep(step.key)}
                 disabled={!isStepEnabled}
-                className={`flex items-center bg-transparent border-none outline-none focus:ring-2 focus:ring-blue-400 disabled:opacity-60 disabled:cursor-not-allowed`}
+                className={`flex flex-col items-center bg-transparent border-none outline-none focus:ring-2 focus:ring-blue-400 disabled:opacity-60 disabled:cursor-not-allowed`}
                 style={{ cursor: isStepEnabled ? 'pointer' : 'not-allowed' }}
               >
                 <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 transition-colors ${circleClass}`}>
@@ -126,12 +123,14 @@ export default function NewProductPage() {
                 <span className={`ml-2 text-sm font-medium ${textClass}`}>
                   {step.label}
                 </span>
-                {index < STEPS.length - 1 && (
-                  <div className={`w-12 h-px mx-4 ${index < currentStepIndex ? 'bg-green-600' : 'bg-gray-300'
-                    }`} />
-                )}
-              </button>
-            );
+              </button>,
+              index < STEPS.length - 1 && (
+                <div
+                  key={`connector-${index}`}
+                  className={`flex-1 h-px mx-4 ${index < currentStepIndex ? 'bg-green-600' : 'bg-gray-300'}`}
+                />
+              )
+            ];
           })}
         </div>
       </div>

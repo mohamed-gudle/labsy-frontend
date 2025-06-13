@@ -3,24 +3,24 @@
 import React, { useState, useCallback } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
 import { basicProductSchema, BasicProductFormData } from "../../_form-schemas";
-import { ProductFormData } from "../_types/admin";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Upload, X, Plus, Minus } from "lucide-react";
+import { ProductFormData } from "../../_types/admin";
 
 interface BasicProductFormProps {
   data: Partial<ProductFormData>;
-  errors: Record<string, string>;
   onChange: (data: Partial<ProductFormData>) => void;
   onValidationError: (errors: Record<string, string>) => void;
 }
 
 export const BasicProductForm: React.FC<BasicProductFormProps> = ({
   data,
-  errors,
   onChange,
   onValidationError,
 }) => {
@@ -43,31 +43,32 @@ export const BasicProductForm: React.FC<BasicProductFormProps> = ({
     defaultValues: {
       title: data.title || "",
       description: data.description || "",
-      brand: data.brand || "",
+
       category: data.category || "",
       material: data.material || "",
-      manufacturer: data.manufacturer || "",
-      country: data.country || "",
-      fulfillmentTime: data.fulfillmentTime || "",
+
       base_cost: data.base_cost || 0,
-      print_cost_per_cm2: data.print_cost_per_cm2 || 0.05,
+
       colors: data.colors || [],
       available_sizes: data.available_sizes || {},
     },
   });
 
-  const handleFileChange = useCallback(async (file: File | null) => {
-    if (file) {
-      setImagePreview(URL.createObjectURL(file));
-      setValue("main_image", file);
-      onChange({ main_image: file });
-      await trigger("main_image");
-    } else {
-      setImagePreview(null);
-      setValue("main_image", undefined as any);
-      onChange({ main_image: undefined });
-    }
-  }, [setValue, onChange, trigger]);
+  const handleFileChange = useCallback(
+    async (file: File | null) => {
+      if (file) {
+        setImagePreview(URL.createObjectURL(file));
+        setValue("main_image", file);
+        onChange({ main_image: file });
+        await trigger("main_image");
+      } else {
+        setImagePreview(null);
+        // Don't setValue for undefined, just clear the preview and notify parent
+        onChange({ main_image: undefined });
+      }
+    },
+    [setValue, onChange, trigger]
+  );
 
   const handleDrop = useCallback(
     (e: React.DragEvent<HTMLDivElement>) => {
@@ -94,14 +95,15 @@ export const BasicProductForm: React.FC<BasicProductFormProps> = ({
 
   const removeColor = (colorToRemove: string) => {
     const currentColors = data.colors || [];
-    const newColors = currentColors.filter(color => color !== colorToRemove);
+    const newColors = currentColors.filter((color) => color !== colorToRemove);
     setValue("colors", newColors);
     onChange({ colors: newColors });
   };
 
   const addSize = () => {
     if (sizeKey && sizeValue) {
-      const currentSizes = data.available_sizes as Record<string, number> || {};
+      const currentSizes =
+        (data.available_sizes as Record<string, number>) || {};
       const newSizes = { ...currentSizes, [sizeKey]: parseInt(sizeValue) };
       setValue("available_sizes", newSizes);
       onChange({ available_sizes: newSizes });
@@ -111,7 +113,7 @@ export const BasicProductForm: React.FC<BasicProductFormProps> = ({
   };
 
   const removeSize = (sizeToRemove: string) => {
-    const currentSizes = data.available_sizes as Record<string, number> || {};
+    const currentSizes = (data.available_sizes as Record<string, number>) || {};
     const newSizes = { ...currentSizes };
     delete newSizes[sizeToRemove];
     setValue("available_sizes", newSizes);
@@ -126,8 +128,12 @@ export const BasicProductForm: React.FC<BasicProductFormProps> = ({
   return (
     <div className="space-y-8">
       <div>
-        <h2 className="text-2xl font-semibold text-gray-900 mb-2">Basic Product Information</h2>
-        <p className="text-gray-600">Enter the essential details for your product</p>
+        <h2 className="text-2xl font-semibold text-gray-900 mb-2">
+          Basic Product Information
+        </h2>
+        <p className="text-gray-600">
+          Enter the essential details for your product
+        </p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -151,23 +157,6 @@ export const BasicProductForm: React.FC<BasicProductFormProps> = ({
             )}
           </div>
 
-          {/* Brand */}
-          <div className="space-y-2">
-            <Label htmlFor="brand">Brand *</Label>
-            <Input
-              id="brand"
-              {...register("brand")}
-              onChange={(e) => {
-                register("brand").onChange(e);
-                onChange({ brand: e.target.value });
-              }}
-              placeholder="e.g., Labsy"
-              className={formErrors.brand ? "border-red-500" : ""}
-            />
-            {formErrors.brand && (
-              <p className="text-sm text-red-600">{formErrors.brand.message}</p>
-            )}
-          </div>
 
           {/* Category */}
           <div className="space-y-2">
@@ -183,27 +172,13 @@ export const BasicProductForm: React.FC<BasicProductFormProps> = ({
               className={formErrors.category ? "border-red-500" : ""}
             />
             {formErrors.category && (
-              <p className="text-sm text-red-600">{formErrors.category.message}</p>
+              <p className="text-sm text-red-600">
+                {formErrors.category.message}
+              </p>
             )}
           </div>
 
-          {/* Manufacturer */}
-          <div className="space-y-2">
-            <Label htmlFor="manufacturer">Manufacturer *</Label>
-            <Input
-              id="manufacturer"
-              {...register("manufacturer")}
-              onChange={(e) => {
-                register("manufacturer").onChange(e);
-                onChange({ manufacturer: e.target.value });
-              }}
-              placeholder="e.g., Labsy Apparel"
-              className={formErrors.manufacturer ? "border-red-500" : ""}
-            />
-            {formErrors.manufacturer && (
-              <p className="text-sm text-red-600">{formErrors.manufacturer.message}</p>
-            )}
-          </div>
+
 
           {/* Material */}
           <div className="space-y-2">
@@ -219,45 +194,13 @@ export const BasicProductForm: React.FC<BasicProductFormProps> = ({
               className={formErrors.material ? "border-red-500" : ""}
             />
             {formErrors.material && (
-              <p className="text-sm text-red-600">{formErrors.material.message}</p>
+              <p className="text-sm text-red-600">
+                {formErrors.material.message}
+              </p>
             )}
           </div>
 
-          {/* Country */}
-          <div className="space-y-2">
-            <Label htmlFor="country">Country of Origin *</Label>
-            <Input
-              id="country"
-              {...register("country")}
-              onChange={(e) => {
-                register("country").onChange(e);
-                onChange({ country: e.target.value });
-              }}
-              placeholder="e.g., Saudi Arabia"
-              className={formErrors.country ? "border-red-500" : ""}
-            />
-            {formErrors.country && (
-              <p className="text-sm text-red-600">{formErrors.country.message}</p>
-            )}
-          </div>
 
-          {/* Fulfillment Time */}
-          <div className="space-y-2">
-            <Label htmlFor="fulfillmentTime">Fulfillment Time *</Label>
-            <Input
-              id="fulfillmentTime"
-              {...register("fulfillmentTime")}
-              onChange={(e) => {
-                register("fulfillmentTime").onChange(e);
-                onChange({ fulfillmentTime: e.target.value });
-              }}
-              placeholder="e.g., P3D (3 days)"
-              className={formErrors.fulfillmentTime ? "border-red-500" : ""}
-            />
-            {formErrors.fulfillmentTime && (
-              <p className="text-sm text-red-600">{formErrors.fulfillmentTime.message}</p>
-            )}
-          </div>
 
           {/* Base Cost */}
           <div className="space-y-2">
@@ -274,30 +217,10 @@ export const BasicProductForm: React.FC<BasicProductFormProps> = ({
               }}
               placeholder="25.00"
               className={formErrors.base_cost ? "border-red-500" : ""}
-            />
-            {formErrors.base_cost && (
-              <p className="text-sm text-red-600">{formErrors.base_cost.message}</p>
-            )}
-          </div>
-
-          {/* Print Cost */}
-          <div className="space-y-2">
-            <Label htmlFor="print_cost_per_cm2">Print Cost per cm² (USD) *</Label>
-            <Input
-              id="print_cost_per_cm2"
-              type="number"
-              step="0.001"
-              {...register("print_cost_per_cm2", { valueAsNumber: true })}
-              onChange={(e) => {
-                const value = parseFloat(e.target.value) || 0;
-                register("print_cost_per_cm2").onChange(e);
-                onChange({ print_cost_per_cm2: value });
-              }}
-              placeholder="0.05"
-              className={formErrors.print_cost_per_cm2 ? "border-red-500" : ""}
-            />
-            {formErrors.print_cost_per_cm2 && (
-              <p className="text-sm text-red-600">{formErrors.print_cost_per_cm2.message}</p>
+            />          {formErrors.base_cost && (
+              <p className="text-sm text-red-600">
+                {formErrors.base_cost.message}
+              </p>
             )}
           </div>
         </div>
@@ -314,12 +237,13 @@ export const BasicProductForm: React.FC<BasicProductFormProps> = ({
             }}
             rows={4}
             placeholder="Describe your product in detail..."
-            className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-              formErrors.description ? "border-red-500" : "border-gray-300"
-            }`}
+            className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${formErrors.description ? "border-red-500" : "border-gray-300"
+              }`}
           />
           {formErrors.description && (
-            <p className="text-sm text-red-600">{formErrors.description.message}</p>
+            <p className="text-sm text-red-600">
+              {formErrors.description.message}
+            </p>
           )}
         </div>
 
@@ -333,18 +257,19 @@ export const BasicProductForm: React.FC<BasicProductFormProps> = ({
               <div
                 onDrop={handleDrop}
                 onDragOver={(e) => e.preventDefault()}
-                className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
-                  formErrors.main_image 
-                    ? "border-red-300 bg-red-50" 
+                className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${formErrors.main_image
+                    ? "border-red-300 bg-red-50"
                     : "border-gray-300 hover:border-gray-400 bg-gray-50"
-                }`}
+                  }`}
               >
                 {imagePreview ? (
                   <div className="relative">
-                    <img
+                    <Image
                       src={imagePreview}
                       alt="Preview"
-                      className="max-w-full max-h-48 mx-auto rounded-lg"
+                      width={300}
+                      height={200}
+                      className="max-w-full max-h-48 mx-auto rounded-lg object-contain"
                     />
                     <button
                       type="button"
@@ -368,7 +293,9 @@ export const BasicProductForm: React.FC<BasicProductFormProps> = ({
                     <Button
                       type="button"
                       variant="outline"
-                      onClick={() => document.getElementById('file-input')?.click()}
+                      onClick={() =>
+                        document.getElementById("file-input")?.click()
+                      }
                     >
                       Choose File
                     </Button>
@@ -388,14 +315,16 @@ export const BasicProductForm: React.FC<BasicProductFormProps> = ({
             )}
           />
           {formErrors.main_image && (
-            <p className="text-sm text-red-600">{formErrors.main_image.message}</p>
+            <p className="text-sm text-red-600">
+              {formErrors.main_image.message}
+            </p>
           )}
         </div>
 
         {/* Colors Section */}
         <Card className="p-4">
           <h3 className="text-lg font-semibold mb-4">Available Colors</h3>
-          
+
           {/* Add Color */}
           <div className="flex gap-2 mb-4">
             <Input
@@ -438,14 +367,16 @@ export const BasicProductForm: React.FC<BasicProductFormProps> = ({
             ))}
           </div>
           {formErrors.colors && (
-            <p className="text-sm text-red-600 mt-2">{formErrors.colors.message}</p>
+            <p className="text-sm text-red-600 mt-2">
+              {formErrors.colors.message}
+            </p>
           )}
         </Card>
 
         {/* Sizes Section */}
         <Card className="p-4">
           <h3 className="text-lg font-semibold mb-4">Available Sizes</h3>
-          
+
           {/* Add Size */}
           <div className="flex gap-2 mb-4">
             <Input
@@ -468,12 +399,16 @@ export const BasicProductForm: React.FC<BasicProductFormProps> = ({
 
           {/* Size List */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-            {Object.entries((data.available_sizes as Record<string, number>) || {}).map(([size, stock]) => (
+            {Object.entries(
+              (data.available_sizes as Record<string, number>) || {}
+            ).map(([size, stock]) => (
               <div
                 key={size}
                 className="flex items-center justify-between bg-gray-100 rounded-lg px-3 py-2"
               >
-                <span className="text-sm font-medium">{size}: {stock}</span>
+                <span className="text-sm font-medium">
+                  {size}: {stock}
+                </span>
                 <button
                   type="button"
                   onClick={() => removeSize(size)}
@@ -485,7 +420,9 @@ export const BasicProductForm: React.FC<BasicProductFormProps> = ({
             ))}
           </div>
           {formErrors.available_sizes && (
-            <p className="text-sm text-red-600 mt-2">{formErrors.available_sizes.message}</p>
+            <p className="text-sm text-red-600 mt-2">
+              {formErrors.available_sizes.message}
+            </p>
           )}
         </Card>
       </form>

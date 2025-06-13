@@ -6,45 +6,34 @@ export const basicProductSchema = z.object({
     .min(1, "Product title is required")
     .min(3, "Title must be at least 3 characters")
     .max(100, "Title must be less than 100 characters"),
-  
+
   description: z.string()
-    .min(1, "Product description is required")
-    .min(10, "Description must be at least 10 characters")
-    .max(500, "Description must be less than 500 characters"),
-  
-  brand: z.string()
-    .min(1, "Brand is required")
-    .max(50, "Brand name must be less than 50 characters"),
-  
+    .optional()
+    .transform(val => val || undefined)
+    .refine(val => !val || val.length >= 10, "Description must be at least 10 characters if provided")
+    .refine(val => !val || val.length <= 500, "Description must be less than 500 characters"),
+
+
   category: z.string()
     .min(1, "Category is required"),
-  
+
   material: z.string()
     .min(1, "Material information is required")
     .max(100, "Material description must be less than 100 characters"),
-  
-  manufacturer: z.string()
-    .min(1, "Manufacturer is required")
-    .max(50, "Manufacturer name must be less than 50 characters"),
-  
-  country: z.string()
-    .min(1, "Country of origin is required"),
-  
-  fulfillmentTime: z.string()
-    .min(1, "Fulfillment time is required"),
-  
+
+
+
+
   base_cost: z.number()
     .min(0.01, "Base cost must be greater than 0")
     .max(10000, "Base cost must be reasonable"),
-  
-  print_cost_per_cm2: z.number()
-    .min(0.001, "Print cost per cm² must be greater than 0")
-    .max(10, "Print cost per cm² must be reasonable"),
-  
+
+
+
   colors: z.array(z.string().regex(/^#[0-9A-Fa-f]{6}$/, "Invalid color format"))
     .min(1, "At least one color is required")
     .max(10, "Maximum 10 colors allowed"),
-  
+
   available_sizes: z.union([
     z.record(z.string(), z.number().min(0)),
     z.array(z.string())
@@ -54,7 +43,7 @@ export const basicProductSchema = z.object({
     }
     return Object.keys(data).length > 0;
   }, "At least one size must be available"),
-  
+
   main_image: z.instanceof(File, { message: "Main product image is required" })
     .refine(file => file.size <= 10 * 1024 * 1024, "Image must be less than 10MB")
     .refine(
@@ -68,7 +57,7 @@ export const printAreaSchema = z.object({
   name: z.string()
     .min(1, "Print area name is required")
     .max(50, "Name must be less than 50 characters"),
-  
+
   mockup_file: z.instanceof(File, { message: "Mockup image is required" })
     .refine(file => file.size <= 10 * 1024 * 1024, "Image must be less than 10MB")
     .refine(
@@ -86,27 +75,27 @@ export const printAreaSchema = z.object({
         img.src = URL.createObjectURL(file);
       });
     }, "Image must be at least 800x800 pixels for print quality"),
-  
+
   x: z.number()
     .min(0, "X coordinate must be positive"),
-  
+
   y: z.number()
     .min(0, "Y coordinate must be positive"),
-  
+
   width: z.number()
     .min(10, "Width must be at least 10 pixels")
     .max(1000, "Width cannot exceed 1000 pixels"),
-  
+
   height: z.number()
     .min(10, "Height must be at least 10 pixels")
     .max(1000, "Height cannot exceed 1000 pixels"),
-  
+
   dpi: z.number()
     .min(150, "DPI must be at least 150 for print quality")
     .max(600, "DPI cannot exceed 600"),
-  
+
   printable: z.boolean().default(true),
-  
+
   description: z.string()
     .max(200, "Description must be less than 200 characters")
     .optional()
