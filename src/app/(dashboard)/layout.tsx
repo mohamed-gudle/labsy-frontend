@@ -2,8 +2,8 @@
 
 import { AuthGuard } from "@/guards/auth-guard";
 import { AuthProvider } from "@/context/auth-context";
-import { SidebarProvider } from "./_context/sidebar-context";
-import { DashboardContent } from "./_components/dashboard-content";
+import { SidebarProvider } from "@/lib/contexts/layout";
+import { DashboardContent } from "@/components/layout/dashboard-content";
 import { Settings, User } from "lucide-react";
 import type { ReactNode } from "react";
 import React, { Suspense } from "react";

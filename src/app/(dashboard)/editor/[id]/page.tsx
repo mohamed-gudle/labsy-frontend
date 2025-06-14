@@ -2,14 +2,14 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { useBaseProduct } from "../../base-products/_lib/api";
+import { useBaseProduct } from "@/lib/hooks/base-products";
 
-import { UploadedDesignsProvider } from "./_components/side-menu/_utils/uploaded-designs-context";
+import { UploadedDesignsProvider } from "@/lib/contexts/designs";
 
-import { DesignCanvas } from "./_components/design-canvas/design-canva";
-import { SideMenu } from "./_components/side-menu/side-menu";
-import { useDesignStates } from "./_hooks/use-design-states";
-import type { Design } from "./_components/side-menu/design-picker/types";
+import { DesignCanvas } from "@/components/designs";
+import { SideMenu } from "@/components/designs";
+import { useDesignStates } from "@/lib/hooks/designs";
+import type { Design } from "@/lib/types/designs";
 
 export default function DesignPage() {
   const { id } = useParams<{ id: string }>();

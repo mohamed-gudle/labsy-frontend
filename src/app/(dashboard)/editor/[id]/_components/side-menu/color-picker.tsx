@@ -1,6 +1,6 @@
 'use client';
 
-import { getColorName } from "@/utils/color-namer";
+import { getColorName } from "@/utils/designs";
 
 interface ColorPickerProps {
   colors: string[];
@@ -19,11 +19,10 @@ export const ColorPicker = ({ colors, selectedColor, onColorChange }: ColorPicke
         {colors.map((color) => (
           <button
             key={getColorName(color)}
-            className={`w-8 h-8 rounded-full border-2 transition-all ${
-              selectedColor === color 
-                ? 'border-gray-600 ring-2 ring-gray-300' 
+            className={`w-8 h-8 rounded-full border-2 transition-all ${selectedColor === color
+                ? 'border-gray-600 ring-2 ring-gray-300'
                 : 'border-gray-300 hover:border-gray-400'
-            }`}
+              }`}
             style={{ backgroundColor: color }}
             onClick={() => onColorChange(color)}
             title={getColorName(color)}

@@ -1,7 +1,7 @@
 "use client";
 
 import { Sidebar } from "./sidebar";
-import { useSidebar } from "../_context/sidebar-context";
+import { useSidebar } from "@/lib/contexts/layout";
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
 import type { SidebarMenuItem } from "./sidebar";

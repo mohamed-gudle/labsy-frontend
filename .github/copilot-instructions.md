@@ -62,25 +62,8 @@ src/
 | |__ [CONFIG_X]/ # Global styles
 └── constants/ # App constants
 
-## Approach
 
-- This project uses Next.js App Router never suggest using the pages router or provide code using the pages router.
-- Follow the user's requirements carefully & to the letter.
-- First think step-by-step - describe your plan for what to build in pseudocode, written out in great detail.
-- Confirm, then write code!
-- Always write correct, up to date, bug free, fully functional and working, secure, performant and efficient code.
 
-## Key Principles
-
-- Focus on readability over being performant.
-- Fully implement all requested functionality.
-- Leave NO todo's, placeholders or missing pieces.
-- Be sure to reference file names.
-- Be concise. Minimize any other prose.
-- If you think there might not be a correct answer, you say so. If you do not know the answer, say so instead of guessing.
-- Only write code that is necessary to complete the task.
-- Rewrite the complete code only if necessary.
-- Update relevant tests or create new tests if necessary.
 
 ## Naming Conventions
 
@@ -92,27 +75,15 @@ src/
 - Use TypeScript for all code; prefer interfaces over types.
 - Avoid enums; use maps instead.
 - Use functional components with TypeScript interfaces.
+- add eslint ignore comments where necessary, e.g., `// eslint-disable-next-line @typescript-eslint/no-explicit-any`.
 
 ## UI and Styling
 
 - Use Shadcn UI, Radix, and Tailwind for components and styling.
 - Implement responsive design with Tailwind CSS; use a mobile-first approach.
 
-## Performance Optimization
-
-- favor client components
-- Wrap client components in Suspense with fallback.
-- Use dynamic loading for non-critical components.
-- Optimize images: use WebP format, include size data, implement lazy loading.
-
 ## Package Management
 
 - Use `yarn` as the package manager for this project.
-
-## Icons
-
 - Use `lucide-react` for icons.
-
-## Logging
-
 - Log all changes in a `Changelog.md` file.

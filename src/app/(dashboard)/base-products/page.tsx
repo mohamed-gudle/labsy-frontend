@@ -1,8 +1,8 @@
 "use client";
 
-import { BaseItem } from "@/app/(dashboard)/base-products/_types/api";
-import { ProductListItem } from "./_components/list-item";
-import { useBaseProducts } from "./_lib/api";
+import { BaseItem } from "@/lib/types/base-products";
+import { ProductListItem } from "@/components/base-products";
+import { useBaseProducts } from "@/lib/hooks/base-products";
 
 export default function BaseProductsPage() {
   const { products, isLoading, error } = useBaseProducts();

@@ -29,24 +29,21 @@ export const UploadedDesignsProvider: React.FC<{ children: ReactNode }> = ({ chi
 
     const removeDesign = (designId: string) => {
         setDesigns((prev) => prev.filter(design => design.id !== designId));
-    };
-
-    const clearDesigns = () => {
+    };    const clearDesigns = () => {
         setDesigns([]);
     };
 
     return (
         <UploadedDesignsContext.Provider 
-            value= {{
-        designs,
-            addDesign,
-            removeDesign,
-            clearDesigns
-    }
-}
+            value={{
+                designs,
+                addDesign,
+                removeDesign,
+                clearDesigns
+            }}
         >
-    { children }
-    </UploadedDesignsContext.Provider>
+            {children}
+        </UploadedDesignsContext.Provider>
     );
 };
 

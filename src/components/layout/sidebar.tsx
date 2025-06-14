@@ -2,7 +2,7 @@
 
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/context/auth-context";
-import { useSidebar } from "../_context/sidebar-context";
+import { useSidebar } from "@/lib/contexts/layout";
 
 import {
     ChevronRight,
@@ -17,19 +17,19 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import * as React from "react";
-import { Button } from "../../../components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-} from "../../../components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 import {
     Sheet,
     SheetContent,
     SheetTrigger,
-} from "../../../components/ui/sheet";
-import { cn } from "../../../lib/utils";
+} from "@/components/ui/sheet";
+import { cn } from "@/lib/utils";
 
 export interface SidebarMenuItem {
     label: string;

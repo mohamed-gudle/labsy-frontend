@@ -1,14 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ProductUploadState, ProductFormData } from './_types/admin-new';
-import { BasicProductForm } from './_components/upload-form';
-import { PrintAreaManager } from './_components/print-area-manager';
-import { ReviewAndSubmit } from './_components/review-submit';
+import { ProductUploadState, ProductFormData } from '@/lib/types/products';
+import { BasicProductForm } from '@/components/products';
+import { PrintAreaManager } from '@/components/products';
+import { ReviewAndSubmit } from '@/components/products';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, Package, Layers, CheckCircle } from 'lucide-react';
-import { completeProductSchema, CompleteProductFormData } from './_form-schemas';
+import { completeProductSchema, CompleteProductFormData } from '@/lib/schemas/products';
 
 const STEPS = [
   { key: 'basic', label: 'Basic Info', icon: Package },

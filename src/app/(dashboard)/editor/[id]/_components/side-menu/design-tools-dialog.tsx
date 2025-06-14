@@ -20,7 +20,7 @@ import { useUploadedDesigns } from "./_utils/uploaded-designs-context";
 import { useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
-import { validateFile } from "./_utils/file-validation";
+import { validateFile } from "@/utils/designs/file-validation";
 import { DesignToolsDialogState } from "./types";
 
 const uploadSchema = z.object({

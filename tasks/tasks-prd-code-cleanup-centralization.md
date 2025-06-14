@@ -138,24 +138,24 @@
   - [x] 7.6 Update component imports to use new centralized paths
   - [x] 7.7 Ensure all components follow consistent naming and structure patterns
 
-- [ ] 8.0 Migrate Utilities to Centralized Structure
-  - [ ] 8.1 Move file validation utility from `editor/[id]/_components/side-menu/_utils/file-validation.ts` to `utils/designs/`
-  - [ ] 8.2 Create `utils/products/` directory and add product-related utility functions
-  - [ ] 8.3 Create `utils/base-products/` directory and add base product utility functions
-  - [ ] 8.4 Create `utils/auth/` directory and add authentication utility functions
-  - [ ] 8.5 Create `utils/users/` directory and add user-related utility functions
-  - [ ] 8.6 Create barrel export files (`index.ts`) for each utility directory
-  - [ ] 8.7 Consolidate any duplicate utility functions across features
+- [x] 8.0 Migrate Utilities to Centralized Structure
+  - [x] 8.1 Move file validation utility from `editor/[id]/_components/side-menu/_utils/file-validation.ts` to `utils/designs/`
+  - [x] 8.2 Create `utils/products/` directory and add product-related utility functions
+  - [x] 8.3 Create `utils/base-products/` directory and add base product utility functions
+  - [x] 8.4 Create `utils/auth/` directory and add authentication utility functions
+  - [x] 8.5 Create `utils/users/` directory and add user-related utility functions
+  - [x] 8.6 Create barrel export files (`index.ts`) for each utility directory
+  - [x] 8.7 Consolidate any duplicate utility functions across features
 
 - [ ] 9.0 Update Import Statements Across Codebase
-  - [ ] 9.1 Update all imports in page components to use new centralized paths
-  - [ ] 9.2 Update all imports in layout components to use new centralized paths
-  - [ ] 9.3 Update all imports in component files to use new centralized paths
-  - [ ] 9.4 Update all imports in hook files to use new centralized paths
-  - [ ] 9.5 Update all imports in context files to use new centralized paths
-  - [ ] 9.6 Update all imports in utility files to use new centralized paths
-  - [ ] 9.7 Verify all import paths are correct and resolve properly
-  - [ ] 9.8 Remove any unused import statements during the migration
+  - [x] 9.1 Update all imports in page components to use new centralized paths
+  - [x] 9.2 Update all imports in layout components to use new centralized paths
+  - [x] 9.3 Update all imports in component files to use new centralized paths
+  - [x] 9.4 Update all imports in hook files to use new centralized paths
+  - [x] 9.5 Update all imports in context files to use new centralized paths
+  - [x] 9.6 Update all imports in utility files to use new centralized paths
+  - [x] 9.7 Verify all import paths are correct and resolve properly
+  - [x] 9.8 Remove any unused import statements during the migration
 
 - [ ] 10.0 Cleanup and Directory Removal
   - [ ] 10.1 Remove empty `_lib/` directories from all feature folders
