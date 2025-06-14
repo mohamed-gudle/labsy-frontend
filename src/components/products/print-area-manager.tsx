@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
-import { ProductFormData, PrintableAreaInput } from "../../_types/admin-new";
+import { ProductFormData, PrintableAreaInput } from "@/lib/types/products";
 import { PrintAreaList } from "./print-area-list";
-import { MockupCanvas } from "../mockup-canvas";
-import { PrintAreaSidebar } from "../print-area-sidebar";
+import { MockupCanvas } from "./mockup-canvas";
+import { PrintAreaSidebar } from "./print-area-sidebar";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
@@ -27,7 +27,8 @@ export const PrintAreaManager: React.FC<PrintAreaManagerProps> = ({
   onValidationError,
 }) => {
   const printAreas = productData.print_areas || [];
-  const currentPrintArea = currentEditingIndex >= 0 ? printAreas[currentEditingIndex] : null;
+  const currentPrintArea =
+    currentEditingIndex >= 0 ? printAreas[currentEditingIndex] : null;
   const addNewPrintArea = () => {
     const newPrintArea: PrintableAreaInput = {
       name: `Print Area ${printAreas.length + 1}`,
@@ -39,12 +40,16 @@ export const PrintAreaManager: React.FC<PrintAreaManagerProps> = ({
       printable: true,
       description: "",
       mockup_file: new File([], "placeholder.jpg", { type: "image/jpeg" }),
-    }; const newPrintAreas = [...printAreas, newPrintArea];
+    };
+    const newPrintAreas = [...printAreas, newPrintArea];
     onChange({ print_areas: newPrintAreas });
     onEditingIndexChange(newPrintAreas.length - 1);
   };
 
-  const updatePrintArea = (index: number, updates: Partial<PrintableAreaInput>) => {
+  const updatePrintArea = (
+    index: number,
+    updates: Partial<PrintableAreaInput>
+  ) => {
     const newPrintAreas = [...printAreas];
     newPrintAreas[index] = { ...newPrintAreas[index], ...updates };
     onChange({ print_areas: newPrintAreas });
@@ -79,8 +84,12 @@ export const PrintAreaManager: React.FC<PrintAreaManagerProps> = ({
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-semibold text-gray-900 mb-2">Print Areas</h2>
-          <p className="text-gray-600">Define printable areas on your product mockups</p>
+          <h2 className="text-2xl font-semibold text-gray-900 mb-2">
+            Print Areas
+          </h2>
+          <p className="text-gray-600">
+            Define printable areas on your product mockups
+          </p>
         </div>
         <Button onClick={addNewPrintArea} className="flex items-center gap-2">
           <Plus size={16} />
@@ -93,7 +102,9 @@ export const PrintAreaManager: React.FC<PrintAreaManagerProps> = ({
         {/* Left: Print Areas List + Properties */}
         <div className="lg:col-span-2 flex flex-col gap-6">
           <Card className="p-4">
-            <h3 className="text-lg font-semibold mb-4">Print Areas ({printAreas.length})</h3>
+            <h3 className="text-lg font-semibold mb-4">
+              Print Areas ({printAreas.length})
+            </h3>
             <PrintAreaList
               printAreas={printAreas}
               currentEditingIndex={currentEditingIndex}
@@ -107,13 +118,17 @@ export const PrintAreaManager: React.FC<PrintAreaManagerProps> = ({
             {currentPrintArea ? (
               <PrintAreaSidebar
                 printArea={currentPrintArea}
-                onUpdate={(updates) => updatePrintArea(currentEditingIndex, updates)}
-                errors={errors}
+                onUpdate={(updates) =>
+                  updatePrintArea(currentEditingIndex, updates)
+                }
+                // errors={errors}
                 onValidationError={onValidationError}
               />
             ) : (
               <>
-                <h3 className="text-lg font-semibold mb-4">Print Area Details</h3>
+                <h3 className="text-lg font-semibold mb-4">
+                  Print Area Details
+                </h3>
                 <p className="text-gray-500 text-sm">
                   Select a print area to view and edit its properties
                 </p>
@@ -138,8 +153,13 @@ export const PrintAreaManager: React.FC<PrintAreaManagerProps> = ({
               <Card className="p-8 text-center">
                 <div className="text-gray-500">
                   <Plus size={48} className="mx-auto mb-4 text-gray-300" />
-                  <h3 className="text-lg font-semibold mb-2">No Print Area Selected</h3>
-                  <p className="mb-4">Select a print area from the list or add a new one to get started</p>
+                  <h3 className="text-lg font-semibold mb-2">
+                    No Print Area Selected
+                  </h3>
+                  <p className="mb-4">
+                    Select a print area from the list or add a new one to get
+                    started
+                  </p>
                   <Button onClick={addNewPrintArea} variant="outline">
                     Add Your First Print Area
                   </Button>

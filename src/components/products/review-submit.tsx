@@ -1,12 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import {
+  Key,
+  JSXElementConstructor,
+  Key,
+  ReactElement,
+  ReactNode,
+  ReactPortal,
+  useState,
+} from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, Upload, CheckCircle, AlertCircle } from "lucide-react";
-import { CompleteProductFormData } from "../../_form-schemas";
+import { CompleteProductFormData } from "@/lib/schemas/products";
 
 interface ReviewAndSubmitProps {
   data: CompleteProductFormData;
@@ -96,18 +104,20 @@ export function ReviewAndSubmit({
               Main Product Images
             </h4>
             <div className="grid grid-cols-4 gap-3">
-              {data.images?.map((image, index) => (
-                <div key={index} className="relative">
-                  <img
-                    src={URL.createObjectURL(image)}
-                    alt={`Product ${index + 1}`}
-                    className="w-full h-20 object-cover rounded border"
-                  />
-                  <Badge className="absolute -top-1 -right-1 h-4 text-xs">
-                    {index + 1}
-                  </Badge>
-                </div>
-              )) || []}
+              {data.images?.map(
+                (image: Blob | MediaSource, index: Key | null | undefined) => (
+                  <div key={index} className="relative">
+                    <img
+                      src={URL.createObjectURL(image)}
+                      alt={`Product ${index + 1}`}
+                      className="w-full h-20 object-cover rounded border"
+                    />
+                    <Badge className="absolute -top-1 -right-1 h-4 text-xs">
+                      {index + 1}
+                    </Badge>
+                  </div>
+                )
+              ) || []}
             </div>
           </div>
 
@@ -182,11 +192,39 @@ export function ReviewAndSubmit({
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-2">
-              {data.sizes?.map((size, index) => (
-                <Badge key={index} variant="secondary">
-                  {size}
-                </Badge>
-              )) || []}
+              {data.sizes?.map(
+                (
+                  size:
+                    | string
+                    | number
+                    | bigint
+                    | boolean
+                    | ReactElement<unknown, string | JSXElementConstructor<any>>
+                    | Iterable<ReactNode>
+                    | ReactPortal
+                    | Promise<
+                        | string
+                        | number
+                        | bigint
+                        | boolean
+                        | ReactPortal
+                        | ReactElement<
+                            unknown,
+                            string | JSXElementConstructor<any>
+                          >
+                        | Iterable<ReactNode>
+                        | null
+                        | undefined
+                      >
+                    | null
+                    | undefined,
+                  index: Key | null | undefined
+                ) => (
+                  <Badge key={index} variant="secondary">
+                    {size}
+                  </Badge>
+                )
+              ) || []}
             </div>
           </CardContent>
         </Card>

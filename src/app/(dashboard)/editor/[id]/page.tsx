@@ -1,19 +1,22 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
 import { useBaseProduct } from "@/lib/hooks/base-products";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 import { UploadedDesignsProvider } from "@/lib/contexts/designs";
 
-import { DesignCanvas } from "@/components/designs";
-import { SideMenu } from "@/components/designs";
+// TODO: Import these components once they're properly exported
+// import { DesignCanvas } from "@/components/designs";
+// import { SideMenu } from "@/components/designs";
 import { useDesignStates } from "@/lib/hooks/designs";
 import type { Design } from "@/lib/types/designs";
+import { SideMenu } from "@/components/designs/side-menu";
+import { DesignCanvas } from "@/components/designs/design-canvas";
 
 export default function DesignPage() {
   const { id } = useParams<{ id: string }>();
-  const { product, isLoading, error } = useBaseProduct(id);
+  const { baseProduct, loading, error } = useBaseProduct(id);
 
   // Design state management with persistence across print areas
   const {
@@ -23,19 +26,19 @@ export default function DesignPage() {
     addDesign,
     updateDesign,
     switchPrintArea,
-  } = useDesignStates(product?.print_areas);
+  } = useDesignStates(baseProduct?.print_areas);
 
   // Color state
   const [selectedColor, setSelectedColor] = useState<string>("#FFFFFF");
 
   // Initialize color when product loads
   useEffect(() => {
-    if (product?.colors?.[0]) {
-      setSelectedColor(product.colors[0]);
+    if (baseProduct?.colors?.[0]) {
+      setSelectedColor(baseProduct.colors[0]);
     }
-  }, [product?.colors]);
+  }, [baseProduct?.colors]);
 
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="w-full h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center text-gray-500">
@@ -49,13 +52,17 @@ export default function DesignPage() {
     return (
       <div className="w-full h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center text-red-500">
-          <p>Error loading product: {error.message}</p>
+          <p>Error loading product: {error}</p>
         </div>
       </div>
     );
   }
 
-  if (!product || !product.print_areas || product.print_areas.length === 0) {
+  if (
+    !baseProduct ||
+    !baseProduct.print_areas ||
+    baseProduct.print_areas.length === 0
+  ) {
     return (
       <div className="w-full h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center text-gray-500">
@@ -87,11 +94,11 @@ export default function DesignPage() {
   return (
     <UploadedDesignsProvider>
       <div className="flex flex-col lg:flex-row gap-6 w-full h-screen p-4 bg-gray-50">
-        {/* Side Menu */}
         <div className="w-full lg:w-80 lg:max-w-sm">
+          <div>TODO: SideMenu component</div>
           <SideMenu
-            colors={product.colors || []}
-            printAreas={product.print_areas}
+            colors={baseProduct.colors || []}
+            printAreas={baseProduct.print_areas}
             currentPrintAreaIndex={currentPrintAreaIndex}
             selectedColor={selectedColor}
             onColorChange={setSelectedColor}
@@ -99,8 +106,6 @@ export default function DesignPage() {
             onDesignSelect={handleDesignSelect}
           />
         </div>
-
-        {/* Design Canvas */}
         <DesignCanvas
           printArea={currentPrintArea}
           selectedColor={selectedColor}

@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
-import { PrintableAreaInput } from '../../_types/admin-new';
+import { PrintableAreaInput } from '@/lib/types/products';
 
 interface PrintAreaSidebarProps {
   printArea: PrintableAreaInput;
@@ -25,7 +25,7 @@ export function PrintAreaSidebar({
   const updateField = (field: keyof PrintableAreaInput, value: string | number | boolean) => {
     onUpdate({ [field]: value });
   };
-  
+
   const updateCoordinate = (coord: 'x' | 'y' | 'width' | 'height', value: string) => {
     const numValue = parseFloat(value) || 0;
     const pixelValue = mmToPixel(numValue);
@@ -78,7 +78,7 @@ export function PrintAreaSidebar({
           <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
             Position & Size (mm)
           </h4>
-          
+
           <div className="grid grid-cols-2 gap-2">
             <div className="min-w-0">
               <Label htmlFor="area-x" className="text-xs">X Position</Label>
@@ -147,7 +147,7 @@ export function PrintAreaSidebar({
           <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
             Print Settings
           </h4>
-          
+
           <div>
             <Label htmlFor="area-dpi" className="text-xs font-medium">
               DPI (Dots Per Inch)

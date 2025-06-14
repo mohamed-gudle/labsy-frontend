@@ -3,7 +3,7 @@
 import React, { useState, useCallback, useRef, useEffect, useMemo } from "react";
 import { Stage, Layer, Image as KonvaImage, Rect, Line } from "react-konva";
 import useImage from "use-image";
-import { PrintableAreaInput, PrintAreaSelection, MockupImageInfo } from "../../_types/admin-new";
+import { PrintableAreaInput, PrintAreaSelection, MockupImageInfo } from "@/lib/types/products";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Upload, ZoomIn, ZoomOut, Grid3X3, RotateCcw } from "lucide-react";

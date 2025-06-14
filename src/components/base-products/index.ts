@@ -8,4 +8,4 @@ export { BaseProductSearch } from './base-product-search';
 export { BaseProductFilter } from './base-product-filter';
 
 // Export types for convenience
-export type { default as BaseItem } from '@/lib/types/base-products';
+export type { BaseItem } from '@/lib/types/base-products';

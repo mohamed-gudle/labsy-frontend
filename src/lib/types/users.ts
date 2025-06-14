@@ -4,6 +4,21 @@
  */
 
 /**
+ * Basic user interface
+ * Essential user information
+ */
+export interface User {
+    /** Unique user identifier */
+    id: string;
+    /** User's email address */
+    email: string;
+    /** User's display name */
+    name: string;
+    /** User's avatar/profile image URL */
+    avatar?: string;
+}
+
+/**
  * User profile interface
  * Complete user profile information
  */
@@ -132,9 +147,8 @@ export interface UserActivity {
     /** IP address where activity occurred */
     ipAddress?: string;
     /** User agent string */
-    userAgent?: string;
-    /** Additional activity metadata */
-    metadata?: Record<string, any>;
+    userAgent?: string;    /** Additional activity metadata */
+    metadata?: Record<string, unknown>;
 }
 
 /**
@@ -283,9 +297,8 @@ export interface UserNotification {
     /** Action URL if applicable */
     actionUrl?: string;
     /** Action button text */
-    actionText?: string;
-    /** Additional notification metadata */
-    metadata?: Record<string, any>;
+    actionText?: string;    /** Additional notification metadata */
+    metadata?: Record<string, unknown>;
 }
 
 /**

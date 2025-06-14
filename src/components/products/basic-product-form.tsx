@@ -4,14 +4,14 @@ import React, { useState, useCallback } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
-import { basicProductSchema, BasicProductFormData } from "../../_form-schemas";
+import { basicProductSchema, BasicProductFormData } from "@/lib/schemas/products";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Upload, X, Plus, Minus } from "lucide-react";
-import { ProductFormData } from "../../_types/admin";
+import { ProductFormData } from "@/lib/types/products";
 
 interface BasicProductFormProps {
   data: Partial<ProductFormData>;

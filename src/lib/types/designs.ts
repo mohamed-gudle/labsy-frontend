@@ -246,3 +246,6 @@ export interface ColorOverlayState {
     /** Blend mode for overlay */
     blendMode: 'multiply' | 'overlay' | 'soft-light' | 'hard-light' | 'color-burn' | 'color-dodge';
 }
+
+// Re-export types from base-products for convenience
+export type { PrintableArea } from "./base-products";
