@@ -1,29 +1,29 @@
 "use client";
 
-import { useState } from 'react';
-import { PasswordInput } from '@/components/auth';
-import { SocialAuthButtons } from '@/components/auth';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { useAuth } from '@/context/auth-context';
+import { useState } from "react";
+import { PasswordInput } from "@/components/auth";
+import { SocialAuthButtons } from "@/components/auth";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useAuth } from "@/context/auth-context";
 
 export const SignUpForm = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isHuman, setIsHuman] = useState(false);
-  const { signUp, loading, error } = useAuth();
+  const { signUp, loading, error, signInWithGoogle } = useAuth();
   const [localError, setLocalError] = useState<string | null>(null);
 
   const handleSignUp = async () => {
     setLocalError(null);
     if (!isHuman) {
-      setLocalError('Please verify you are not a robot.');
+      setLocalError("Please verify you are not a robot.");
       return;
     }
     if (!name || !email || !password) {
-      setLocalError('All fields are required.');
+      setLocalError("All fields are required.");
       return;
     }
     await signUp(email, password);
@@ -32,14 +32,18 @@ export const SignUpForm = () => {
 
   return (
     <div className="max-w-md w-full bg-white p-8 shadow-md rounded-md">
-      <h1 className="font-poppins text-2xl font-semibold mb-6">Create with Labsy</h1>
+      <h1 className="font-poppins text-2xl font-semibold mb-6">
+        Create with Labsy
+      </h1>
       <div className="space-y-4">
         <div>
           <Label htmlFor="name">Your name or Brand name</Label>
           <Input
             id="name"
             value={name}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setName(e.target.value)
+            }
             placeholder="John Doe"
             required
           />
@@ -50,7 +54,9 @@ export const SignUpForm = () => {
             id="email"
             type="email"
             value={email}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setEmail(e.target.value)
+            }
             placeholder="you@example.com"
             required
           />
@@ -63,7 +69,9 @@ export const SignUpForm = () => {
             placeholder="Minimum 6 characters"
             required
             value={password}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setPassword(e.target.value)
+            }
           />
         </div>
         <div className="flex items-center space-x-2">
@@ -71,29 +79,38 @@ export const SignUpForm = () => {
             type="checkbox"
             id="recaptcha"
             checked={isHuman}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setIsHuman(e.target.checked)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setIsHuman(e.target.checked)
+            }
           />
           <Label htmlFor="recaptcha">I&apos;m not a robot</Label>
         </div>
         {localError && <p className="text-red-500 text-sm">{localError}</p>}
         {error && <p className="text-red-500 text-sm">{error}</p>}
         <Button onClick={handleSignUp} className="w-full" disabled={loading}>
-          {loading ? 'Signing up...' : 'Sign up'}
+          {loading ? "Signing up..." : "Sign up"}
         </Button>
       </div>
       <p className="text-sm text-gray-600 mt-4">
-        By creating your account, you agree to our <a href="#" className="text-blue-500">Terms of Service</a> and <a href="#" className="text-blue-500">Privacy Policy</a>.
+        By creating your account, you agree to our{" "}
+        <a href="#" className="text-blue-500">
+          Terms of Service
+        </a>{" "}
+        and{" "}
+        <a href="#" className="text-blue-500">
+          Privacy Policy
+        </a>
+        .
       </p>
       <p className="text-sm text-gray-600 mt-2">
-        Already have an account? <a href="/auth/sign-in" className="text-blue-500">Log In</a>
+        Already have an account?{" "}
+        <a href="/auth/sign-in" className="text-blue-500">
+          Log In
+        </a>
       </p>
       <div className="mt-6">
         <p className="text-center text-gray-500 mb-2">or</p>
-        <SocialAuthButtons
-          onGoogleClick={() => {/* TODO: Implement Google Sign-Up */ }}
-          onFacebookClick={() => {/* TODO: Implement Facebook Sign-Up */ }}
-          onYouTubeClick={() => {/* TODO: Implement YouTube Sign-Up */ }}
-        />
+        <SocialAuthButtons onGoogleClick={() => signInWithGoogle()} />
       </div>
     </div>
   );

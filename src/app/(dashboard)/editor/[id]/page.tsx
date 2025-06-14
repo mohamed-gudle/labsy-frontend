@@ -95,7 +95,6 @@ export default function DesignPage() {
     <UploadedDesignsProvider>
       <div className="flex flex-col lg:flex-row gap-6 w-full h-screen p-4 bg-gray-50">
         <div className="w-full lg:w-80 lg:max-w-sm">
-          <div>TODO: SideMenu component</div>
           <SideMenu
             colors={baseProduct.colors || []}
             printAreas={baseProduct.print_areas}

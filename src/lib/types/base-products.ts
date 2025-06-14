@@ -73,23 +73,23 @@ export interface BaseItem {
     type?: string;
     /** Product category (alternative to type) */
     category?: string;
-    /** Base cost in cents (USD) */
+    /** Material composition */
+    material?: string;
+    /** Base cost in currency units */
     base_cost: number;
     /** Currency code (default: USD) */
     currency?: string;
-    /** Main product image URL (WebP preferred) */
+    /** Main product image URL */
     image: string;
+    /** Main product image URL (schema field) */
+    main_image?: string;
     /** Available color codes (hex format) */
     colors: string[];
     /** Available sizes with stock quantities */
     available_sizes: Record<string, number> | string[];
-    /** Country of origin/manufacture */
-    country?: string;
-    /** Fulfillment time in days or ISO 8601 duration string */
-    fulfillmentTime?: number | string;
-    /** Array of printable areas on this product */
+    /** Print areas configuration */
     print_areas: PrintableArea[];
-    /** Additional product metadata */
+    /** Additional metadata */
     metadata?: ProductMetadata;
     /** Product availability status */
     is_available?: boolean;
