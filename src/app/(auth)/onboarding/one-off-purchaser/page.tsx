@@ -55,7 +55,7 @@ export default function OneOffPurchaserOnboardingPage() {
       if (result?.success) {
         console.log("onboarding completed successfully:", result.user);
         // Redirect to dashboard after successful submission
-        router.push("/dashboard");
+        router.push("/");
       } else {
         console.error(
           "Failed to complete onboarding:",

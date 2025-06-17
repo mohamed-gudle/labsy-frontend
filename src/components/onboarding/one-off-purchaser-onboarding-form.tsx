@@ -18,7 +18,6 @@ import { OneOffPurchaserOnboardingData } from "@/lib/types/onboarding";
 import { cn } from "@/lib/utils";
 
 interface OneOffPurchaserOnboardingFormProps {
-
   initialData?: Partial<OneOffPurchaserOnboardingData>;
 
   onSubmit: (data: any) => void;
@@ -44,7 +43,6 @@ export function OneOffPurchaserOnboardingForm({
     defaultValues: {
       name: initialData?.name ?? "",
       phone: initialData?.phone ?? "",
-      location: initialData?.location ?? "",
     },
   });
 
@@ -100,7 +98,7 @@ export function OneOffPurchaserOnboardingForm({
                   )}
                 />
               </div>
-              <div className="space-y-2">
+              <div className="md:col-span-2 space-y-2">
                 <Label htmlFor="phone">Phone Number (Optional)</Label>
                 <Controller
                   name="phone"
@@ -111,28 +109,6 @@ export function OneOffPurchaserOnboardingForm({
                         {...field}
                         id="phone"
                         placeholder="Enter your phone number"
-                        className={fieldState.error ? "border-red-500" : ""}
-                      />
-                      {fieldState.error && (
-                        <p className="text-sm text-red-600 mt-1">
-                          {fieldState.error.message}
-                        </p>
-                      )}
-                    </div>
-                  )}
-                />
-              </div>
-              <div className="space-y-2 w-full">
-                <Label htmlFor="location">Location (Optional)</Label>
-                <Controller
-                  name="location"
-                  control={personalInfoForm.control}
-                  render={({ field, fieldState }) => (
-                    <div>
-                      <Input
-                        {...field}
-                        id="location"
-                        placeholder="City, State/Country"
                         className={fieldState.error ? "border-red-500" : ""}
                       />
                       {fieldState.error && (

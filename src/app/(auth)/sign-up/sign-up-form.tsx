@@ -76,7 +76,7 @@ export const SignUpForm = () => {
       </p>
       <p className="text-sm text-gray-600 mt-2">
         Already have an account?{" "}
-        <a href="/auth/sign-in" className="text-blue-500">
+        <a href="/sign-in" className="text-blue-500">
           Log In
         </a>
       </p>
