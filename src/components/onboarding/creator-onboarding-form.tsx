@@ -2,20 +2,18 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import {
     businessInfoSchema,
-    creatorPreferencesSchema,
     personalInfoSchema
 } from '@/lib/schemas/onboarding';
 import { CreatorOnboardingData, OnboardingFormErrors } from '@/lib/types/onboarding';
 import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft, ArrowRight, Building, Settings, User } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Building, User } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -51,16 +49,19 @@ function PersonalInfoStep({
     const {
         register,
         handleSubmit,
+        setValue,
+        watch,
         formState: { errors }
     } = useForm<z.infer<typeof personalInfoSchema>>({
         resolver: zodResolver(personalInfoSchema),
         defaultValues: {
             name: data.personalInfo?.name ?? '',
-            email: data.personalInfo?.email ?? '',
             phone: data.personalInfo?.phone ?? '',
-            location: data.personalInfo?.location ?? '',
+            preferredLanguage: data.personalInfo?.preferredLanguage ?? 'ar',
         }
     });
+
+    const preferredLanguage = watch('preferredLanguage');
 
     const onFormSubmit = (formData: z.infer<typeof personalInfoSchema>) => {
         onSubmit({ personalInfo: formData });
@@ -69,11 +70,11 @@ function PersonalInfoStep({
     return (
         <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
+                <div className="md:col-span-2 space-y-2">
                     <Label htmlFor="name">Full Name *</Label>
                     <Input
                         id="name"
-                        placeholder="John Doe"
+                        placeholder="Fatima Al-Zahra"
                         className={cn(errors.name && "border-red-500")}
                         {...register('name')}
                     />
@@ -83,25 +84,11 @@ function PersonalInfoStep({
                 </div>
 
                 <div className="space-y-2">
-                    <Label htmlFor="email">Email Address *</Label>
-                    <Input
-                        id="email"
-                        type="email"
-                        placeholder="john@example.com"
-                        className={cn(errors.email && "border-red-500")}
-                        {...register('email')}
-                    />
-                    {errors.email && (
-                        <p className="text-sm text-red-600">{errors.email.message}</p>
-                    )}
-                </div>
-
-                <div className="space-y-2">
-                    <Label htmlFor="phone">Phone Number *</Label>
+                    <Label htmlFor="phone">Phone Number (Optional)</Label>
                     <Input
                         id="phone"
                         type="tel"
-                        placeholder="+1 (555) 123-4567"
+                        placeholder="+1234567890"
                         className={cn(errors.phone && "border-red-500")}
                         {...register('phone')}
                     />
@@ -111,16 +98,19 @@ function PersonalInfoStep({
                 </div>
 
                 <div className="space-y-2">
-                    <Label htmlFor="location">Location (Optional)</Label>
-                    <Input
-                        id="location"
-                        placeholder="New York, NY"
-                        className={cn(errors.location && "border-red-500")}
-                        {...register('location')}
-                    />
-                    {errors.location && (
-                        <p className="text-sm text-red-600">{errors.location.message}</p>
-                    )}
+                    <Label htmlFor="preferredLanguage">Preferred Language</Label>
+                    <Select
+                        value={preferredLanguage}
+                        onValueChange={(value) => setValue('preferredLanguage', value as 'ar' | 'en')}
+                    >
+                        <SelectTrigger>
+                            <SelectValue placeholder="Select preferred language" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="ar">العربية (Arabic)</SelectItem>
+                            <SelectItem value="en">English</SelectItem>
+                        </SelectContent>
+                    </Select>
                 </div>
             </div>
 
@@ -163,39 +153,44 @@ function BusinessInfoStep({
     const {
         register,
         handleSubmit,
-        setValue,
-        watch,
         formState: { errors }
     } = useForm<z.infer<typeof businessInfoSchema>>({
         resolver: zodResolver(businessInfoSchema),
         defaultValues: {
             businessName: data.businessInfo?.businessName ?? '',
-            businessType: data.businessInfo?.businessType ?? 'individual',
-            description: data.businessInfo?.description ?? '',
-            website: data.businessInfo?.website ?? '',
-            socialMedia: {
-                instagram: data.businessInfo?.socialMedia?.instagram ?? '',
-                twitter: data.businessInfo?.socialMedia?.twitter ?? '',
-                facebook: data.businessInfo?.socialMedia?.facebook ?? '',
-                tiktok: data.businessInfo?.socialMedia?.tiktok ?? '',
+            businessDescription: data.businessInfo?.businessDescription ?? '',
+            socialMediaLinks: {
+                instagram: data.businessInfo?.socialMediaLinks?.instagram ?? '',
+                twitter: data.businessInfo?.socialMediaLinks?.twitter ?? '',
+                tiktok: data.businessInfo?.socialMediaLinks?.tiktok ?? '',
+                youtube: data.businessInfo?.socialMediaLinks?.youtube ?? '',
+                website: data.businessInfo?.socialMediaLinks?.website ?? '',
             },
         }
     });
 
-    const businessType = watch('businessType');
-
     const onFormSubmit = (formData: z.infer<typeof businessInfoSchema>) => {
-        onSubmit({ businessInfo: formData });
+        // Filter out empty strings from social media links
+        const filteredSocialMediaLinks = Object.fromEntries(
+            Object.entries(formData.socialMediaLinks || {}).filter(([, value]) => value && value.trim() !== '')
+        );
+
+        const processedData = {
+            ...formData,
+            socialMediaLinks: Object.keys(filteredSocialMediaLinks).length > 0 ? filteredSocialMediaLinks : undefined,
+        };
+
+        onSubmit({ businessInfo: processedData });
     };
 
     return (
         <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4">
                 <div className="space-y-2">
-                    <Label htmlFor="businessName">Business/Brand Name</Label>
+                    <Label htmlFor="businessName">Business/Brand Name *</Label>
                     <Input
                         id="businessName"
-                        placeholder="Acme Designs"
+                        placeholder="Al-Zahra Designs"
                         className={cn(errors.businessName && "border-red-500")}
                         {...register('businessName')}
                     />
@@ -205,254 +200,83 @@ function BusinessInfoStep({
                 </div>
 
                 <div className="space-y-2">
-                    <Label htmlFor="businessType">Business Type</Label>
-                    <Select value={businessType} onValueChange={(value) => setValue('businessType', value as 'individual' | 'llc' | 'corporation' | 'partnership' | 'other')}>
-                        <SelectTrigger>
-                            <SelectValue placeholder="Select business type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="individual">Individual/Freelancer</SelectItem>
-                            <SelectItem value="llc">LLC</SelectItem>
-                            <SelectItem value="corporation">Corporation</SelectItem>
-                            <SelectItem value="partnership">Partnership</SelectItem>
-                            <SelectItem value="other">Other</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-
-                <div className="md:col-span-2 space-y-2">
-                    <Label htmlFor="description">Business Description</Label>
+                    <Label htmlFor="businessDescription">Business Description (Optional)</Label>
                     <Textarea
-                        id="description"
-                        placeholder="Tell us about your business and what makes it unique..."
+                        id="businessDescription"
+                        placeholder="Creating unique Arabic calligraphy designs for custom merchandise and home decor"
                         rows={3}
-                        className={cn(errors.description && "border-red-500")}
-                        {...register('description')}
+                        className={cn(errors.businessDescription && "border-red-500")}
+                        {...register('businessDescription')}
                     />
-                    {errors.description && (
-                        <p className="text-sm text-red-600">{errors.description.message}</p>
+                    {errors.businessDescription && (
+                        <p className="text-sm text-red-600">{errors.businessDescription.message}</p>
                     )}
                 </div>
 
-                <div className="md:col-span-2 space-y-2">
-                    <Label htmlFor="website">Website URL</Label>
-                    <Input
-                        id="website"
-                        type="url"
-                        placeholder="https://yourwebsite.com"
-                        className={cn(errors.website && "border-red-500")}
-                        {...register('website')}
-                    />
-                    {errors.website && (
-                        <p className="text-sm text-red-600">{errors.website.message}</p>
-                    )}
-                </div>
-
-                <div className="md:col-span-2">
-                    <Label className="text-base font-medium">Social Media (Optional)</Label>
+                <div>
+                    <Label className="text-base font-medium">Social Media Links & Online Presence (Optional)</Label>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
                         <div className="space-y-2">
-                            <Label htmlFor="instagram">Instagram</Label>
+                            <Label htmlFor="instagram">Instagram Profile URL</Label>
                             <Input
                                 id="instagram"
-                                placeholder="@username"
-                                {...register('socialMedia.instagram')}
+                                placeholder="https://instagram.com/labsy_creator"
+                                {...register('socialMediaLinks.instagram')}
+                                className={cn(errors.socialMediaLinks?.instagram && "border-red-500")}
                             />
+                            {errors.socialMediaLinks?.instagram && (
+                                <p className="text-sm text-red-600">{errors.socialMediaLinks.instagram.message}</p>
+                            )}
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="twitter">Twitter</Label>
+                            <Label htmlFor="twitter">Twitter/X Profile URL</Label>
                             <Input
                                 id="twitter"
-                                placeholder="@username"
-                                {...register('socialMedia.twitter')}
+                                placeholder="https://twitter.com/labsy_creator"
+                                {...register('socialMediaLinks.twitter')}
+                                className={cn(errors.socialMediaLinks?.twitter && "border-red-500")}
                             />
+                            {errors.socialMediaLinks?.twitter && (
+                                <p className="text-sm text-red-600">{errors.socialMediaLinks.twitter.message}</p>
+                            )}
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="facebook">Facebook</Label>
-                            <Input
-                                id="facebook"
-                                placeholder="Your Page Name"
-                                {...register('socialMedia.facebook')}
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="tiktok">TikTok</Label>
+                            <Label htmlFor="tiktok">TikTok Profile URL</Label>
                             <Input
                                 id="tiktok"
-                                placeholder="@username"
-                                {...register('socialMedia.tiktok')}
+                                placeholder="https://tiktok.com/@labsy_creator"
+                                {...register('socialMediaLinks.tiktok')}
+                                className={cn(errors.socialMediaLinks?.tiktok && "border-red-500")}
                             />
+                            {errors.socialMediaLinks?.tiktok && (
+                                <p className="text-sm text-red-600">{errors.socialMediaLinks.tiktok.message}</p>
+                            )}
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="youtube">YouTube Channel URL</Label>
+                            <Input
+                                id="youtube"
+                                placeholder="https://youtube.com/c/labsy_creator"
+                                {...register('socialMediaLinks.youtube')}
+                                className={cn(errors.socialMediaLinks?.youtube && "border-red-500")}
+                            />
+                            {errors.socialMediaLinks?.youtube && (
+                                <p className="text-sm text-red-600">{errors.socialMediaLinks.youtube.message}</p>
+                            )}
+                        </div>
+                        <div className="md:col-span-2 space-y-2">
+                            <Label htmlFor="website">Website URL</Label>
+                            <Input
+                                id="website"
+                                placeholder="https://labsycreator.com"
+                                {...register('socialMediaLinks.website')}
+                                className={cn(errors.socialMediaLinks?.website && "border-red-500")}
+                            />
+                            {errors.socialMediaLinks?.website && (
+                                <p className="text-sm text-red-600">{errors.socialMediaLinks.website.message}</p>
+                            )}
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between pt-6 space-y-3 md:space-y-0">
-                <Button
-                    type="button"
-                    variant="outline"
-                    onClick={onBack}
-                    disabled={isSubmitting}
-                    className="w-full md:w-auto order-2 md:order-1"
-                >
-                    <ArrowLeft className="w-4 h-4 mr-2" />
-                    Back
-                </Button>
-                <Button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full md:w-auto order-1 md:order-2"
-                >
-                    Continue
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-            </div>
-        </form>
-    );
-}
-
-// Preferences Step
-function PreferencesStep({
-    data,
-    onSubmit,
-    onBack,
-    isSubmitting = false
-}: {
-    data: Partial<CreatorOnboardingData>;
-    onSubmit: (stepData: Partial<CreatorOnboardingData>) => void;
-    onBack: () => void;
-    isSubmitting?: boolean;
-}) {
-    const {
-        register,
-        handleSubmit,
-        setValue,
-        watch,
-        formState: { errors }
-    } = useForm<z.infer<typeof creatorPreferencesSchema>>({
-        resolver: zodResolver(creatorPreferencesSchema),
-        defaultValues: {
-            productInterests: data.preferences?.productInterests ?? [],
-            designStyles: data.preferences?.designStyles ?? [],
-            targetAudience: data.preferences?.targetAudience ?? '',
-            expectedVolume: data.preferences?.expectedVolume ?? 'medium',
-            budgetRange: data.preferences?.budgetRange ?? '',
-        }
-    });
-
-    const productInterests = watch('productInterests');
-    const designStyles = watch('designStyles');
-    const expectedVolume = watch('expectedVolume');
-
-    const productOptions = [
-        'T-Shirts', 'Hoodies', 'Sweatshirts', 'Tank Tops', 'Long Sleeves',
-        'Hats & Caps', 'Tote Bags', 'Mugs', 'Phone Cases', 'Stickers'
-    ];
-
-    const designStyleOptions = [
-        'Minimalist', 'Vintage', 'Modern', 'Abstract', 'Typography',
-        'Illustration', 'Photography', 'Grunge', 'Retro', 'Artistic'
-    ];
-
-    const handleProductInterestChange = (product: string, checked: boolean) => {
-        const currentInterests = productInterests ?? [];
-        if (checked) {
-            setValue('productInterests', [...currentInterests, product]);
-        } else {
-            setValue('productInterests', currentInterests.filter(p => p !== product));
-        }
-    };
-
-    const handleDesignStyleChange = (style: string, checked: boolean) => {
-        const currentStyles = designStyles ?? [];
-        if (checked) {
-            setValue('designStyles', [...currentStyles, style]);
-        } else {
-            setValue('designStyles', currentStyles.filter(s => s !== style));
-        }
-    };
-
-    const onFormSubmit = (formData: z.infer<typeof creatorPreferencesSchema>) => {
-        onSubmit({ preferences: formData });
-    };
-
-    return (
-        <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6">
-            <div className="space-y-6">
-                <div className="space-y-4">
-                    <Label className="text-base font-medium">Product Interests *</Label>
-                    <p className="text-sm text-gray-600">Select the products you&apos;re interested in creating designs for</p>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                        {productOptions.map((product) => (
-                            <div key={product} className="flex items-center space-x-2">
-                                <Checkbox
-                                    id={`product-${product}`}
-                                    checked={productInterests?.includes(product) ?? false}
-                                    onCheckedChange={(checked) => handleProductInterestChange(product, checked as boolean)}
-                                />
-                                <Label htmlFor={`product-${product}`} className="text-sm font-normal">
-                                    {product}
-                                </Label>
-                            </div>
-                        ))}
-                    </div>
-                    {errors.productInterests && (
-                        <p className="text-sm text-red-600">{errors.productInterests.message}</p>
-                    )}
-                </div>
-
-                <div className="space-y-4">
-                    <Label className="text-base font-medium">Design Styles (Optional)</Label>
-                    <p className="text-sm text-gray-600">What design styles best represent your work?</p>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                        {designStyleOptions.map((style) => (
-                            <div key={style} className="flex items-center space-x-2">
-                                <Checkbox
-                                    id={`style-${style}`}
-                                    checked={designStyles?.includes(style) ?? false}
-                                    onCheckedChange={(checked) => handleDesignStyleChange(style, checked as boolean)}
-                                />
-                                <Label htmlFor={`style-${style}`} className="text-sm font-normal">
-                                    {style}
-                                </Label>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                        <Label htmlFor="expectedVolume">Expected Monthly Volume</Label>
-                        <Select value={expectedVolume} onValueChange={(value) => setValue('expectedVolume', value as 'low' | 'medium' | 'high')}>
-                            <SelectTrigger>
-                                <SelectValue placeholder="Select expected volume" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="low">Low (1-50 orders)</SelectItem>
-                                <SelectItem value="medium">Medium (51-200 orders)</SelectItem>
-                                <SelectItem value="high">High (200+ orders)</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-
-                    <div className="space-y-2">
-                        <Label htmlFor="budgetRange">Budget Range (Optional)</Label>
-                        <Input
-                            id="budgetRange"
-                            placeholder="e.g., $500-$2000/month"
-                            {...register('budgetRange')}
-                        />
-                    </div>
-                </div>
-
-                <div className="space-y-2">
-                    <Label htmlFor="targetAudience">Target Audience (Optional)</Label>
-                    <Textarea
-                        id="targetAudience"
-                        placeholder="Describe your target customers..."
-                        rows={3}
-                        {...register('targetAudience')}
-                    />
                 </div>
             </div>
 
@@ -501,11 +325,10 @@ export function CreatorOnboardingForm({
     const stepComponents = [
         PersonalInfoStep,
         BusinessInfoStep,
-        PreferencesStep,
     ];
 
-    const stepIcons = [User, Building, Settings];
-    const stepTitles = ['Personal Information', 'Business Details', 'Preferences'];
+    const stepIcons = [User, Building];
+    const stepTitles = ['Personal Information', 'Business Details'];
 
     const StepComponent = stepComponents[currentStep];
     const StepIcon = stepIcons[currentStep];

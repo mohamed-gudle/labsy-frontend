@@ -52,52 +52,28 @@ export interface CreatorOnboardingData {
     personalInfo: {
         /** Creator's full name */
         name: string;
-        /** Creator's email */
-        email: string;
         /** Creator's phone number */
-        phone: string;
-        /** Creator's location */
-        location?: string;
+        phone?: string;
+        /** Creator's preferred language */
+        preferredLanguage?: 'ar' | 'en';
     };
 
     /** Business information */
     businessInfo: {
         /** Business or brand name */
-        businessName?: string;
-        /** Business type */
-        businessType?: 'individual' | 'llc' | 'corporation' | 'partnership' | 'other';
+        businessName: string;
         /** Business description */
-        description?: string;
-        /** Website URL */
-        website?: string;
-        /** Social media handles */
-        socialMedia?: {
+        businessDescription?: string;
+        /** Social media links and online presence */
+        socialMediaLinks?: {
             instagram?: string;
             twitter?: string;
-            facebook?: string;
             tiktok?: string;
+            youtube?: string;
+            website?: string;
         };
     };
 
-    /** Creator preferences */
-    preferences: {
-        /** Primary product interests */
-        productInterests: string[];
-        /** Design style preferences */
-        designStyles?: string[];
-        /** Target audience */
-        targetAudience?: string;
-        /** Monthly volume expectations */
-        expectedVolume?: 'low' | 'medium' | 'high';
-        /** Budget range */
-        budgetRange?: string;
-    };
-
-    /** Intent survey data */
-    intentData: IntentSurveyData;
-
-    /** Onboarding completion timestamp */
-    completedAt?: Date;
 }
 
 /**

@@ -17,7 +17,7 @@ export const SignUpForm = () => {
 
   const handleSignUp = async () => {
     setLocalError(null);
-    if (!name || !email || !password) {
+    if (!email || !password) {
       setLocalError("All fields are required.");
       return;
     }
@@ -31,18 +31,6 @@ export const SignUpForm = () => {
         Create with Labsy
       </h1>
       <div className="space-y-4">
-        <div>
-          <Label htmlFor="name">Your name or Brand name</Label>
-          <Input
-            id="name"
-            value={name}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setName(e.target.value)
-            }
-            placeholder="John Doe"
-            required
-          />
-        </div>
         <div>
           <Label htmlFor="email">Email</Label>
           <Input

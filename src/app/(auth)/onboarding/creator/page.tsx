@@ -38,13 +38,6 @@ export default function CreatorOnboardingPage() {
       completed: currentStep > 1,
       active: currentStep === 1,
     },
-    {
-      id: "preferences",
-      title: "Preferences",
-      description: "Set up your preferences",
-      completed: currentStep > 2,
-      active: currentStep === 2,
-    },
   ];
 
   const handleStepComplete = (stepData: Partial<CreatorOnboardingData>) => {
@@ -67,14 +60,10 @@ export default function CreatorOnboardingPage() {
 
     try {
       // Prepare complete onboarding data for single submission
-      const completeOnboardingData: CreatorOnboardingData = {
-        ...finalData,
-        intentData: {
-          intent: "creator",
-          completedAt: new Date(),
-        },
-        completedAt: new Date(),
-      } as CreatorOnboardingData;
+      const completeOnboardingData = {
+        ...finalData.personalInfo,
+        ...finalData.businessInfo,
+      };
 
       // Single submission using SWR mutation - no intermediate calls
       const result = await registerCreatorMutation(completeOnboardingData);

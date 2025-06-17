@@ -10,10 +10,10 @@ import { axiosInstance } from "../axios";
  * Interface for onboarding API responses
  */
 export interface OnboardingApiResponse {
-    success: boolean;
-    user?: any;
-    message?: string;
-    errors?: Record<string, string>;
+  success: boolean;
+  user?: any;
+  message?: string;
+  errors?: Record<string, string>;
 }
 
 /**
@@ -23,30 +23,30 @@ export interface OnboardingApiResponse {
  * @returns Promise that resolves to OnboardingApiResponse
  */
 export const completeOnboarding = async (
-    onboardingData: OnboardingData,
-    intent: UserIntent
+  onboardingData: OnboardingData,
+  intent: UserIntent
 ): Promise<OnboardingApiResponse> => {
-    try {
-        const response = await fetch("/api/onboarding/complete", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                onboardingData,
-                intent,
-                completedAt: new Date(),
-            }),
-        });
+  try {
+    const response = await fetch("/api/onboarding/complete", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        onboardingData,
+        intent,
+        completedAt: new Date(),
+      }),
+    });
 
-        return await response.json();
-    } catch (error) {
-        console.error('Failed to complete onboarding:', error);
-        return {
-            success: false,
-            message: "Failed to complete onboarding",
-        };
-    }
+    return await response.json();
+  } catch (error) {
+    console.error("Failed to complete onboarding:", error);
+    return {
+      success: false,
+      message: "Failed to complete onboarding",
+    };
+  }
 };
 
 /**
@@ -55,27 +55,28 @@ export const completeOnboarding = async (
  * @param arg - Object containing the creator onboarding data
  * @returns Promise that resolves to API response
  */
-export async function registerCreator(url: string, { arg }: { arg: OnboardingData }) {
-    try {
-        const response = await axiosInstance.post(url, {
-            onboardingData: arg,
-            intent: 'creator',
-            completedAt: new Date(),
-        });
+export async function registerCreator(url: string, { arg }: { arg: any }) {
+  try {
+    const response = await axiosInstance.post(url, {
+      ...arg,
+    });
 
-        return {
-            success: true,
-            data: response.data,
-        };
-    } catch (error: any) {
-        console.error('Creator registration failed:', error);
+    return {
+      success: true,
+      data: response.data,
+    };
+  } catch (error: any) {
+    console.error("Creator registration failed:", error);
 
-        return {
-            success: false,
-            message: error.response?.data?.message ?? error.message ?? 'Failed to register creator',
-            errors: error.response?.data?.errors,
-        };
-    }
+    return {
+      success: false,
+      message:
+        error.response?.data?.message ??
+        error.message ??
+        "Failed to register creator",
+      errors: error.response?.data?.errors,
+    };
+  }
 }
 
 /**
@@ -85,28 +86,28 @@ export async function registerCreator(url: string, { arg }: { arg: OnboardingDat
  * @returns Promise that resolves to OnboardingApiResponse
  */
 export const createUserProfile = async (
-    onboardingData: OnboardingData,
-    intent: UserIntent
+  onboardingData: OnboardingData,
+  intent: UserIntent
 ): Promise<OnboardingApiResponse> => {
-    try {
-        const response = await fetch("/users/profile", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                onboardingData,
-                intent,
-                createdAt: new Date(),
-            }),
-        });
+  try {
+    const response = await fetch("/users/profile", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        onboardingData,
+        intent,
+        createdAt: new Date(),
+      }),
+    });
 
-        return await response.json();
-    } catch (error) {
-        console.error('Failed to create user profile:', error);
-        return {
-            success: false,
-            message: "Failed to create user profile",
-        };
-    }
+    return await response.json();
+  } catch (error) {
+    console.error("Failed to create user profile:", error);
+    return {
+      success: false,
+      message: "Failed to create user profile",
+    };
+  }
 };

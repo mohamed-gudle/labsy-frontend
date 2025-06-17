@@ -38,19 +38,21 @@ export const intentSurveySchema = z.object({
 export const personalInfoSchema = z.object({
   name: z
     .string()
-    .min(2, "Name must be at least 2 characters")
-    .max(50, "Name must be less than 50 characters"),
-
-  email: z.string().email("Please enter a valid email address"),
+    .min(2, "Name must be at least 2 characters long")
+    .max(100, "Name cannot exceed 100 characters")
+    .regex(/^[a-zA-Z\u0600-\u06FF\s.-]+$/, {
+      message: "Name can only contain letters, spaces, dots, and hyphens (Arabic and English supported)"
+    }),
 
   phone: z
     .string()
-    .regex(/^[\+]?[\d\s\-\(\)]+$/, "Please enter a valid phone number")
-    .min(10, "Phone number must be at least 10 digits"),
+    .regex(/^\+[1-9]\d{1,14}$/, "Please provide a valid phone number with country code (e.g., +1234567890)")
+    .optional(),
 
-  location: z
-    .string()
-    .max(100, "Location must be less than 100 characters")
+  preferredLanguage: z
+    .enum(["ar", "en"], {
+      errorMap: () => ({ message: "Preferred language must be either 'ar' (Arabic) or 'en' (English)" })
+    })
     .optional(),
 });
 
@@ -60,55 +62,60 @@ export const personalInfoSchema = z.object({
 export const businessInfoSchema = z.object({
   businessName: z
     .string()
-    .min(2, "Business name must be at least 2 characters")
-    .max(100, "Business name must be less than 100 characters")
-    .optional(),
+    .min(2, "Business name must be at least 2 characters long")
+    .max(150, "Business name cannot exceed 150 characters"),
 
-  businessType: z
-    .enum(["individual", "llc", "corporation", "partnership", "other"])
-    .optional(),
-
-  description: z
+  businessDescription: z
     .string()
-    .max(500, "Description must be less than 500 characters")
+    .min(10, "Business description must be at least 10 characters long")
+    .max(500, "Business description cannot exceed 500 characters")
     .optional(),
 
-  website: z
-    .string()
-    .url("Please enter a valid website URL")
-    .optional()
-    .or(z.literal("")),
-
-  socialMedia: z
+  socialMediaLinks: z
     .object({
-      instagram: z.string().optional(),
-      twitter: z.string().optional(),
-      facebook: z.string().optional(),
-      tiktok: z.string().optional(),
+      instagram: z
+        .string()
+        .optional()
+        .refine((val) => !val || z.string().url().safeParse(val).success, {
+          message: "Instagram URL must be a valid URL"
+        })
+        .refine((val) => !val || /^https?:\/\/(www\.)?instagram\.com\/[a-zA-Z0-9._]+\/?$/.test(val), {
+          message: "Instagram URL must be a valid Instagram profile URL"
+        }),
+      twitter: z
+        .string()
+        .optional()
+        .refine((val) => !val || z.string().url().safeParse(val).success, {
+          message: "Twitter URL must be a valid URL"
+        })
+        .refine((val) => !val || /^https?:\/\/(www\.)?(twitter\.com|x\.com)\/\w+\/?$/.test(val), {
+          message: "Twitter URL must be a valid Twitter/X profile URL"
+        }),
+      tiktok: z
+        .string()
+        .optional()
+        .refine((val) => !val || z.string().url().safeParse(val).success, {
+          message: "TikTok URL must be a valid URL"
+        })
+        .refine((val) => !val || /^https?:\/\/(www\.)?tiktok\.com\/@[a-zA-Z0-9._]+\/?$/.test(val), {
+          message: "TikTok URL must be a valid TikTok profile URL"
+        }),
+      youtube: z
+        .string()
+        .optional()
+        .refine((val) => !val || z.string().url().safeParse(val).success, {
+          message: "YouTube URL must be a valid URL"
+        })
+        .refine((val) => !val || /^https?:\/\/(www\.)?youtube\.com\/(c\/|channel\/|user\/)?[a-zA-Z0-9._-]+\/?$/.test(val), {
+          message: "YouTube URL must be a valid YouTube channel URL"
+        }),
+      website: z
+        .string()
+        .optional()
+        .refine((val) => !val || z.string().url().safeParse(val).success, {
+          message: "Website URL must be a valid URL"
+        }),
     })
-    .optional(),
-});
-
-/**
- * Creator preferences schema
- */
-export const creatorPreferencesSchema = z.object({
-  productInterests: z
-    .array(z.string())
-    .min(1, "Please select at least one product interest"),
-
-  designStyles: z.array(z.string()).optional(),
-
-  targetAudience: z
-    .string()
-    .max(200, "Target audience description must be less than 200 characters")
-    .optional(),
-
-  expectedVolume: z.enum(["low", "medium", "high"]).optional(),
-
-  budgetRange: z
-    .string()
-    .max(50, "Budget range must be less than 50 characters")
     .optional(),
 });
 
@@ -118,7 +125,6 @@ export const creatorPreferencesSchema = z.object({
 export const creatorOnboardingSchema = z.object({
   personalInfo: personalInfoSchema,
   businessInfo: businessInfoSchema,
-  preferences: creatorPreferencesSchema,
   intentData: intentSurveySchema,
   completedAt: z.date().optional(),
 });
@@ -198,8 +204,8 @@ export const factoryContactInfoSchema = z.object({
 
   phone: z
     .string()
-    .regex(/^[\+]?[\d\s\-\(\)]+$/, "Please enter a valid phone number")
-    .min(10, "Phone number must be at least 10 digits"),
+    .regex(/^\+[1-9]\d{1,14}$/, "Please provide a valid phone number with country code (e.g., +1234567890)")
+    .optional(),
 
   position: z
     .string()
@@ -273,8 +279,7 @@ export const oneOffPurchaserPersonalInfoSchema = z.object({
 
   phone: z
     .string()
-    .regex(/^[\+]?[\d\s\-\(\)]+$/, "Please enter a valid phone number")
-    .min(10, "Phone number must be at least 10 digits")
+    .regex(/^\+[1-9]\d{1,14}$/, "Please provide a valid phone number with country code (e.g., +1234567890)")
     .optional(),
 
   location: z
