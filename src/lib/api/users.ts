@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * API functions for user management
  * This file consolidates all user-related API calls

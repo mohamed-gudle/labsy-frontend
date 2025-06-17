@@ -40,7 +40,7 @@
 ### Notes
 - All authentication logic is now centralized in the context for maintainability and scalability.
 - Local validation and error handling are preserved in both forms.
-- Logout functionality clears localStorage and redirects to `/auth/sign-in`.
+- Logout functionality clears localStorage and redirects to `/sign-in`.
 
 ## [1.0.0] - 2025-06-01
 ### Added

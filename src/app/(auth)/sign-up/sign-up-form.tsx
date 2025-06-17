@@ -12,16 +12,11 @@ export const SignUpForm = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isHuman, setIsHuman] = useState(false);
   const { signUp, loading, error, signInWithGoogle } = useAuth();
   const [localError, setLocalError] = useState<string | null>(null);
 
   const handleSignUp = async () => {
     setLocalError(null);
-    if (!isHuman) {
-      setLocalError("Please verify you are not a robot.");
-      return;
-    }
     if (!name || !email || !password) {
       setLocalError("All fields are required.");
       return;
@@ -73,17 +68,6 @@ export const SignUpForm = () => {
               setPassword(e.target.value)
             }
           />
-        </div>
-        <div className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            id="recaptcha"
-            checked={isHuman}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setIsHuman(e.target.checked)
-            }
-          />
-          <Label htmlFor="recaptcha">I&apos;m not a robot</Label>
         </div>
         {localError && <p className="text-red-500 text-sm">{localError}</p>}
         {error && <p className="text-red-500 text-sm">{error}</p>}
