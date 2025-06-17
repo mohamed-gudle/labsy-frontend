@@ -82,20 +82,6 @@ export function OnboardingWizard({
           </p>
         </div>
 
-
-
-        {/* Current Step Info */}
-        {currentStepData && (
-          <div className="text-center mb-4 md:mb-6">
-            <h2 className="text-lg md:text-xl font-semibold text-gray-900 mb-1">
-              {currentStepData.title}
-            </h2>
-            <p className="text-sm md:text-base text-gray-600">
-              {currentStepData.description}
-            </p>
-          </div>
-        )}
-
         {/* Main Content Card */}
         <Card className="shadow-lg border-0 mx-2 md:mx-0">
           <CardHeader className="pb-4 md:pb-6 px-4 md:px-6">
@@ -115,44 +101,6 @@ export function OnboardingWizard({
 
           <CardContent className="pt-0 px-4 md:px-6 pb-4 md:pb-6">
             {children}
-
-            {/* Navigation inside card */}
-            {navigationInCard && (
-              <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between pt-6 space-y-3 md:space-y-0">
-                {/* Back Button */}
-                {!isFirstStep ? (
-                  <Button
-                    variant="outline"
-                    onClick={onStepBack}
-                    disabled={isNavigating}
-                    className="flex items-center justify-center space-x-2 w-full md:w-auto order-2 md:order-1"
-                  >
-                    <ArrowLeft className="w-4 h-4" />
-                    <span>{backButtonText}</span>
-                  </Button>
-                ) : (
-                  <div className="hidden md:block" /> /* Desktop spacer */
-                )}
-
-                {/* Forward/Submit Button */}
-                <Button
-                  onClick={onStepForward}
-                  disabled={!canProceed || isNavigating}
-                  className="flex items-center justify-center space-x-2 min-w-[120px] w-full md:w-auto order-1 md:order-2"
-                >
-                  {isNavigating ? (
-                    <span>Loading...</span>
-                  ) : (
-                    <>
-                      <span>
-                        {isLastStep ? submitButtonText : nextButtonText}
-                      </span>
-                      {!isLastStep && <ArrowRight className="w-4 h-4" />}
-                    </>
-                  )}
-                </Button>
-              </div>
-            )}
           </CardContent>
         </Card>
 

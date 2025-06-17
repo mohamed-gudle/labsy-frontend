@@ -97,13 +97,13 @@ function PersonalInfoStep({
                     )}
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-2 w-full">
                     <Label htmlFor="preferredLanguage">Preferred Language</Label>
                     <Select
                         value={preferredLanguage}
                         onValueChange={(value) => setValue('preferredLanguage', value as 'ar' | 'en')}
                     >
-                        <SelectTrigger>
+                        <SelectTrigger className="w-full">
                             <SelectValue placeholder="Select preferred language" />
                         </SelectTrigger>
                         <SelectContent>

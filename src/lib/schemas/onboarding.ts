@@ -41,17 +41,24 @@ export const personalInfoSchema = z.object({
     .min(2, "Name must be at least 2 characters long")
     .max(100, "Name cannot exceed 100 characters")
     .regex(/^[a-zA-Z\u0600-\u06FF\s.-]+$/, {
-      message: "Name can only contain letters, spaces, dots, and hyphens (Arabic and English supported)"
+      message:
+        "Name can only contain letters, spaces, dots, and hyphens (Arabic and English supported)",
     }),
 
   phone: z
     .string()
-    .regex(/^\+[1-9]\d{1,14}$/, "Please provide a valid phone number with country code (e.g., +1234567890)")
+    .regex(
+      /^\+[1-9]\d{1,14}$/,
+      "Please provide a valid phone number with country code (e.g., +1234567890)"
+    )
     .optional(),
 
   preferredLanguage: z
     .enum(["ar", "en"], {
-      errorMap: () => ({ message: "Preferred language must be either 'ar' (Arabic) or 'en' (English)" })
+      errorMap: () => ({
+        message:
+          "Preferred language must be either 'ar' (Arabic) or 'en' (English)",
+      }),
     })
     .optional(),
 });
@@ -77,43 +84,65 @@ export const businessInfoSchema = z.object({
         .string()
         .optional()
         .refine((val) => !val || z.string().url().safeParse(val).success, {
-          message: "Instagram URL must be a valid URL"
+          message: "Instagram URL must be a valid URL",
         })
-        .refine((val) => !val || /^https?:\/\/(www\.)?instagram\.com\/[a-zA-Z0-9._]+\/?$/.test(val), {
-          message: "Instagram URL must be a valid Instagram profile URL"
-        }),
+        .refine(
+          (val) =>
+            !val ||
+            /^https?:\/\/(www\.)?instagram\.com\/[a-zA-Z0-9._]+\/?$/.test(val),
+          {
+            message: "Instagram URL must be a valid Instagram profile URL",
+          }
+        ),
       twitter: z
         .string()
         .optional()
         .refine((val) => !val || z.string().url().safeParse(val).success, {
-          message: "Twitter URL must be a valid URL"
+          message: "Twitter URL must be a valid URL",
         })
-        .refine((val) => !val || /^https?:\/\/(www\.)?(twitter\.com|x\.com)\/\w+\/?$/.test(val), {
-          message: "Twitter URL must be a valid Twitter/X profile URL"
-        }),
+        .refine(
+          (val) =>
+            !val ||
+            /^https?:\/\/(www\.)?(twitter\.com|x\.com)\/\w+\/?$/.test(val),
+          {
+            message: "Twitter URL must be a valid Twitter/X profile URL",
+          }
+        ),
       tiktok: z
         .string()
         .optional()
         .refine((val) => !val || z.string().url().safeParse(val).success, {
-          message: "TikTok URL must be a valid URL"
+          message: "TikTok URL must be a valid URL",
         })
-        .refine((val) => !val || /^https?:\/\/(www\.)?tiktok\.com\/@[a-zA-Z0-9._]+\/?$/.test(val), {
-          message: "TikTok URL must be a valid TikTok profile URL"
-        }),
+        .refine(
+          (val) =>
+            !val ||
+            /^https?:\/\/(www\.)?tiktok\.com\/@[a-zA-Z0-9._]+\/?$/.test(val),
+          {
+            message: "TikTok URL must be a valid TikTok profile URL",
+          }
+        ),
       youtube: z
         .string()
         .optional()
         .refine((val) => !val || z.string().url().safeParse(val).success, {
-          message: "YouTube URL must be a valid URL"
+          message: "YouTube URL must be a valid URL",
         })
-        .refine((val) => !val || /^https?:\/\/(www\.)?youtube\.com\/(c\/|channel\/|user\/)?[a-zA-Z0-9._-]+\/?$/.test(val), {
-          message: "YouTube URL must be a valid YouTube channel URL"
-        }),
+        .refine(
+          (val) =>
+            !val ||
+            /^https?:\/\/(www\.)?youtube\.com\/(c\/|channel\/|user\/)?[a-zA-Z0-9._-]+\/?$/.test(
+              val
+            ),
+          {
+            message: "YouTube URL must be a valid YouTube channel URL",
+          }
+        ),
       website: z
         .string()
         .optional()
         .refine((val) => !val || z.string().url().safeParse(val).success, {
-          message: "Website URL must be a valid URL"
+          message: "Website URL must be a valid URL",
         }),
     })
     .optional(),
@@ -204,7 +233,10 @@ export const factoryContactInfoSchema = z.object({
 
   phone: z
     .string()
-    .regex(/^\+[1-9]\d{1,14}$/, "Please provide a valid phone number with country code (e.g., +1234567890)")
+    .regex(
+      /^\+[1-9]\d{1,14}$/,
+      "Please provide a valid phone number with country code (e.g., +1234567890)"
+    )
     .optional(),
 
   position: z
@@ -275,11 +307,12 @@ export const oneOffPurchaserPersonalInfoSchema = z.object({
     .min(2, "Name must be at least 2 characters")
     .max(50, "Name must be less than 50 characters"),
 
-  email: z.string().email("Please enter a valid email address"),
-
   phone: z
     .string()
-    .regex(/^\+[1-9]\d{1,14}$/, "Please provide a valid phone number with country code (e.g., +1234567890)")
+    .regex(
+      /^\+[1-9]\d{1,14}$/,
+      "Please provide a valid phone number with country code (e.g., +1234567890)"
+    )
     .optional(),
 
   location: z

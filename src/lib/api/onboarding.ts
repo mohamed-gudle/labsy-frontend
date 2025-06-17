@@ -79,6 +79,33 @@ export async function registerCreator(url: string, { arg }: { arg: any }) {
   }
 }
 
+export async function registerUser(
+  url: string,
+  { arg }: { arg: any }
+): Promise<OnboardingApiResponse> {
+  try {
+    const response = await axiosInstance.post(url, {
+      ...arg,
+    });
+
+    return {
+      success: true,
+      user: response.data.user,
+    };
+  } catch (error: any) {
+    console.error("User registration failed:", error);
+
+    return {
+      success: false,
+      message:
+        error.response?.data?.message ??
+        error.message ??
+        "Failed to register user",
+      errors: error.response?.data?.errors,
+    };
+  }
+}
+
 /**
  * Create user profile based on onboarding data
  * @param onboardingData - The onboarding data

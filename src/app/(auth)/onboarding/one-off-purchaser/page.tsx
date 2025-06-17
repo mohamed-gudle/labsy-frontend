@@ -1,67 +1,92 @@
 "use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { OneOffPurchaserOnboardingForm } from '@/components/onboarding';
-import { OneOffPurchaserOnboardingData } from '@/lib/types/onboarding';
-import { getPostOnboardingRoute } from '@/lib/utils/onboarding';
-import { completeOnboarding } from '@/lib/api/onboarding';
-import { useAuth } from '@/context/auth-context';
+import {
+  OnboardingWizard,
+  OneOffPurchaserOnboardingForm,
+} from "@/components/onboarding";
+import { useAuth } from "@/context/auth-context";
+import { registerUser } from "@/lib/api/onboarding";
+import { OneOffPurchaserOnboardingData } from "@/lib/types/onboarding";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import useSWRMutation from "swr/mutation";
 
 export default function OneOffPurchaserOnboardingPage() {
-    const router = useRouter();
-    const { user } = useAuth();
-    const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const { user } = useAuth();
+  const [currentStep, setCurrentStep] = useState(0);
+  const [formData, setFormData] = useState<
+    Partial<OneOffPurchaserOnboardingData>
+  >({});
 
-    const handleSubmit = async (data: OneOffPurchaserOnboardingData) => {
-        if (!user) {
-            console.error('User not authenticated');
-            return;
-        }
+  // SWR mutation for creator registration
+  const { trigger: registerMutation, isMutating } = useSWRMutation(
+    "/auth/register/user",
+    registerUser
+  );
 
-        setLoading(true);
+  const steps = [
+    {
+      id: "personal-info",
+      title: "Personal Information",
+      description: "Tell us about yourself",
+      completed: currentStep > 0,
+      active: currentStep === 0,
+    },
+  ];
 
-        try {
-            // Complete the onboarding data
-            const completeOnboardingData: OneOffPurchaserOnboardingData = {
-                ...data,
-                intentData: {
-                    intent: 'one-off-purchaser',
-                    completedAt: new Date(),
-                },
-                completedAt: new Date(),
-            };
+  const handleOnboardingComplete = async (
+    finalData: Partial<OneOffPurchaserOnboardingData>
+  ) => {
+    if (!user) {
+      console.error("User not authenticated");
+      return;
+    }
 
-            // Submit onboarding data to backend
-            const result = await completeOnboarding(completeOnboardingData, 'one-off-purchaser');
+    try {
+      // Prepare complete onboarding data for single submission
+      const completeOnboardingData = {
+        ...finalData,
+      };
 
-            if (result.success) {
-                console.log('One-off purchaser onboarding completed successfully:', result);
-                // Redirect to appropriate dashboard
-                const redirectUrl = getPostOnboardingRoute('one-off-purchaser');
-                router.push(redirectUrl);
-            } else {
-                console.error('Failed to complete onboarding:', result.message);
-                // Handle error - could show toast notification
-                setLoading(false);
-            }
-        } catch (error) {
-            console.error('Error submitting onboarding data:', error);
-            setLoading(false);
-        }
-    };
+      // Single submission using SWR mutation - no intermediate calls
+      const result = await registerMutation(completeOnboardingData);
 
-    const handleBack = () => {
-        router.push('/onboarding');
-    };
+      if (result?.success) {
+        console.log("onboarding completed successfully:", result.user);
+        // Redirect to dashboard after successful submission
+        router.push("/dashboard");
+      } else {
+        console.error(
+          "Failed to complete onboarding:",
+          result?.message ?? "Unknown error"
+        );
+        // Handle error - could show toast notification
+      }
+    } catch (error) {
+      console.error("Error completing onboarding:", error);
+      // Handle error state - could show error message to user
+    }
+  };
 
-    return (
-        <div className="min-h-screen bg-gray-50 py-8">
-            <OneOffPurchaserOnboardingForm
-                onSubmit={handleSubmit}
-                onBack={handleBack}
-                loading={loading}
-            />
-        </div>
-    );
+  const handleStepBack = () => {
+    if (currentStep > 0) {
+      setCurrentStep((prev) => prev - 1);
+    } else {
+      router.push("/onboarding");
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <OnboardingWizard steps={steps} currentStep={currentStep}>
+        <OneOffPurchaserOnboardingForm
+          initialData={formData}
+          onSubmit={handleOnboardingComplete}
+          onBack={handleStepBack}
+          loading={isMutating}
+        />
+      </OnboardingWizard>
+    </div>
+  );
 }
