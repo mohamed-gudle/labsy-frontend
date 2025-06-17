@@ -1,18 +1,23 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState, ReactNode, useMemo } from 'react';
+import React, { createContext, useContext, useEffect, useState, ReactNode, useMemo, useCallback } from 'react';
 import { onAuthStateChanged, signInWithEmailAndPassword, signOut as firebaseSignOut, createUserWithEmailAndPassword, sendPasswordResetEmail, User, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '@/lib/firebase/config';
+import { getCurrentUser } from '@/lib/api/users';
 
 interface AuthContextProps {
     user: User | null;
     loading: boolean;
     error: string | null;
+    authError: string | null; // New error state for authentication/user fetching errors
     signIn: (email: string, password: string) => Promise<void>;
     signOut: () => Promise<void>;
     signUp: (email: string, password: string) => Promise<void>;
     signInWithGoogle: () => Promise<void>;
     resetPassword: (email: string) => Promise<void>;
+    getFirebaseToken: () => Promise<string | null>;
+    refreshToken: () => Promise<string | null>;
+    clearAuthError: () => void; // Function to clear auth errors
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -25,16 +30,40 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [authError, setAuthError] = useState<string | null>(null);
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+        const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
             setUser(firebaseUser);
+            setAuthError(null);
+
+            if (firebaseUser) {
+                // Skip API call if on onboarding pages to prevent infinite loops
+                const isOnboardingPage = typeof window !== 'undefined' &&
+                    window.location.pathname.includes('/onboarding');
+
+                if (!isOnboardingPage) {
+                    try {
+                        await getCurrentUser();
+                    } catch (err: unknown) {
+                        console.error('Error fetching current user:', err);
+
+                        // Set auth error for display
+                        if (err && typeof err === 'object' && 'message' in err && typeof (err as { message: unknown }).message === 'string') {
+                            setAuthError((err as { message: string }).message);
+                        } else {
+                            setAuthError('Failed to load user profile. Please try refreshing the page or contact support if the issue persists.');
+                        }
+                    }
+                }
+            }
+
             setLoading(false);
         });
         return () => unsubscribe();
     }, []);
 
-    const signIn = async (email: string, password: string) => {
+    const signIn = useCallback(async (email: string, password: string) => {
         setError(null);
         setLoading(true);
         try {
@@ -46,10 +75,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             } else {
                 setError('Failed to sign in.');
             }
+
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
     const signInWithGoogle = async () => {
         setError(null);
@@ -120,7 +150,46 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }
     };
 
-    const contextValue = useMemo(() => ({ user, loading, error, signIn, signInWithGoogle, signOut, signUp, resetPassword }), [user, loading, error]);
+    const getFirebaseToken = async (): Promise<string | null> => {
+        try {
+            if (!user) return null;
+            const token = await user.getIdToken();
+            return token;
+        } catch (error) {
+            console.error('Error getting Firebase token:', error);
+            return null;
+        }
+    };
+
+    const refreshToken = async (): Promise<string | null> => {
+        try {
+            if (!user) return null;
+            const token = await user.getIdToken(true); // Force refresh
+            return token;
+        } catch (error) {
+            console.error('Error refreshing Firebase token:', error);
+            return null;
+        }
+    };
+
+    const clearAuthError = useCallback(() => {
+        setAuthError(null);
+    }, []);
+
+    const contextValue = useMemo(() => ({
+        user,
+        loading,
+        error,
+        authError,
+        signIn,
+        signInWithGoogle,
+        signOut,
+        signUp,
+        resetPassword,
+        getFirebaseToken,
+        refreshToken,
+        clearAuthError
+    }), [user, loading, error, authError, signIn, signInWithGoogle, signOut, signUp, resetPassword, getFirebaseToken, refreshToken, clearAuthError]);
 
     return (
         <AuthContext.Provider value={contextValue}>

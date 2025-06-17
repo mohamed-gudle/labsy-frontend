@@ -4,14 +4,16 @@
  * This file consolidates all user-related API calls
  */
 
+import { axiosInstance } from "../axios";
+
 /**
  * Interface for user API responses
  */
 export interface UserApiResponse {
-    success: boolean;
-    user?: any;
-    message?: string;
-    errors?: Record<string, string>;
+  success: boolean;
+  user?: any;
+  message?: string;
+  errors?: Record<string, string>;
 }
 
 /**
@@ -19,15 +21,15 @@ export interface UserApiResponse {
  * @returns Promise that resolves to UserApiResponse
  */
 export const getCurrentUser = async (): Promise<UserApiResponse> => {
-    try {
-        const response = await fetch('/api/users/me');
-        return await response.json();
-    } catch (error) {
-        return {
-            success: false,
-            message: 'Failed to get user profile',
-        };
-    }
+  try {
+    const response = await axiosInstance.get("/auth/me");
+    return response.data;
+  } catch (error) {
+    return {
+      success: false,
+      message: "Failed to get user profile",
+    };
+  }
 };
 
 /**
@@ -35,23 +37,25 @@ export const getCurrentUser = async (): Promise<UserApiResponse> => {
  * @param userData - The user data to update
  * @returns Promise that resolves to UserApiResponse
  */
-export const updateUserProfile = async (userData: Record<string, any>): Promise<UserApiResponse> => {
-    try {
-        const response = await fetch('/api/users/me', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(userData),
-        });
+export const updateUserProfile = async (
+  userData: Record<string, any>
+): Promise<UserApiResponse> => {
+  try {
+    const response = await fetch("/api/users/me", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    });
 
-        return await response.json();
-    } catch (error) {
-        return {
-            success: false,
-            message: 'Failed to update user profile',
-        };
-    }
+    return await response.json();
+  } catch (error) {
+    return {
+      success: false,
+      message: "Failed to update user profile",
+    };
+  }
 };
 
 /**
@@ -60,23 +64,26 @@ export const updateUserProfile = async (userData: Record<string, any>): Promise<
  * @param newPassword - New password
  * @returns Promise that resolves to UserApiResponse
  */
-export const updateUserPassword = async (currentPassword: string, newPassword: string): Promise<UserApiResponse> => {
-    try {
-        const response = await fetch('/api/users/password', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ currentPassword, newPassword }),
-        });
+export const updateUserPassword = async (
+  currentPassword: string,
+  newPassword: string
+): Promise<UserApiResponse> => {
+  try {
+    const response = await fetch("/api/users/password", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ currentPassword, newPassword }),
+    });
 
-        return await response.json();
-    } catch (error) {
-        return {
-            success: false,
-            message: 'Failed to update password',
-        };
-    }
+    return await response.json();
+  } catch (error) {
+    return {
+      success: false,
+      message: "Failed to update password",
+    };
+  }
 };
 
 /**
@@ -84,16 +91,16 @@ export const updateUserPassword = async (currentPassword: string, newPassword: s
  * @returns Promise that resolves to UserApiResponse
  */
 export const deleteUserAccount = async (): Promise<UserApiResponse> => {
-    try {
-        const response = await fetch('/api/users/me', {
-            method: 'DELETE',
-        });
+  try {
+    const response = await fetch("/api/users/me", {
+      method: "DELETE",
+    });
 
-        return await response.json();
-    } catch (error) {
-        return {
-            success: false,
-            message: 'Failed to delete account',
-        };
-    }
+    return await response.json();
+  } catch (error) {
+    return {
+      success: false,
+      message: "Failed to delete account",
+    };
+  }
 };

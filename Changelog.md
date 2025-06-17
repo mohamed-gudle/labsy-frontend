@@ -5,11 +5,21 @@
 - User menu component (`src/components/ui/user-menu.tsx`) with profile, settings, subscription, and logout options, using Shadcn UI, lucide-react, and Tailwind.
 - Integrated user menu at the bottom of the desktop sidebar in `src/components/ui/sidebar.tsx`.
 - Added `category-dropdown.tsx` component for category selection dropdown using Radix UI, Shadcn UI, and Tailwind.
+
+### Fixed
+- **CRITICAL**: Added automatic user existence check in auth context to ensure proper onboarding redirection after Firebase authentication
+- Enhanced auth context to automatically call `getCurrentUser()` API when user authenticates, triggering axios interceptor for onboarding redirection
+- Fixed issue where users weren't automatically redirected to onboarding after sign-in/sign-up because no API calls were made to trigger backend validation
 - Added `filter.tsx` to wrap the dropdown and manage selected state.
 - Updated `page.tsx` to use the new filter and display filtered products, matching the dropdown menu UI/UX from the provided screenshot.
 - Created `ProductListItem` component in `src/app/(dashboard)/base-products/components/product-list-item.tsx` for product card UI matching design reference.
 - Created a global Axios instance in `src/lib/fetcher.ts` for API requests, with default headers and TypeScript support.
 - Added `removeDesign` and `clearCurrentArea` actions to design state management for better control over designs.
+- Added backend error handling in axios interceptor to redirect users to onboarding when "User not found in database" error is received.
+- Enhanced auth context with `getFirebaseToken()` and `refreshToken()` methods for Firebase token management.
+- Created comprehensive onboarding API module (`src/lib/api/onboarding.ts`) with functions for completing onboarding, saving progress, and creating user profiles.
+- Integrated Firebase authentication with all onboarding flows (creator, factory, one-off-purchaser) to save user data against Firebase tokens.
+- Enhanced AuthGuard to support onboarding flows - authenticated users can now access onboarding routes without being redirected.
 
 ### Changed
 - **BREAKING:** Simplified canvas logic and design state management for better persistence across print areas:
@@ -28,6 +38,12 @@
   - Now uses a responsive two-column layout: print area list/properties sidebar on the left, canvas on the right (desktop); stacks vertically on mobile.
   - Canvas area is given more space for better usability.
   - Ensures print area configuration is more user-friendly and visually balanced across screen sizes.
+- Updated axios interceptor to automatically include Firebase auth tokens in API requests and handle "User not found in database" errors.
+- Modified all onboarding pages to use Firebase authentication and backend API integration:
+  - Creator onboarding (`src/app/(auth)/onboarding/creator/page.tsx`) now saves data using Firebase tokens
+  - Factory onboarding (`src/app/(auth)/onboarding/factory/page.tsx`) now integrates with backend API
+  - One-off purchaser onboarding (`src/app/(auth)/onboarding/one-off-purchaser/page.tsx`) now uses Firebase authentication
+- Enhanced AuthGuard (`src/guards/auth-guard.tsx`) to properly handle onboarding routes - authenticated users can now access onboarding pages without being redirected to dashboard.
 
 ### Fixed
 - Resolved `Module not found: Can't resolve 'canvas'` error from `konva`/`react-konva` in Next.js by aliasing 'canvas' to an empty module in `next.config.ts`.

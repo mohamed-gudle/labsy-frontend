@@ -1,4 +1,5 @@
 import { AuthProvider } from "@/context/auth-context";
+import { AuthErrorBoundary } from "@/components/auth";
 import type { Metadata } from "next";
 import { Inter, Poppins } from 'next/font/google'
 import "./globals.css";
@@ -64,7 +65,9 @@ export default function RootLayout({
         <body
           className="font-inter"
         >
-          {children}
+          <AuthErrorBoundary>
+            {children}
+          </AuthErrorBoundary>
         </body>
       </html>
     </AuthProvider>

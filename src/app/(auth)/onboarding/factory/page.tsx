@@ -4,9 +4,12 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { OnboardingWizard, FactoryOnboardingForm } from '@/components/onboarding';
 import { FactoryOnboardingData } from '@/lib/types/onboarding';
+import { completeOnboarding } from '@/lib/api/onboarding';
+import { useAuth } from '@/context/auth-context';
 
 export default function FactoryOnboardingPage() {
     const router = useRouter();
+    const { user } = useAuth();
     const [currentStep, setCurrentStep] = useState(0);
     const [formData, setFormData] = useState<Partial<FactoryOnboardingData>>({});
 
@@ -46,12 +49,33 @@ export default function FactoryOnboardingPage() {
     };
 
     const handleOnboardingComplete = async (finalData: Partial<FactoryOnboardingData>) => {
-        try {
-            // TODO: Submit onboarding data to API
-            console.log('Factory onboarding completed:', finalData);
+        if (!user) {
+            console.error('User not authenticated');
+            return;
+        }
 
-            // Redirect to factory dashboard
-            router.push('/dashboard/factory');
+        try {
+            // Complete the onboarding data
+            const completeOnboardingData: FactoryOnboardingData = {
+                ...finalData,
+                intentData: {
+                    intent: 'factory',
+                    completedAt: new Date(),
+                },
+                completedAt: new Date(),
+            } as FactoryOnboardingData;
+
+            // Submit onboarding data to backend
+            const result = await completeOnboarding(completeOnboardingData, 'factory');
+
+            if (result.success) {
+                console.log('Factory onboarding completed successfully:', result);
+                // Redirect to factory dashboard
+                router.push('/dashboard/factory');
+            } else {
+                console.error('Failed to complete onboarding:', result.message);
+                // Handle error - could show toast notification
+            }
         } catch (error) {
             console.error('Error completing factory onboarding:', error);
         }

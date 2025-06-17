@@ -22,24 +22,13 @@ interface SocialAuthButtonsProps {
 }
 
 const defaultProviders: SocialProvider[] = [
-  {
-    id: "youtube",
-    name: "YouTube",
-    icon: "/icons/youtube.svg",
-    alt: "YouTube logo",
-  },
+
   {
     id: "google",
     name: "Google",
     icon: "/icons/google.svg",
     alt: "Google logo",
-  },
-  {
-    id: "facebook",
-    name: "Facebook",
-    icon: "/icons/facebook.svg",
-    alt: "Facebook logo",
-  },
+  }
 ];
 
 /**

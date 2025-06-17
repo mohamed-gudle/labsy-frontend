@@ -4,11 +4,15 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { OnboardingWizard, CreatorOnboardingForm } from '@/components/onboarding';
 import { CreatorOnboardingData } from '@/lib/types/onboarding';
+import { completeOnboarding } from '@/lib/api/onboarding';
+import { useAuth } from '@/context/auth-context';
 
 export default function CreatorOnboardingPage() {
     const router = useRouter();
+    const { user } = useAuth();
     const [currentStep, setCurrentStep] = useState(0);
     const [formData, setFormData] = useState<Partial<CreatorOnboardingData>>({});
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const steps = [
         {
@@ -46,14 +50,38 @@ export default function CreatorOnboardingPage() {
     };
 
     const handleOnboardingComplete = async (finalData: Partial<CreatorOnboardingData>) => {
-        try {
-            // TODO: Submit onboarding data to API
-            console.log('Creator onboarding completed:', finalData);
+        if (!user) {
+            console.error('User not authenticated');
+            return;
+        }
 
-            // Redirect to dashboard
-            router.push('/dashboard');
+        setIsSubmitting(true);
+        try {
+            // Complete the onboarding data
+            const completeOnboardingData: CreatorOnboardingData = {
+                ...finalData,
+                intentData: {
+                    intent: 'creator',
+                    completedAt: new Date(),
+                },
+                completedAt: new Date(),
+            } as CreatorOnboardingData;
+
+            // Submit onboarding data to backend
+            const result = await completeOnboarding(completeOnboardingData, 'creator');
+
+            if (result.success) {
+                console.log('Creator onboarding completed successfully:', result);
+                // Redirect to dashboard
+                router.push('/dashboard');
+            } else {
+                console.error('Failed to complete onboarding:', result.message);
+                // Handle error - could show toast notification
+            }
         } catch (error) {
             console.error('Error completing onboarding:', error);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
