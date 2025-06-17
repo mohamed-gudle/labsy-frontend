@@ -81,7 +81,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }
     }, []);
 
-    const signInWithGoogle = async () => {
+    const signInWithGoogle = useCallback(async () => {
         setError(null);
         setLoading(true);
         try {
@@ -97,9 +97,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
-    const signOut = async () => {
+    const signOut = useCallback(async () => {
         setError(null);
         setLoading(true);
         try {
@@ -114,9 +114,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
-    const signUp = async (email: string, password: string) => {
+    const signUp = useCallback(async (email: string, password: string) => {
         setError(null);
         setLoading(true);
         try {
@@ -131,9 +131,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
-    const resetPassword = async (email: string) => {
+    const resetPassword = useCallback(async (email: string) => {
         setError(null);
         setLoading(true);
         try {
@@ -148,9 +148,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
-    const getFirebaseToken = async (): Promise<string | null> => {
+    const getFirebaseToken = useCallback(async (): Promise<string | null> => {
         try {
             if (!user) return null;
             const token = await user.getIdToken();
@@ -159,9 +159,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             console.error('Error getting Firebase token:', error);
             return null;
         }
-    };
+    }, [user]);
 
-    const refreshToken = async (): Promise<string | null> => {
+    const refreshToken = useCallback(async (): Promise<string | null> => {
         try {
             if (!user) return null;
             const token = await user.getIdToken(true); // Force refresh
@@ -170,7 +170,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             console.error('Error refreshing Firebase token:', error);
             return null;
         }
-    };
+    }, [user]);
 
     const clearAuthError = useCallback(() => {
         setAuthError(null);
