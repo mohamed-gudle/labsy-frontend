@@ -3,15 +3,14 @@
     "id": "reg-fit-tee-ss-001",
     "title": "Regular Fit Short Sleeve Tee",
     "description": "A comfortable regular fit short sleeve t-shirt made from 180 GSM cotton, perfect for everyday wear.",
-    "image": "/mocks/REG_FIT_TEES/FRONT_SS.png",
     "brand": "Labsy",
     "category": "T-shirt",
     "material": "100% cotton",
-    "manufacturer": "Labsy Apparel",
+    "base_cost": 25.0,
     "colors": ["#E5E5E5", "#111111", "#FFFFFF", "#A32C2C", "#2C4A1B"],
-    "country": "Saudi Arabia",
-    "fulfillmentTime": "P3D",
     "available_sizes": {"S": 100, "M": 120, "L": 80, "XL": 60},
+    "image": "/mocks/REG_FIT_TEES/FRONT_SS.png",
+    "main_image": "/mocks/REG_FIT_TEES/FRONT_SS.png",
     "print_areas": [
       {
         "name": "Front",
@@ -19,10 +18,8 @@
         "y": 100,
         "width": 200,
         "height": 200,
-        "mockup_url": "/mock/tshirt-front.png",
         "dpi": 300,
-        "printable": true,
-        "description": "Front print area for chest designs."
+        "mockup_url": "https://example.com/mock/tshirt-front.png"
       },
       {
         "name": "Back",
@@ -30,28 +27,23 @@
         "y": 40,
         "width": 210,
         "height": 297,
-        "mockup_url": "/mocks/REG_FIT_TEES/BACK_SS.png",
         "dpi": 300,
-        "printable": true,
-        "description": "Back print area for large designs."
+        "mockup_url": "https://example.com/mocks/REG_FIT_TEES/BACK_SS.png"
       }
-    ],
-    "base_cost": 25.0,
-    "print_cost_per_cm2": 0.05
+    ]
   },
   {
-    "id": "reg-fit-tee-ls-001",
+    "id": "reg-fit-tee-ls-001", 
     "title": "Regular Fit Long Sleeve Tee",
     "description": "A comfortable regular fit long sleeve t-shirt made from 180 GSM cotton, ideal for cooler weather.",
-    "image": "/mocks/REG_FIT_TEES/LS_TEE_FRONT.png",
     "brand": "Labsy",
     "category": "Long Sleeve T-shirt",
     "material": "100% cotton",
-    "manufacturer": "Labsy Apparel",
+    "base_cost": 30.0,
     "colors": ["#E5E5E5", "#111111", "#FFFFFF", "#A32C2C", "#2C4A1B"],
-    "country": "Saudi Arabia",
-    "fulfillmentTime": "P3D",
     "available_sizes": {"S": 80, "M": 100, "L": 70, "XL": 50},
+    "image": "/mocks/REG_FIT_TEES/LS_TEE_FRONT.png",
+    "main_image": "/mocks/REG_FIT_TEES/LS_TEE_FRONT.png",
     "print_areas": [
       {
         "name": "Front",
@@ -59,10 +51,8 @@
         "y": 100,
         "width": 200,
         "height": 200,
-        "mockup_url": "/mocks/REG_FIT_TEES/LS_TEE_FRONT.png",
         "dpi": 300,
-        "printable": true,
-        "description": "Front print area for chest designs."
+        "mockup_url": "https://example.com/mocks/REG_FIT_TEES/LS_TEE_FRONT.png"
       },
       {
         "name": "Back",
@@ -70,28 +60,23 @@
         "y": 40,
         "width": 210,
         "height": 297,
-        "mockup_url": "/mocks/REG_FIT_TEES/LS_TEE_BACK.png",
         "dpi": 300,
-        "printable": true,
-        "description": "Back print area for large designs."
+        "mockup_url": "https://example.com/mocks/REG_FIT_TEES/LS_TEE_BACK.png"
       }
-    ],
-    "base_cost": 30.0,
-    "print_cost_per_cm2": 0.05
+    ]
   },
   {
     "id": "oversized-tee-001",
     "title": "Oversized Relaxed Tee",
     "description": "A trendy oversized t-shirt with a relaxed fit, made from premium 200 GSM cotton for maximum comfort.",
-    "image": "/mocks/OVERSIZED_TEES/FRONT_OS.png",
     "brand": "Labsy",
     "category": "Oversized T-shirt",
     "material": "100% cotton",
-    "manufacturer": "Labsy Apparel",
+    "base_cost": 35.0,
     "colors": ["#E5E5E5", "#111111", "#FFFFFF", "#A32C2C", "#2C4A1B"],
-    "country": "Saudi Arabia",
-    "fulfillmentTime": "P3D",
     "available_sizes": {"S": 60, "M": 80, "L": 100, "XL": 90, "XXL": 40},
+    "image": "/mocks/OVERSIZED_TEES/FRONT_OS.png",
+    "main_image": "/mocks/OVERSIZED_TEES/FRONT_OS.png",
     "print_areas": [
       {
         "name": "Front",
@@ -99,10 +84,8 @@
         "y": 120,
         "width": 250,
         "height": 250,
-        "mockup_url": "/mocks/OVERSIZED_TEES/FRONT_OS.png",
         "dpi": 300,
-        "printable": true,
-        "description": "Front print area for oversized designs."
+        "mockup_url": "https://example.com/mocks/OVERSIZED_TEES/FRONT_OS.png"
       },
       {
         "name": "Back",
@@ -110,28 +93,23 @@
         "y": 50,
         "width": 280,
         "height": 350,
-        "mockup_url": "/mocks/OVERSIZED_TEES/BACK_OS.png",
         "dpi": 300,
-        "printable": true,
-        "description": "Back print area for large oversized designs."
+        "mockup_url": "https://example.com/mocks/OVERSIZED_TEES/BACK_OS.png"
       }
-    ],
-    "base_cost": 35.0,
-    "print_cost_per_cm2": 0.06
+    ]
   },
   {
     "id": "ls-oversized-tee-001",
     "title": "Long Sleeve Oversized Tee",
     "description": "A comfortable oversized long sleeve t-shirt with a relaxed fit, perfect for layering.",
-    "image": "/mocks/LS/LS_OVERSIZED_FRONT.png",
     "brand": "Labsy",
     "category": "Long Sleeve Oversized T-shirt",
     "material": "100% cotton",
-    "manufacturer": "Labsy Apparel",
+    "base_cost": 40.0,
     "colors": ["#E5E5E5", "#111111", "#FFFFFF", "#A32C2C", "#2C4A1B"],
-    "country": "Saudi Arabia",
-    "fulfillmentTime": "P4D",
     "available_sizes": {"S": 50, "M": 70, "L": 80, "XL": 60, "XXL": 30},
+    "image": "/mocks/LS/LS_OVERSIZED_FRONT.png",
+    "main_image": "/mocks/LS/LS_OVERSIZED_FRONT.png",
     "print_areas": [
       {
         "name": "Front",
@@ -139,10 +117,8 @@
         "y": 120,
         "width": 250,
         "height": 250,
-        "mockup_url": "/mocks/LS/LS_OVERSIZED_FRONT.png",
         "dpi": 300,
-        "printable": true,
-        "description": "Front print area for oversized long sleeve designs."
+        "mockup_url": "https://example.com/mocks/LS/LS_OVERSIZED_FRONT.png"
       },
       {
         "name": "Back",
@@ -150,28 +126,23 @@
         "y": 50,
         "width": 280,
         "height": 350,
-        "mockup_url": "/mocks/LS/LS_OVERSIZED_BACK.png",
         "dpi": 300,
-        "printable": true,
-        "description": "Back print area for large oversized designs."
+        "mockup_url": "https://example.com/mocks/LS/LS_OVERSIZED_BACK.png"
       }
-    ],
-    "base_cost": 40.0,
-    "print_cost_per_cm2": 0.06
+    ]
   },
   {
     "id": "reg-fit-hoodie-001",
     "title": "Regular Fit Pullover Hoodie",
     "description": "A classic regular fit pullover hoodie made from 280 GSM cotton blend, perfect for casual wear.",
-    "image": "/mocks/REG_FIT_HOODIE/Front.png",
     "brand": "Labsy",
     "category": "Hoodie",
     "material": "80% cotton, 20% polyester",
-    "manufacturer": "Labsy Apparel",
+    "base_cost": 55.0,
     "colors": ["#111111", "#E5E5E5", "#2C4A1B", "#A32C2C"],
-    "country": "UAE",
-    "fulfillmentTime": "P5D",
     "available_sizes": {"S": 40, "M": 60, "L": 70, "XL": 50, "XXL": 30},
+    "image": "/mocks/REG_FIT_HOODIE/Front.png",
+    "main_image": "/mocks/REG_FIT_HOODIE/Front.png",
     "print_areas": [
       {
         "name": "Front",
@@ -179,10 +150,8 @@
         "y": 35,
         "width": 200,
         "height": 250,
-        "mockup_url": "/mocks/REG_FIT_HOODIE/Front.png",
         "dpi": 300,
-        "printable": true,
-        "description": "Front print area for hoodie designs."
+        "mockup_url": "https://example.com/mocks/REG_FIT_HOODIE/Front.png"
       },
       {
         "name": "Back",
@@ -190,28 +159,23 @@
         "y": 30,
         "width": 220,
         "height": 280,
-        "mockup_url": "/mocks/REG_FIT_HOODIE/BACK.png",
         "dpi": 300,
-        "printable": true,
-        "description": "Back print area for large hoodie designs."
+        "mockup_url": "https://example.com/mocks/REG_FIT_HOODIE/BACK.png"
       }
-    ],
-    "base_cost": 55.0,
-    "print_cost_per_cm2": 0.07
+    ]
   },
   {
     "id": "oversized-hoodie-001",
     "title": "Oversized Pullover Hoodie",
     "description": "A trendy oversized pullover hoodie with a relaxed fit, made from premium 320 GSM cotton blend.",
-    "image": "/mocks/OS_HOODIE/FRONT.png",
     "brand": "Labsy",
     "category": "Oversized Hoodie",
     "material": "80% cotton, 20% polyester",
-    "manufacturer": "Labsy Apparel",
+    "base_cost": 70.0,
     "colors": ["#111111", "#E5E5E5", "#2C4A1B", "#A32C2C"],
-    "country": "UAE",
-    "fulfillmentTime": "P6D",
     "available_sizes": {"S": 30, "M": 50, "L": 60, "XL": 70, "XXL": 40},
+    "image": "/mocks/OS_HOODIE/FRONT.png",
+    "main_image": "/mocks/OS_HOODIE/FRONT.png",
     "print_areas": [
       {
         "name": "Front",
@@ -219,10 +183,8 @@
         "y": 50,
         "width": 250,
         "height": 300,
-        "mockup_url": "/mocks/OS_HOODIE/FRONT.png",
         "dpi": 300,
-        "printable": true,
-        "description": "Front print area for oversized hoodie designs."
+        "mockup_url": "https://example.com/mocks/OS_HOODIE/FRONT.png"
       },
       {
         "name": "Back",
@@ -230,28 +192,23 @@
         "y": 40,
         "width": 280,
         "height": 350,
-        "mockup_url": "/mocks/OS_HOODIE/BACK.png",
         "dpi": 300,
-        "printable": true,
-        "description": "Back print area for large oversized hoodie designs."
+        "mockup_url": "https://example.com/mocks/OS_HOODIE/BACK.png"
       }
-    ],
-    "base_cost": 70.0,
-    "print_cost_per_cm2": 0.08
+    ]
   },
   {
     "id": "reg-fit-sweater-001",
     "title": "Regular Fit Crew Neck Sweater",
     "description": "A comfortable regular fit crew neck sweater made from soft cotton blend, perfect for cooler days.",
-    "image": "/mocks/REG_FIT_SWEATER/FRONT.png",
     "brand": "Labsy",
     "category": "Sweater",
     "material": "70% cotton, 30% polyester",
-    "manufacturer": "Labsy Apparel",
+    "base_cost": 50.0,
     "colors": ["#111111", "#E5E5E5", "#2C4A1B", "#A32C2C", "#FFFFFF"],
-    "country": "UAE",
-    "fulfillmentTime": "P5D",
     "available_sizes": {"S": 35, "M": 55, "L": 65, "XL": 45, "XXL": 25},
+    "image": "/mocks/REG_FIT_SWEATER/FRONT.png",
+    "main_image": "/mocks/REG_FIT_SWEATER/FRONT.png",
     "print_areas": [
       {
         "name": "Front",
@@ -259,10 +216,8 @@
         "y": 35,
         "width": 200,
         "height": 240,
-        "mockup_url": "/mocks/REG_FIT_SWEATER/FRONT.png",
         "dpi": 300,
-        "printable": true,
-        "description": "Front print area for sweater designs."
+        "mockup_url": "https://example.com/mocks/REG_FIT_SWEATER/FRONT.png"
       },
       {
         "name": "Back",
@@ -270,28 +225,23 @@
         "y": 30,
         "width": 220,
         "height": 270,
-        "mockup_url": "/mocks/REG_FIT_SWEATER/BACK.png",
         "dpi": 300,
-        "printable": true,
-        "description": "Back print area for sweater designs."
+        "mockup_url": "https://example.com/mocks/REG_FIT_SWEATER/BACK.png"
       }
-    ],
-    "base_cost": 50.0,
-    "print_cost_per_cm2": 0.07
+    ]
   },
   {
     "id": "oversized-sweater-001",
     "title": "Oversized Crew Neck Sweater",
     "description": "A trendy oversized crew neck sweater with a relaxed fit, made from premium cotton blend.",
-    "image": "/mocks/OS_SWEATER/FRONT.png",
     "brand": "Labsy",
     "category": "Oversized Sweater",
     "material": "70% cotton, 30% polyester",
-    "manufacturer": "Labsy Apparel",
+    "base_cost": 65.0,
     "colors": ["#111111", "#E5E5E5", "#2C4A1B", "#A32C2C", "#FFFFFF"],
-    "country": "UAE",
-    "fulfillmentTime": "P6D",
     "available_sizes": {"S": 25, "M": 45, "L": 55, "XL": 65, "XXL": 35},
+    "image": "/mocks/OS_SWEATER/FRONT.png",
+    "main_image": "/mocks/OS_SWEATER/FRONT.png",
     "print_areas": [
       {
         "name": "Front",
@@ -299,10 +249,8 @@
         "y": 50,
         "width": 240,
         "height": 280,
-        "mockup_url": "/mocks/OS_SWEATER/FRONT.png",
         "dpi": 300,
-        "printable": true,
-        "description": "Front print area for oversized sweater designs."
+        "mockup_url": "https://example.com/mocks/OS_SWEATER/FRONT.png"
       },
       {
         "name": "Back",
@@ -310,28 +258,23 @@
         "y": 40,
         "width": 270,
         "height": 330,
-        "mockup_url": "/mocks/OS_SWEATER/BACK.png",
         "dpi": 300,
-        "printable": true,
-        "description": "Back print area for large oversized sweater designs."
+        "mockup_url": "https://example.com/mocks/OS_SWEATER/BACK.png"
       }
-    ],
-    "base_cost": 65.0,
-    "print_cost_per_cm2": 0.08
+    ]
   },
   {
     "id": "hat-001",
     "title": "Classic Baseball Cap",
     "description": "A versatile baseball cap made from durable cotton twill, perfect for casual wear and sun protection.",
-    "image": "/mocks/HAT/FRONT.png",
     "brand": "Labsy",
     "category": "Hat",
     "material": "100% cotton twill",
-    "manufacturer": "Labsy Accessories",
+    "base_cost": 20.0,
     "colors": ["#111111", "#E5E5E5", "#2C4A1B", "#A32C2C", "#FFFFFF"],
-    "country": "Saudi Arabia",
-    "fulfillmentTime": "P4D",
     "available_sizes": {"One Size": 150},
+    "image": "/mocks/HAT/FRONT.png",
+    "main_image": "/mocks/HAT/FRONT.png",
     "print_areas": [
       {
         "name": "Front",
@@ -339,10 +282,8 @@
         "y": 20,
         "width": 80,
         "height": 50,
-        "mockup_url": "/mocks/HAT/FRONT.png",
         "dpi": 300,
-        "printable": true,
-        "description": "Front panel print area for logos and designs."
+        "mockup_url": "https://example.com/mocks/HAT/FRONT.png"
       },
       {
         "name": "Back",
@@ -350,10 +291,8 @@
         "y": 15,
         "width": 70,
         "height": 40,
-        "mockup_url": "/mocks/HAT/BACK.png",
         "dpi": 300,
-        "printable": true,
-        "description": "Back panel print area for additional branding."
+        "mockup_url": "https://example.com/mocks/HAT/BACK.png"
       },
       {
         "name": "Side",
@@ -361,28 +300,23 @@
         "y": 15,
         "width": 60,
         "height": 35,
-        "mockup_url": "/mocks/HAT/SIDE.png",
         "dpi": 300,
-        "printable": true,
-        "description": "Side panel print area for side designs."
+        "mockup_url": "https://example.com/mocks/HAT/SIDE.png"
       }
-    ],
-    "base_cost": 20.0,
-    "print_cost_per_cm2": 0.08
+    ]
   },
   {
     "id": "tote-large-001",
     "title": "Large Canvas Tote Bag",
     "description": "A spacious and durable large canvas tote bag, perfect for shopping, beach trips, or daily use.",
-    "image": "/mocks/TOTES/TOTE_L.png",
     "brand": "Labsy",
     "category": "Large Tote Bag",
     "material": "100% organic cotton canvas",
-    "manufacturer": "Labsy Accessories",
+    "base_cost": 15.0,
     "colors": ["#E5E5E5", "#A32C2C", "#2C4A1B", "#111111"],
-    "country": "Kuwait",
-    "fulfillmentTime": "P2D",
     "available_sizes": {"Large": 120},
+    "image": "/mocks/TOTES/TOTE_L.png",
+    "main_image": "/mocks/TOTES/TOTE_L.png",
     "print_areas": [
       {
         "name": "Front",
@@ -390,28 +324,23 @@
         "y": 25,
         "width": 220,
         "height": 280,
-        "mockup_url": "/mocks/TOTES/TOTE_L.png",
         "dpi": 300,
-        "printable": true,
-        "description": "Large front print area for tote bag designs."
+        "mockup_url": "https://example.com/mocks/TOTES/TOTE_L.png"
       }
-    ],
-    "base_cost": 15.0,
-    "print_cost_per_cm2": 0.03
+    ]
   },
   {
     "id": "tote-small-001",
     "title": "Small Canvas Tote Bag",
     "description": "A compact and convenient small canvas tote bag, ideal for quick trips and everyday essentials.",
-    "image": "/mocks/TOTES/TOTE_S.png",
     "brand": "Labsy",
     "category": "Small Tote Bag",
     "material": "100% organic cotton canvas",
-    "manufacturer": "Labsy Accessories",
+    "base_cost": 12.0,
     "colors": ["#E5E5E5", "#A32C2C", "#2C4A1B", "#111111"],
-    "country": "Kuwait",
-    "fulfillmentTime": "P2D",
     "available_sizes": {"Small": 200},
+    "image": "/mocks/TOTES/TOTE_S.png",
+    "main_image": "/mocks/TOTES/TOTE_S.png",
     "print_areas": [
       {
         "name": "Front",
@@ -419,13 +348,9 @@
         "y": 20,
         "width": 160,
         "height": 200,
-        "mockup_url": "/mocks/TOTES/TOTE_S.png",
         "dpi": 300,
-        "printable": true,
-        "description": "Front print area for small tote bag designs."
+        "mockup_url": "https://example.com/mocks/TOTES/TOTE_S.png"
       }
-    ],
-    "base_cost": 12.0,
-    "print_cost_per_cm2": 0.03
+    ]
   }
 ]

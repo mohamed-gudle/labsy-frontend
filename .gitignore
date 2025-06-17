@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+docs/entities/admin.entity.ts
+docs/entities/creator.entity.ts
+docs/entities/customer.entity.ts
+docs/entities/factory.entity.ts
+docs/entities/index.ts
+docs/entities/user.entity.ts

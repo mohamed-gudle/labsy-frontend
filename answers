@@ -1,0 +1,26 @@
+1. creators are users that design custom products /artwork , but not only that , they also will have a store in our platform to sell those custom products...
+one off purchasers are like creators but they are buying custom products one time for personal use without setting up a store , they can be companies looking for merchandise ... 
+customers can be both , they can grow into returning or stay one-off 
+factories are manufacturing partners or suppliers 
+
+2. for creators they make their intent clear by clicking on " create now " , you must realize that one off purchasers are just a special type of creators with no store ... 
+    for factories , the admin creates a profile for them and he invites them to the system using the same email , so they will need to fill their company information when they accept the invite 
+    for customers , they don't need to sign up , they can remain anonymous and just order stuff and we will use their emails and phone number for communication ... we can mimick how ecommerce platforms work  nowadays ... they will always have the option to sign up but never enforced 
+yes there is an existing user role/type in the backend defined here #entities
+
+3. for creators , make it generic , capture what is essential for a creator but we will prompt for store creation later on 
+for factories capture everything specific to them 
+there are no different verification requirements 
+
+4. yes , so for creators we will need to capture intent so that we can classify them as one off purchasers or creators with intent to sell , therefore , have a survey like form before asking them to fill more information ... like " what brings you here " 
+- for creators take them to /base-products by default 
+- for factories take them to /orders 
+- for customers -- by default they will be taken to the /marketplace 
+- no review / approval for any user before full access 
+
+5. they cannot switch between user types 
+    yes, but we are not getting into that now 
+    multistep wizard 
+6. let us make sure we have no errors 
+7. I will share some inspirations , yes each user type should have distint themes / branding , no accessibility requirements at the moment 
+

@@ -1,12 +1,11 @@
 "use client";
 
-import Image from 'next/image';
-import { MapPin, Clock } from 'lucide-react';
-import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { BaseItem } from '@/lib/types/base-products';
+import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
-import { BaseItem } from '@/lib/types/base-products';
 
 /**
  * Product list item component for displaying base products
@@ -18,8 +17,6 @@ export const ProductListItem: React.FC<BaseItem> = ({
     image,
     brand,
     colors,
-    country,
-    fulfillmentTime,
     available_sizes,
     print_areas,
     base_cost,
@@ -46,16 +43,7 @@ export const ProductListItem: React.FC<BaseItem> = ({
                 </span>
             </div>
             <hr className="my-2 border-gray-100" />
-            <div className="flex flex-col gap-1 text-sm text-gray-700">
-                <div className="flex items-center gap-2">
-                    <MapPin size={16} className="text-gray-400" />
-                    <span className="text-xs">{country}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                    <Clock size={16} className="text-gray-400" />
-                    <span className="text-xs">{fulfillmentTime}</span>
-                </div>
-            </div>
+
             {/* Available colors display */}
             {colors && colors.length > 0 && (
                 <div className="flex items-center gap-2 mt-2">

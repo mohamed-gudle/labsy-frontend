@@ -122,7 +122,6 @@ export const PrintAreaManager: React.FC<PrintAreaManagerProps> = ({
                   updatePrintArea(currentEditingIndex, updates)
                 }
                 // errors={errors}
-                onValidationError={onValidationError}
               />
             ) : (
               <>

@@ -11,16 +11,11 @@ import { Label } from '@/components/ui/label';
 export const SignInForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isHuman, setIsHuman] = useState(false);
   const { signIn, signInWithGoogle, loading, error } = useAuth();
   const [localError, setLocalError] = useState<string | null>(null);
 
   const handleSignIn = async () => {
     setLocalError(null);
-    if (!isHuman) {
-      setLocalError('Please verify you are not a robot.');
-      return;
-    }
     if (!email || !password) {
       setLocalError('Email and password are required.');
       return;
@@ -54,15 +49,6 @@ export const SignInForm = () => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
           />
         </div>
-        <div className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            id="recaptcha"
-            checked={isHuman}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setIsHuman(e.target.checked)}
-          />
-          <Label htmlFor="recaptcha">I&apos;m not a robot</Label>
-        </div>
         {localError && <p className="text-red-500 text-sm">{localError}</p>}
         {error && <p className="text-red-500 text-sm">{error}</p>}
         <Button onClick={handleSignIn} className="w-full" disabled={loading}>
@@ -73,14 +59,13 @@ export const SignInForm = () => {
         <a href="/auth/reset-password" className="text-blue-500">Reset your password</a>
       </p>
       <p className="text-sm text-gray-600 mt-2">
-        New to Spring by Amaze? <a href="/auth/sign-up" className="text-blue-500">Create an account</a>
+        New to Spring by Amaze? <a href="/sign-up" className="text-blue-500">Create an account</a>
       </p>
       <div className="mt-6">
         <p className="text-center text-gray-500 mb-2">or</p>
         <SocialAuthButtons
           onGoogleClick={() => signInWithGoogle()}
-          onFacebookClick={() => {/* TODO: Implement Facebook Sign-In */ }}
-          onYouTubeClick={() => {/* TODO: Implement YouTube Sign-In */ }}
+
         />
       </div>
     </div>

@@ -65,7 +65,7 @@ export default function ResetPasswordPage() {
             </form>
             <p className="text-sm text-gray-600 mt-4 text-center">
                 Remembered your password?{' '}
-                <Link href="/auth/sign-in" className="text-blue-500">Log In</Link>
+                <Link href="/sign-in" className="text-blue-500">Log In</Link>
             </p>
         </div>
     );
