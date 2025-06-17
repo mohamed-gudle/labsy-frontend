@@ -11,23 +11,31 @@ interface AuthGuardProps {
 }
 
 export function AuthGuard({ children, mode }: AuthGuardProps) {
-  const { user, loading } = useAuth();
+  const { user, loading, isAuthenticated } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
-
-  // Check if current path is onboarding-related
-  const isOnboardingRoute = pathname.startsWith('/onboarding');
+  const isOnboardingPage = pathname.startsWith("/onboarding");
 
   useEffect(() => {
-    if (!loading) {
-      if (mode === "protected" && !user) {
-        router.replace("/sign-in");
-      } else if (mode === "public" && user && !isOnboardingRoute) {
-        // Allow authenticated users on onboarding routes
-        router.replace("/");
-      }
+    if (loading) return;
+
+    if (mode === "protected" && !isAuthenticated) {
+      router.replace("/sign-in");
+    } else if (
+      mode === "public" &&
+      isAuthenticated &&
+      user
+    ) {
+      router.replace("/");
+    } else if (
+      mode === "public" &&
+      !isAuthenticated 
+    ) {
+      console.warn("fasdf");
+      router.replace("/sign-in");
     }
-  }, [user, loading, mode, router, isOnboardingRoute]);
+   
+  }, [user, loading, mode, router, isAuthenticated, pathname, isOnboardingPage]);
 
   if (loading) {
     return (
@@ -38,7 +46,7 @@ export function AuthGuard({ children, mode }: AuthGuardProps) {
   }
 
   if (mode === "protected" && !user) return null;
-  if (mode === "public" && user && !isOnboardingRoute) return null;
+  if (mode === "public" && user && !isOnboardingPage) return null;
 
   return <>{children}</>;
 }

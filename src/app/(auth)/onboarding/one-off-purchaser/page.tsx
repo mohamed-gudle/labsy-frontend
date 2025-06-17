@@ -38,10 +38,6 @@ export default function OneOffPurchaserOnboardingPage() {
   const handleOnboardingComplete = async (
     finalData: Partial<OneOffPurchaserOnboardingData>
   ) => {
-    if (!user) {
-      console.error("User not authenticated");
-      return;
-    }
 
     try {
       // Prepare complete onboarding data for single submission

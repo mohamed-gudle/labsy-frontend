@@ -4,7 +4,9 @@
  * This file consolidates all user-related API calls
  */
 
+import { User } from "firebase/auth";
 import { axiosInstance } from "../axios";
+
 
 /**
  * Interface for user API responses
@@ -20,16 +22,9 @@ export interface UserApiResponse {
  * Get current user profile
  * @returns Promise that resolves to UserApiResponse
  */
-export const getCurrentUser = async (): Promise<UserApiResponse> => {
-  try {
-    const response = await axiosInstance.get("/auth/me");
-    return response.data;
-  } catch (error) {
-    return {
-      success: false,
-      message: "Failed to get user profile",
-    };
-  }
+export const getCurrentUser = async (): Promise<User> => {
+  const response = await axiosInstance.get("/auth/me");
+  return response.data;
 };
 
 /**
