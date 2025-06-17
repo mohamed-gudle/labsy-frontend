@@ -6,6 +6,16 @@
 - Integrated user menu at the bottom of the desktop sidebar in `src/components/ui/sidebar.tsx`.
 - Added `category-dropdown.tsx` component for category selection dropdown using Radix UI, Shadcn UI, and Tailwind.
 
+### Improved
+- **MAJOR**: Simplified creator onboarding form by implementing React Hook Form with Zod validation
+  - Removed manual state management and validation logic (reduced ~200 lines of code)
+  - Integrated `@hookform/resolvers` with existing Zod schemas for automatic validation
+  - Improved form performance with React Hook Form's optimized re-renders
+  - Enhanced type safety with proper TypeScript integration
+  - Replaced logical OR operators with nullish coalescing for safer defaults
+  - Fixed array handling for design styles and product interests
+  - Made component props readonly for better immutability
+
 ### Fixed
 - **CRITICAL**: Added automatic user existence check in auth context to ensure proper onboarding redirection after Firebase authentication
 - Enhanced auth context to automatically call `getCurrentUser()` API when user authenticates, triggering axios interceptor for onboarding redirection

@@ -3,7 +3,8 @@
  * This file consolidates all onboarding-related API calls
  */
 
-import { OnboardingData, UserIntent } from '@/lib/types/onboarding';
+import { OnboardingData, UserIntent } from "@/lib/types/onboarding";
+import { axiosInstance } from "../axios";
 
 /**
  * Interface for onboarding API responses
@@ -26,10 +27,10 @@ export const completeOnboarding = async (
     intent: UserIntent
 ): Promise<OnboardingApiResponse> => {
     try {
-        const response = await fetch('/api/onboarding/complete', {
-            method: 'POST',
+        const response = await fetch("/api/onboarding/complete", {
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
             },
             body: JSON.stringify({
                 onboardingData,
@@ -40,63 +41,42 @@ export const completeOnboarding = async (
 
         return await response.json();
     } catch (error) {
+        console.error('Failed to complete onboarding:', error);
         return {
             success: false,
-            message: 'Failed to complete onboarding',
+            message: "Failed to complete onboarding",
         };
     }
 };
 
 /**
- * Save onboarding progress
- * @param stepData - Current step data
- * @param intent - User intent type
- * @param currentStep - Current step number
- * @returns Promise that resolves to OnboardingApiResponse
+ * Register creator using SWR mutation
+ * @param url - API endpoint URL
+ * @param arg - Object containing the creator onboarding data
+ * @returns Promise that resolves to API response
  */
-export const saveOnboardingProgress = async (
-    stepData: Partial<OnboardingData>,
-    intent: UserIntent,
-    currentStep: number
-): Promise<OnboardingApiResponse> => {
+export async function registerCreator(url: string, { arg }: { arg: OnboardingData }) {
     try {
-        const response = await fetch('/api/onboarding/progress', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                stepData,
-                intent,
-                currentStep,
-                updatedAt: new Date(),
-            }),
+        const response = await axiosInstance.post(url, {
+            onboardingData: arg,
+            intent: 'creator',
+            completedAt: new Date(),
         });
 
-        return await response.json();
-    } catch (error) {
         return {
-            success: false,
-            message: 'Failed to save onboarding progress',
+            success: true,
+            data: response.data,
         };
-    }
-};
+    } catch (error: any) {
+        console.error('Creator registration failed:', error);
 
-/**
- * Get user's onboarding status
- * @returns Promise that resolves to OnboardingApiResponse
- */
-export const getOnboardingStatus = async (): Promise<OnboardingApiResponse> => {
-    try {
-        const response = await fetch('/api/onboarding/status');
-        return await response.json();
-    } catch (error) {
         return {
             success: false,
-            message: 'Failed to get onboarding status',
+            message: error.response?.data?.message ?? error.message ?? 'Failed to register creator',
+            errors: error.response?.data?.errors,
         };
     }
-};
+}
 
 /**
  * Create user profile based on onboarding data
@@ -109,10 +89,10 @@ export const createUserProfile = async (
     intent: UserIntent
 ): Promise<OnboardingApiResponse> => {
     try {
-        const response = await fetch('/api/users/profile', {
-            method: 'POST',
+        const response = await fetch("/users/profile", {
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
             },
             body: JSON.stringify({
                 onboardingData,
@@ -123,9 +103,10 @@ export const createUserProfile = async (
 
         return await response.json();
     } catch (error) {
+        console.error('Failed to create user profile:', error);
         return {
             success: false,
-            message: 'Failed to create user profile',
+            message: "Failed to create user profile",
         };
     }
 };

@@ -8,7 +8,7 @@ export { OnboardingWizard } from "./onboarding-wizard";
 export { CreatorOnboardingForm } from "./creator-onboarding-form";
 export { OneOffPurchaserOnboardingForm } from "./one-off-purchaser-onboarding-form";
 export { FactoryOnboardingForm } from "./factory-onboarding-form";
-export { ProgressIndicator } from "./progress-indicator";
+
 
 // Re-export onboarding types for convenience
 export type {

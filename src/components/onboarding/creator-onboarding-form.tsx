@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { Button } from '@/components/ui/button';
@@ -16,78 +14,71 @@ import {
 } from '@/lib/schemas/onboarding';
 import { CreatorOnboardingData, OnboardingFormErrors } from '@/lib/types/onboarding';
 import { cn } from '@/lib/utils';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft, ArrowRight, Building, Settings, User } from 'lucide-react';
-import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 interface CreatorOnboardingFormProps {
     /** Current step index */
-    currentStep: number;
+    readonly currentStep: number;
     /** Current form data */
-    data: Partial<CreatorOnboardingData>;
+    readonly data: Partial<CreatorOnboardingData>;
     /** Callback when step is completed */
-    onStepComplete: (stepData: Partial<CreatorOnboardingData>) => void;
+    readonly onStepComplete: (stepData: Partial<CreatorOnboardingData>) => void;
     /** Callback to go back */
-    onBack: () => void;
+    readonly onBack: () => void;
+    /** Whether form is in submitting state */
+    readonly isSubmitting?: boolean;
     /** Validation errors */
-    errors?: OnboardingFormErrors;
+    readonly errors?: OnboardingFormErrors;
     /** Additional CSS classes */
-    className?: string;
+    readonly className?: string;
 }
 
-interface StepFormProps {
+// Personal Information Step
+function PersonalInfoStep({
+    data,
+    onSubmit,
+    onBack,
+    isSubmitting = false
+}: {
     data: Partial<CreatorOnboardingData>;
-    errors: OnboardingFormErrors;
     onSubmit: (stepData: Partial<CreatorOnboardingData>) => void;
     onBack: () => void;
-}
-
-// Step 1: Personal Information
-function PersonalInfoStep({ data, onSubmit, onBack }: StepFormProps) {
-    const [formData, setFormData] = useState({
-        name: data.personalInfo?.name || '',
-        email: data.personalInfo?.email || '',
-        phone: data.personalInfo?.phone || '',
-        location: data.personalInfo?.location || '',
-    });
-    const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-
-        try {
-            const validation = await personalInfoSchema.safeParseAsync(formData);
-            if (!validation.success) {
-                const errorMap: Record<string, string> = {};
-                validation.error.errors.forEach((error) => {
-                    if (error.path[0]) {
-                        errorMap[error.path[0] as string] = error.message;
-                    }
-                });
-                setValidationErrors(errorMap);
-                return;
-            }
-
-            setValidationErrors({});
-            onSubmit({ personalInfo: formData });
-        } catch (error) {
-            console.error('Validation error:', error);
+    isSubmitting?: boolean;
+}) {
+    const {
+        register,
+        handleSubmit,
+        formState: { errors }
+    } = useForm<z.infer<typeof personalInfoSchema>>({
+        resolver: zodResolver(personalInfoSchema),
+        defaultValues: {
+            name: data.personalInfo?.name ?? '',
+            email: data.personalInfo?.email ?? '',
+            phone: data.personalInfo?.phone ?? '',
+            location: data.personalInfo?.location ?? '',
         }
+    });
+
+    const onFormSubmit = (formData: z.infer<typeof personalInfoSchema>) => {
+        onSubmit({ personalInfo: formData });
     };
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                     <Label htmlFor="name">Full Name *</Label>
                     <Input
                         id="name"
-                        value={formData.name}
-                        onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                         placeholder="John Doe"
-                        className={cn(validationErrors.name && "border-red-500")}
+                        className={cn(errors.name && "border-red-500")}
+                        {...register('name')}
                     />
-                    {validationErrors.name && (
-                        <p className="text-sm text-red-600">{validationErrors.name}</p>
+                    {errors.name && (
+                        <p className="text-sm text-red-600">{errors.name.message}</p>
                     )}
                 </div>
 
@@ -96,13 +87,12 @@ function PersonalInfoStep({ data, onSubmit, onBack }: StepFormProps) {
                     <Input
                         id="email"
                         type="email"
-                        value={formData.email}
-                        onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                         placeholder="john@example.com"
-                        className={cn(validationErrors.email && "border-red-500")}
+                        className={cn(errors.email && "border-red-500")}
+                        {...register('email')}
                     />
-                    {validationErrors.email && (
-                        <p className="text-sm text-red-600">{validationErrors.email}</p>
+                    {errors.email && (
+                        <p className="text-sm text-red-600">{errors.email.message}</p>
                     )}
                 </div>
 
@@ -111,13 +101,12 @@ function PersonalInfoStep({ data, onSubmit, onBack }: StepFormProps) {
                     <Input
                         id="phone"
                         type="tel"
-                        value={formData.phone}
-                        onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
                         placeholder="+1 (555) 123-4567"
-                        className={cn(validationErrors.phone && "border-red-500")}
+                        className={cn(errors.phone && "border-red-500")}
+                        {...register('phone')}
                     />
-                    {validationErrors.phone && (
-                        <p className="text-sm text-red-600">{validationErrors.phone}</p>
+                    {errors.phone && (
+                        <p className="text-sm text-red-600">{errors.phone.message}</p>
                     )}
                 </div>
 
@@ -125,23 +114,32 @@ function PersonalInfoStep({ data, onSubmit, onBack }: StepFormProps) {
                     <Label htmlFor="location">Location (Optional)</Label>
                     <Input
                         id="location"
-                        value={formData.location}
-                        onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
                         placeholder="New York, NY"
-                        className={cn(validationErrors.location && "border-red-500")}
+                        className={cn(errors.location && "border-red-500")}
+                        {...register('location')}
                     />
-                    {validationErrors.location && (
-                        <p className="text-sm text-red-600">{validationErrors.location}</p>
+                    {errors.location && (
+                        <p className="text-sm text-red-600">{errors.location.message}</p>
                     )}
                 </div>
             </div>
 
             <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between pt-6 space-y-3 md:space-y-0">
-                <Button type="button" variant="outline" onClick={onBack} className="w-full md:w-auto order-2 md:order-1">
+                <Button
+                    type="button"
+                    variant="outline"
+                    onClick={onBack}
+                    disabled={isSubmitting}
+                    className="w-full md:w-auto order-2 md:order-1"
+                >
                     <ArrowLeft className="w-4 h-4 mr-2" />
                     Back
                 </Button>
-                <Button type="submit" className="w-full md:w-auto order-1 md:order-2">
+                <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full md:w-auto order-1 md:order-2"
+                >
                     Continue
                     <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
@@ -150,68 +148,65 @@ function PersonalInfoStep({ data, onSubmit, onBack }: StepFormProps) {
     );
 }
 
-// Step 2: Business Information
-function BusinessInfoStep({ data, errors, onSubmit, onBack }: StepFormProps) {
-    const [formData, setFormData] = useState({
-        businessName: data.businessInfo?.businessName || '',
-        businessType: data.businessInfo?.businessType || 'individual',
-        description: data.businessInfo?.description || '',
-        website: data.businessInfo?.website || '',
-        socialMedia: {
-            instagram: data.businessInfo?.socialMedia?.instagram || '',
-            twitter: data.businessInfo?.socialMedia?.twitter || '',
-            facebook: data.businessInfo?.socialMedia?.facebook || '',
-            tiktok: data.businessInfo?.socialMedia?.tiktok || '',
-        },
-    });
-    const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-
-        try {
-            const validation = await businessInfoSchema.safeParseAsync(formData);
-            if (!validation.success) {
-                const errorMap: Record<string, string> = {};
-                validation.error.errors.forEach((error) => {
-                    if (error.path[0]) {
-                        errorMap[error.path.join('.')] = error.message;
-                    }
-                });
-                setValidationErrors(errorMap);
-                return;
-            }
-
-            setValidationErrors({});
-            onSubmit({ businessInfo: formData });
-        } catch (error) {
-            console.error('Validation error:', error);
+// Business Information Step
+function BusinessInfoStep({
+    data,
+    onSubmit,
+    onBack,
+    isSubmitting = false
+}: {
+    data: Partial<CreatorOnboardingData>;
+    onSubmit: (stepData: Partial<CreatorOnboardingData>) => void;
+    onBack: () => void;
+    isSubmitting?: boolean;
+}) {
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        watch,
+        formState: { errors }
+    } = useForm<z.infer<typeof businessInfoSchema>>({
+        resolver: zodResolver(businessInfoSchema),
+        defaultValues: {
+            businessName: data.businessInfo?.businessName ?? '',
+            businessType: data.businessInfo?.businessType ?? 'individual',
+            description: data.businessInfo?.description ?? '',
+            website: data.businessInfo?.website ?? '',
+            socialMedia: {
+                instagram: data.businessInfo?.socialMedia?.instagram ?? '',
+                twitter: data.businessInfo?.socialMedia?.twitter ?? '',
+                facebook: data.businessInfo?.socialMedia?.facebook ?? '',
+                tiktok: data.businessInfo?.socialMedia?.tiktok ?? '',
+            },
         }
+    });
+
+    const businessType = watch('businessType');
+
+    const onFormSubmit = (formData: z.infer<typeof businessInfoSchema>) => {
+        onSubmit({ businessInfo: formData });
     };
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                     <Label htmlFor="businessName">Business/Brand Name</Label>
                     <Input
                         id="businessName"
-                        value={formData.businessName}
-                        onChange={(e) => setFormData(prev => ({ ...prev, businessName: e.target.value }))}
                         placeholder="Acme Designs"
-                        className={cn(validationErrors.businessName && "border-red-500")}
+                        className={cn(errors.businessName && "border-red-500")}
+                        {...register('businessName')}
                     />
-                    {validationErrors.businessName && (
-                        <p className="text-sm text-red-600">{validationErrors.businessName}</p>
+                    {errors.businessName && (
+                        <p className="text-sm text-red-600">{errors.businessName.message}</p>
                     )}
                 </div>
 
                 <div className="space-y-2">
                     <Label htmlFor="businessType">Business Type</Label>
-                    <Select
-                        value={formData.businessType}
-                        onValueChange={(value) => setFormData(prev => ({ ...prev, businessType: value as any }))}
-                    >
+                    <Select value={businessType} onValueChange={(value) => setValue('businessType', value as 'individual' | 'llc' | 'corporation' | 'partnership' | 'other')}>
                         <SelectTrigger>
                             <SelectValue placeholder="Select business type" />
                         </SelectTrigger>
@@ -229,14 +224,13 @@ function BusinessInfoStep({ data, errors, onSubmit, onBack }: StepFormProps) {
                     <Label htmlFor="description">Business Description</Label>
                     <Textarea
                         id="description"
-                        value={formData.description}
-                        onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                         placeholder="Tell us about your business and what makes it unique..."
                         rows={3}
-                        className={cn(validationErrors.description && "border-red-500")}
+                        className={cn(errors.description && "border-red-500")}
+                        {...register('description')}
                     />
-                    {validationErrors.description && (
-                        <p className="text-sm text-red-600">{validationErrors.description}</p>
+                    {errors.description && (
+                        <p className="text-sm text-red-600">{errors.description.message}</p>
                     )}
                 </div>
 
@@ -245,13 +239,12 @@ function BusinessInfoStep({ data, errors, onSubmit, onBack }: StepFormProps) {
                     <Input
                         id="website"
                         type="url"
-                        value={formData.website}
-                        onChange={(e) => setFormData(prev => ({ ...prev, website: e.target.value }))}
                         placeholder="https://yourwebsite.com"
-                        className={cn(validationErrors.website && "border-red-500")}
+                        className={cn(errors.website && "border-red-500")}
+                        {...register('website')}
                     />
-                    {validationErrors.website && (
-                        <p className="text-sm text-red-600">{validationErrors.website}</p>
+                    {errors.website && (
+                        <p className="text-sm text-red-600">{errors.website.message}</p>
                     )}
                 </div>
 
@@ -262,48 +255,32 @@ function BusinessInfoStep({ data, errors, onSubmit, onBack }: StepFormProps) {
                             <Label htmlFor="instagram">Instagram</Label>
                             <Input
                                 id="instagram"
-                                value={formData.socialMedia.instagram}
-                                onChange={(e) => setFormData(prev => ({
-                                    ...prev,
-                                    socialMedia: { ...prev.socialMedia, instagram: e.target.value }
-                                }))}
                                 placeholder="@username"
+                                {...register('socialMedia.instagram')}
                             />
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="twitter">Twitter</Label>
                             <Input
                                 id="twitter"
-                                value={formData.socialMedia.twitter}
-                                onChange={(e) => setFormData(prev => ({
-                                    ...prev,
-                                    socialMedia: { ...prev.socialMedia, twitter: e.target.value }
-                                }))}
                                 placeholder="@username"
+                                {...register('socialMedia.twitter')}
                             />
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="facebook">Facebook</Label>
                             <Input
                                 id="facebook"
-                                value={formData.socialMedia.facebook}
-                                onChange={(e) => setFormData(prev => ({
-                                    ...prev,
-                                    socialMedia: { ...prev.socialMedia, facebook: e.target.value }
-                                }))}
                                 placeholder="Your Page Name"
+                                {...register('socialMedia.facebook')}
                             />
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="tiktok">TikTok</Label>
                             <Input
                                 id="tiktok"
-                                value={formData.socialMedia.tiktok}
-                                onChange={(e) => setFormData(prev => ({
-                                    ...prev,
-                                    socialMedia: { ...prev.socialMedia, tiktok: e.target.value }
-                                }))}
                                 placeholder="@username"
+                                {...register('socialMedia.tiktok')}
                             />
                         </div>
                     </div>
@@ -311,11 +288,21 @@ function BusinessInfoStep({ data, errors, onSubmit, onBack }: StepFormProps) {
             </div>
 
             <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between pt-6 space-y-3 md:space-y-0">
-                <Button type="button" variant="outline" onClick={onBack} className="w-full md:w-auto order-2 md:order-1">
+                <Button
+                    type="button"
+                    variant="outline"
+                    onClick={onBack}
+                    disabled={isSubmitting}
+                    className="w-full md:w-auto order-2 md:order-1"
+                >
                     <ArrowLeft className="w-4 h-4 mr-2" />
                     Back
                 </Button>
-                <Button type="submit" className="w-full md:w-auto order-1 md:order-2">
+                <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full md:w-auto order-1 md:order-2"
+                >
                     Continue
                     <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
@@ -324,16 +311,38 @@ function BusinessInfoStep({ data, errors, onSubmit, onBack }: StepFormProps) {
     );
 }
 
-// Step 3: Preferences
-function PreferencesStep({ data, errors, onSubmit, onBack }: StepFormProps) {
-    const [formData, setFormData] = useState({
-        productInterests: data.preferences?.productInterests || [],
-        designStyles: data.preferences?.designStyles || [],
-        targetAudience: data.preferences?.targetAudience || '',
-        expectedVolume: data.preferences?.expectedVolume || 'medium',
-        budgetRange: data.preferences?.budgetRange || '',
+// Preferences Step
+function PreferencesStep({
+    data,
+    onSubmit,
+    onBack,
+    isSubmitting = false
+}: {
+    data: Partial<CreatorOnboardingData>;
+    onSubmit: (stepData: Partial<CreatorOnboardingData>) => void;
+    onBack: () => void;
+    isSubmitting?: boolean;
+}) {
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        watch,
+        formState: { errors }
+    } = useForm<z.infer<typeof creatorPreferencesSchema>>({
+        resolver: zodResolver(creatorPreferencesSchema),
+        defaultValues: {
+            productInterests: data.preferences?.productInterests ?? [],
+            designStyles: data.preferences?.designStyles ?? [],
+            targetAudience: data.preferences?.targetAudience ?? '',
+            expectedVolume: data.preferences?.expectedVolume ?? 'medium',
+            budgetRange: data.preferences?.budgetRange ?? '',
+        }
     });
-    const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+
+    const productInterests = watch('productInterests');
+    const designStyles = watch('designStyles');
+    const expectedVolume = watch('expectedVolume');
 
     const productOptions = [
         'T-Shirts', 'Hoodies', 'Sweatshirts', 'Tank Tops', 'Long Sleeves',
@@ -346,58 +355,29 @@ function PreferencesStep({ data, errors, onSubmit, onBack }: StepFormProps) {
     ];
 
     const handleProductInterestChange = (product: string, checked: boolean) => {
+        const currentInterests = productInterests ?? [];
         if (checked) {
-            setFormData(prev => ({
-                ...prev,
-                productInterests: [...prev.productInterests, product]
-            }));
+            setValue('productInterests', [...currentInterests, product]);
         } else {
-            setFormData(prev => ({
-                ...prev,
-                productInterests: prev.productInterests.filter(p => p !== product)
-            }));
+            setValue('productInterests', currentInterests.filter(p => p !== product));
         }
     };
 
     const handleDesignStyleChange = (style: string, checked: boolean) => {
+        const currentStyles = designStyles ?? [];
         if (checked) {
-            setFormData(prev => ({
-                ...prev,
-                designStyles: [...prev.designStyles, style]
-            }));
+            setValue('designStyles', [...currentStyles, style]);
         } else {
-            setFormData(prev => ({
-                ...prev,
-                designStyles: prev.designStyles.filter(s => s !== style)
-            }));
+            setValue('designStyles', currentStyles.filter(s => s !== style));
         }
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-
-        try {
-            const validation = await creatorPreferencesSchema.safeParseAsync(formData);
-            if (!validation.success) {
-                const errorMap: Record<string, string> = {};
-                validation.error.errors.forEach((error) => {
-                    if (error.path[0]) {
-                        errorMap[error.path[0] as string] = error.message;
-                    }
-                });
-                setValidationErrors(errorMap);
-                return;
-            }
-
-            setValidationErrors({});
-            onSubmit({ preferences: formData });
-        } catch (error) {
-            console.error('Validation error:', error);
-        }
+    const onFormSubmit = (formData: z.infer<typeof creatorPreferencesSchema>) => {
+        onSubmit({ preferences: formData });
     };
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6">
             <div className="space-y-6">
                 <div className="space-y-4">
                     <Label className="text-base font-medium">Product Interests *</Label>
@@ -407,7 +387,7 @@ function PreferencesStep({ data, errors, onSubmit, onBack }: StepFormProps) {
                             <div key={product} className="flex items-center space-x-2">
                                 <Checkbox
                                     id={`product-${product}`}
-                                    checked={formData.productInterests.includes(product)}
+                                    checked={productInterests?.includes(product) ?? false}
                                     onCheckedChange={(checked) => handleProductInterestChange(product, checked as boolean)}
                                 />
                                 <Label htmlFor={`product-${product}`} className="text-sm font-normal">
@@ -416,8 +396,8 @@ function PreferencesStep({ data, errors, onSubmit, onBack }: StepFormProps) {
                             </div>
                         ))}
                     </div>
-                    {validationErrors.productInterests && (
-                        <p className="text-sm text-red-600">{validationErrors.productInterests}</p>
+                    {errors.productInterests && (
+                        <p className="text-sm text-red-600">{errors.productInterests.message}</p>
                     )}
                 </div>
 
@@ -429,7 +409,7 @@ function PreferencesStep({ data, errors, onSubmit, onBack }: StepFormProps) {
                             <div key={style} className="flex items-center space-x-2">
                                 <Checkbox
                                     id={`style-${style}`}
-                                    checked={formData.designStyles.includes(style)}
+                                    checked={designStyles?.includes(style) ?? false}
                                     onCheckedChange={(checked) => handleDesignStyleChange(style, checked as boolean)}
                                 />
                                 <Label htmlFor={`style-${style}`} className="text-sm font-normal">
@@ -443,10 +423,7 @@ function PreferencesStep({ data, errors, onSubmit, onBack }: StepFormProps) {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                         <Label htmlFor="expectedVolume">Expected Monthly Volume</Label>
-                        <Select
-                            value={formData.expectedVolume}
-                            onValueChange={(value) => setFormData(prev => ({ ...prev, expectedVolume: value as any }))}
-                        >
+                        <Select value={expectedVolume} onValueChange={(value) => setValue('expectedVolume', value as 'low' | 'medium' | 'high')}>
                             <SelectTrigger>
                                 <SelectValue placeholder="Select expected volume" />
                             </SelectTrigger>
@@ -462,9 +439,8 @@ function PreferencesStep({ data, errors, onSubmit, onBack }: StepFormProps) {
                         <Label htmlFor="budgetRange">Budget Range (Optional)</Label>
                         <Input
                             id="budgetRange"
-                            value={formData.budgetRange}
-                            onChange={(e) => setFormData(prev => ({ ...prev, budgetRange: e.target.value }))}
                             placeholder="e.g., $500-$2000/month"
+                            {...register('budgetRange')}
                         />
                     </div>
                 </div>
@@ -473,22 +449,40 @@ function PreferencesStep({ data, errors, onSubmit, onBack }: StepFormProps) {
                     <Label htmlFor="targetAudience">Target Audience (Optional)</Label>
                     <Textarea
                         id="targetAudience"
-                        value={formData.targetAudience}
-                        onChange={(e) => setFormData(prev => ({ ...prev, targetAudience: e.target.value }))}
                         placeholder="Describe your target customers..."
                         rows={3}
+                        {...register('targetAudience')}
                     />
                 </div>
             </div>
 
             <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between pt-6 space-y-3 md:space-y-0">
-                <Button type="button" variant="outline" onClick={onBack} className="w-full md:w-auto order-2 md:order-1">
+                <Button
+                    type="button"
+                    variant="outline"
+                    onClick={onBack}
+                    disabled={isSubmitting}
+                    className="w-full md:w-auto order-2 md:order-1"
+                >
                     <ArrowLeft className="w-4 h-4 mr-2" />
                     Back
                 </Button>
-                <Button type="submit" className="w-full md:w-auto order-1 md:order-2">
-                    Complete Setup
-                    <ArrowRight className="w-4 h-4 ml-2" />
+                <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full md:w-auto order-1 md:order-2"
+                >
+                    {isSubmitting ? (
+                        <>
+                            <div className="w-4 h-4 mr-2 animate-spin rounded-full border-2 border-b-transparent border-white" />
+                            Completing Setup...
+                        </>
+                    ) : (
+                        <>
+                            Complete Setup
+                            <ArrowRight className="w-4 h-4 ml-2" />
+                        </>
+                    )}
                 </Button>
             </div>
         </form>
@@ -500,6 +494,7 @@ export function CreatorOnboardingForm({
     data,
     onStepComplete,
     onBack,
+    isSubmitting = false,
     errors = {},
     className,
 }: CreatorOnboardingFormProps) {
@@ -535,9 +530,9 @@ export function CreatorOnboardingForm({
                 <CardContent>
                     <StepComponent
                         data={data}
-                        errors={errors}
                         onSubmit={onStepComplete}
                         onBack={onBack}
+                        isSubmitting={isSubmitting}
                     />
                 </CardContent>
             </Card>
