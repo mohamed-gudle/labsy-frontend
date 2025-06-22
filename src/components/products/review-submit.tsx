@@ -1,7 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CompleteProductFormData } from "@/lib/schemas/products";
+import { AlertCircle, CheckCircle, Loader2, Upload } from "lucide-react";
 import {
-  Key,
   JSXElementConstructor,
   Key,
   ReactElement,
@@ -9,12 +15,6 @@ import {
   ReactPortal,
   useState,
 } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2, Upload, CheckCircle, AlertCircle } from "lucide-react";
-import { CompleteProductFormData } from "@/lib/schemas/products";
 
 interface ReviewAndSubmitProps {
   data: CompleteProductFormData;
@@ -104,20 +104,11 @@ export function ReviewAndSubmit({
               Main Product Images
             </h4>
             <div className="grid grid-cols-4 gap-3">
-              {data.images?.map(
-                (image: Blob | MediaSource, index: Key | null | undefined) => (
-                  <div key={index} className="relative">
-                    <img
-                      src={URL.createObjectURL(image)}
-                      alt={`Product ${index + 1}`}
-                      className="w-full h-20 object-cover rounded border"
-                    />
-                    <Badge className="absolute -top-1 -right-1 h-4 text-xs">
-                      {index + 1}
-                    </Badge>
-                  </div>
-                )
-              ) || []}
+              <img
+                src={URL.createObjectURL(data.main_image)}
+                alt={`Product`}
+                className="w-full h-20 object-cover rounded border"
+              />
             </div>
           </div>
 
@@ -177,9 +168,9 @@ export function ReviewAndSubmit({
                 >
                   <div
                     className="w-4 h-4 rounded-full border"
-                    style={{ backgroundColor: color.hex }}
+                    style={{ backgroundColor: color }}
                   />
-                  <span className="text-sm">{color.name}</span>
+                  <span className="text-sm">{color}</span>
                 </div>
               )) || []}
             </div>
@@ -192,39 +183,44 @@ export function ReviewAndSubmit({
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-2">
-              {data.sizes?.map(
-                (
-                  size:
-                    | string
-                    | number
-                    | bigint
-                    | boolean
-                    | ReactElement<unknown, string | JSXElementConstructor<any>>
-                    | Iterable<ReactNode>
-                    | ReactPortal
-                    | Promise<
+              {Array.isArray(data.available_sizes)
+                ? data.available_sizes.map(
+                    (
+                      size:
                         | string
                         | number
                         | bigint
                         | boolean
-                        | ReactPortal
                         | ReactElement<
                             unknown,
                             string | JSXElementConstructor<any>
                           >
                         | Iterable<ReactNode>
+                        | ReactPortal
+                        | Promise<
+                            | string
+                            | number
+                            | bigint
+                            | boolean
+                            | ReactPortal
+                            | ReactElement<
+                                unknown,
+                                string | JSXElementConstructor<any>
+                              >
+                            | Iterable<ReactNode>
+                            | null
+                            | undefined
+                          >
                         | null
-                        | undefined
-                      >
-                    | null
-                    | undefined,
-                  index: Key | null | undefined
-                ) => (
-                  <Badge key={index} variant="secondary">
-                    {size}
-                  </Badge>
-                )
-              ) || []}
+                        | undefined,
+                      index: Key | null | undefined
+                    ) => (
+                      <Badge key={index} variant="secondary">
+                        {size}
+                      </Badge>
+                    )
+                  )
+                : null}
             </div>
           </CardContent>
         </Card>

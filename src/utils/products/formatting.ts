@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Product-related utility functions
  * This file contains helper functions for product management and processing

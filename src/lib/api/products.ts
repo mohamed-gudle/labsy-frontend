@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * API functions for product management
  * This file consolidates all product-related API calls

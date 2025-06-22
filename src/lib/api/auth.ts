@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * API functions for authentication
  * This file consolidates all authentication-related API calls
@@ -7,11 +9,11 @@
  * Interface for authentication responses
  */
 export interface AuthApiResponse {
-    success: boolean;
-    user?: any;
-    token?: string;
-    message?: string;
-    errors?: Record<string, string>;
+  success: boolean;
+  user?: any;
+  token?: string;
+  message?: string;
+  errors?: Record<string, string>;
 }
 
 /**
@@ -20,23 +22,26 @@ export interface AuthApiResponse {
  * @param password - User password
  * @returns Promise that resolves to AuthApiResponse
  */
-export const signInWithEmail = async (email: string, password: string): Promise<AuthApiResponse> => {
-    try {
-        const response = await fetch('/api/auth/sign-in', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, password }),
-        });
+export const signInWithEmail = async (
+  email: string,
+  password: string
+): Promise<AuthApiResponse> => {
+  try {
+    const response = await fetch("/api/auth/sign-in", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
 
-        return await response.json();
-    } catch (error) {
-        return {
-            success: false,
-            message: 'Failed to sign in',
-        };
-    }
+    return await response.json();
+  } catch (error) {
+    return {
+      success: false,
+      message: "Failed to sign in",
+    };
+  }
 };
 
 /**
@@ -46,23 +51,27 @@ export const signInWithEmail = async (email: string, password: string): Promise<
  * @param name - User name
  * @returns Promise that resolves to AuthApiResponse
  */
-export const signUpWithEmail = async (email: string, password: string, name: string): Promise<AuthApiResponse> => {
-    try {
-        const response = await fetch('/api/auth/sign-up', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, password, name }),
-        });
+export const signUpWithEmail = async (
+  email: string,
+  password: string,
+  name: string
+): Promise<AuthApiResponse> => {
+  try {
+    const response = await fetch("/api/auth/sign-up", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password, name }),
+    });
 
-        return await response.json();
-    } catch (error) {
-        return {
-            success: false,
-            message: 'Failed to sign up',
-        };
-    }
+    return await response.json();
+  } catch (error) {
+    return {
+      success: false,
+      message: "Failed to sign up",
+    };
+  }
 };
 
 /**
@@ -70,23 +79,25 @@ export const signUpWithEmail = async (email: string, password: string, name: str
  * @param email - User email
  * @returns Promise that resolves to AuthApiResponse
  */
-export const resetPassword = async (email: string): Promise<AuthApiResponse> => {
-    try {
-        const response = await fetch('/api/auth/reset-password', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email }),
-        });
+export const resetPassword = async (
+  email: string
+): Promise<AuthApiResponse> => {
+  try {
+    const response = await fetch("/api/auth/reset-password", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+    });
 
-        return await response.json();
-    } catch (error) {
-        return {
-            success: false,
-            message: 'Failed to reset password',
-        };
-    }
+    return await response.json();
+  } catch (error) {
+    return {
+      success: false,
+      message: "Failed to reset password",
+    };
+  }
 };
 
 /**
@@ -94,16 +105,16 @@ export const resetPassword = async (email: string): Promise<AuthApiResponse> => 
  * @returns Promise that resolves to AuthApiResponse
  */
 export const signOut = async (): Promise<AuthApiResponse> => {
-    try {
-        const response = await fetch('/api/auth/sign-out', {
-            method: 'POST',
-        });
+  try {
+    const response = await fetch("/api/auth/sign-out", {
+      method: "POST",
+    });
 
-        return await response.json();
-    } catch (error) {
-        return {
-            success: false,
-            message: 'Failed to sign out',
-        };
-    }
+    return await response.json();
+  } catch (error) {
+    return {
+      success: false,
+      message: "Failed to sign out",
+    };
+  }
 };

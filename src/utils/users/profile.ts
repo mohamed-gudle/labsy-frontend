@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * User utility functions
  * Helper functions for user profile management and preferences

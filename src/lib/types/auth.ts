@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Authentication-related TypeScript interfaces and types
  * Centralized type definitions for user authentication, authorization, and security

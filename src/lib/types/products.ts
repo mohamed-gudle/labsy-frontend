@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Product-related TypeScript interfaces and types
  * Centralized type definitions for product management and administration

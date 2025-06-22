@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Base product utility functions
  * Helper functions for base product filtering, sorting, and processing
