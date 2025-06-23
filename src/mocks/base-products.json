@@ -19,7 +19,7 @@
         "width": 200,
         "height": 200,
         "dpi": 300,
-        "mockup_url": "https://example.com/mock/tshirt-front.png"
+        "mockup_url": "/mocks/REG_FIT_TEES/FRONT_SS.png"
       },
       {
         "name": "Back",
@@ -28,7 +28,7 @@
         "width": 210,
         "height": 297,
         "dpi": 300,
-        "mockup_url": "https://example.com/mocks/REG_FIT_TEES/BACK_SS.png"
+        "mockup_url": "/mocks/REG_FIT_TEES/BACK_SS.png"
       }
     ]
   },
@@ -52,7 +52,7 @@
         "width": 200,
         "height": 200,
         "dpi": 300,
-        "mockup_url": "https://example.com/mocks/REG_FIT_TEES/LS_TEE_FRONT.png"
+        "mockup_url": "/mocks/REG_FIT_TEES/LS_TEE_FRONT.png"
       },
       {
         "name": "Back",
@@ -61,7 +61,7 @@
         "width": 210,
         "height": 297,
         "dpi": 300,
-        "mockup_url": "https://example.com/mocks/REG_FIT_TEES/LS_TEE_BACK.png"
+        "mockup_url": "/mocks/REG_FIT_TEES/LS_TEE_BACK.png"
       }
     ]
   },
@@ -85,7 +85,7 @@
         "width": 250,
         "height": 250,
         "dpi": 300,
-        "mockup_url": "https://example.com/mocks/OVERSIZED_TEES/FRONT_OS.png"
+        "mockup_url": "/mocks/OVERSIZED_TEES/FRONT_OS.png"
       },
       {
         "name": "Back",
@@ -94,7 +94,7 @@
         "width": 280,
         "height": 350,
         "dpi": 300,
-        "mockup_url": "https://example.com/mocks/OVERSIZED_TEES/BACK_OS.png"
+        "mockup_url": "/mocks/OVERSIZED_TEES/BACK_OS.png"
       }
     ]
   },
@@ -118,7 +118,7 @@
         "width": 250,
         "height": 250,
         "dpi": 300,
-        "mockup_url": "https://example.com/mocks/LS/LS_OVERSIZED_FRONT.png"
+        "mockup_url": "/mocks/LS/LS_OVERSIZED_FRONT.png"
       },
       {
         "name": "Back",
@@ -127,7 +127,7 @@
         "width": 280,
         "height": 350,
         "dpi": 300,
-        "mockup_url": "https://example.com/mocks/LS/LS_OVERSIZED_BACK.png"
+        "mockup_url": "/mocks/LS/LS_OVERSIZED_BACK.png"
       }
     ]
   },
@@ -151,7 +151,7 @@
         "width": 200,
         "height": 250,
         "dpi": 300,
-        "mockup_url": "https://example.com/mocks/REG_FIT_HOODIE/Front.png"
+        "mockup_url": "/mocks/REG_FIT_HOODIE/Front.png"
       },
       {
         "name": "Back",
@@ -160,7 +160,7 @@
         "width": 220,
         "height": 280,
         "dpi": 300,
-        "mockup_url": "https://example.com/mocks/REG_FIT_HOODIE/BACK.png"
+        "mockup_url": "/mocks/REG_FIT_HOODIE/BACK.png"
       }
     ]
   },
@@ -184,7 +184,7 @@
         "width": 250,
         "height": 300,
         "dpi": 300,
-        "mockup_url": "https://example.com/mocks/OS_HOODIE/FRONT.png"
+        "mockup_url": "/mocks/OS_HOODIE/FRONT.png"
       },
       {
         "name": "Back",
@@ -193,7 +193,7 @@
         "width": 280,
         "height": 350,
         "dpi": 300,
-        "mockup_url": "https://example.com/mocks/OS_HOODIE/BACK.png"
+        "mockup_url": "/mocks/OS_HOODIE/BACK.png"
       }
     ]
   },
@@ -217,7 +217,7 @@
         "width": 200,
         "height": 240,
         "dpi": 300,
-        "mockup_url": "https://example.com/mocks/REG_FIT_SWEATER/FRONT.png"
+        "mockup_url": "/mocks/REG_FIT_SWEATER/FRONT.png"
       },
       {
         "name": "Back",
@@ -226,7 +226,7 @@
         "width": 220,
         "height": 270,
         "dpi": 300,
-        "mockup_url": "https://example.com/mocks/REG_FIT_SWEATER/BACK.png"
+        "mockup_url": "/mocks/REG_FIT_SWEATER/BACK.png"
       }
     ]
   },
@@ -250,7 +250,7 @@
         "width": 240,
         "height": 280,
         "dpi": 300,
-        "mockup_url": "https://example.com/mocks/OS_SWEATER/FRONT.png"
+        "mockup_url": "/mocks/OS_SWEATER/FRONT.png"
       },
       {
         "name": "Back",
@@ -259,7 +259,7 @@
         "width": 270,
         "height": 330,
         "dpi": 300,
-        "mockup_url": "https://example.com/mocks/OS_SWEATER/BACK.png"
+        "mockup_url": "/mocks/OS_SWEATER/BACK.png"
       }
     ]
   },
@@ -283,7 +283,7 @@
         "width": 80,
         "height": 50,
         "dpi": 300,
-        "mockup_url": "https://example.com/mocks/HAT/FRONT.png"
+        "mockup_url": "/mocks/HAT/FRONT.png"
       },
       {
         "name": "Back",
@@ -292,7 +292,7 @@
         "width": 70,
         "height": 40,
         "dpi": 300,
-        "mockup_url": "https://example.com/mocks/HAT/BACK.png"
+        "mockup_url": "/mocks/HAT/BACK.png"
       },
       {
         "name": "Side",
@@ -301,7 +301,7 @@
         "width": 60,
         "height": 35,
         "dpi": 300,
-        "mockup_url": "https://example.com/mocks/HAT/SIDE.png"
+        "mockup_url": "/mocks/HAT/SIDE.png"
       }
     ]
   },
@@ -325,7 +325,7 @@
         "width": 220,
         "height": 280,
         "dpi": 300,
-        "mockup_url": "https://example.com/mocks/TOTES/TOTE_L.png"
+        "mockup_url": "/mocks/TOTES/TOTE_L.png"
       }
     ]
   },
@@ -349,7 +349,7 @@
         "width": 160,
         "height": 200,
         "dpi": 300,
-        "mockup_url": "https://example.com/mocks/TOTES/TOTE_S.png"
+        "mockup_url": "/mocks/TOTES/TOTE_S.png"
       }
     ]
   }
