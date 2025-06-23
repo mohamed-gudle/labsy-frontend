@@ -1,6 +1,6 @@
 # Labsy Frontend
 
-A modern, AI-powered design platform for custom apparel and product customization. Built with Next.js 15, TypeScript, and cutting-edge design tools to deliver an exceptional user experience for creators, manufacturers, and customers.
+A modern design platform for custom apparel and product customization. Built with Next.js 15, TypeScript, and cutting-edge design tools to deliver an exceptional user experience for creators, manufacturers, and customers.
 
 ## 🚀 Overview
 
@@ -97,8 +97,14 @@ src/
 │   ├── designs/                  # Design helper functions
 │   └── products/                 # Product utilities
 │
-└── mocks/                        # Mock data and assets
-    └── base-products.json        # Sample product data
+├── mocks/                        # Mock data and assets
+│   └── base-products.json        # Sample product data
+│
+└── tasks/                        # Product Requirements Documents
+    ├── prd-admin-base-products-upload.md    # Admin product management PRD
+    ├── prd-user-onboarding-flows.md         # User onboarding specifications
+    ├── prd-code-cleanup-centralization.md   # Code organization requirements
+    └── tasks-*.md                           # Implementation task breakdowns
 ```
 
 ## 🎯 Key Features Deep Dive
@@ -189,27 +195,37 @@ yarn start
 yarn lint
 ```
 
-## 🤖 AI Co-Developer Integration
+## 📋 AI-Assisted Development Workflow
 
-This project leverages AI-powered development assistance throughout the codebase:
+This project utilizes a structured approach to AI-assisted development through Product Requirements Documents (PRDs) and task management:
 
-### GitHub Copilot Integration
-- **Intelligent Code Completion**: Context-aware suggestions for TypeScript/React
-- **Pattern Recognition**: Consistent coding patterns across components
-- **Comment-driven Development**: Natural language comments generate implementation
-- **Test Generation**: AI-assisted test case creation and validation
+### Product Requirements Documents (PRDs)
+Located in the `tasks/` directory, PRDs provide comprehensive specifications for new features:
 
-### AI-Enhanced Features
-- **Smart Component Generation**: AI helps scaffold new components following project patterns
-- **Type Inference**: Intelligent TypeScript type suggestions and corrections
-- **Error Resolution**: AI-powered debugging and error fixing suggestions
-- **Documentation**: Automated documentation generation for complex functions
+- **[Admin Base Products Upload](./tasks/prd-admin-base-products-upload.md)**: Detailed requirements for the admin product management interface, including print area configuration and visual mockup editing
+- **[User Onboarding Flows](./tasks/prd-user-onboarding-flows.md)**: Specifications for role-specific onboarding experiences (Creators, Factories, One-off Purchasers)
+- **[Code Cleanup & Centralization](./tasks/prd-code-cleanup-centralization.md)**: Requirements for improving code organization and maintainability
 
-### Best Practices for AI Development
-1. **Clear Comments**: Use descriptive comments to guide AI suggestions
-2. **Consistent Patterns**: Follow established patterns for better AI understanding
-3. **Type Annotations**: Provide explicit types for better AI context
-4. **Incremental Development**: Build features step-by-step for optimal AI assistance
+### Development Process with AI Assistance
+1. **PRD Creation**: Detailed feature specifications with user stories, functional requirements, and technical considerations
+2. **Task Breakdown**: Each PRD has corresponding task files that break down implementation into manageable chunks
+3. **AI Code Generation**: Using GitHub Copilot and AI assistants to implement features based on PRD specifications
+4. **Pattern Consistency**: AI helps maintain consistent coding patterns across the codebase
+5. **Documentation**: AI assists in generating comprehensive documentation and comments
+
+### Benefits of This Approach
+- **Clear Specifications**: PRDs provide unambiguous requirements for AI-assisted development
+- **Consistent Implementation**: Detailed requirements ensure AI suggestions align with project goals
+- **Quality Assurance**: Structured approach reduces errors and improves code quality
+- **Knowledge Transfer**: PRDs serve as living documentation for team members and AI assistants
+- **Iterative Improvement**: Task breakdown allows for incremental development and testing
+
+### Best Practices for AI-Assisted Development
+1. **Detailed PRDs**: Write comprehensive requirements to guide AI implementation
+2. **Code Comments**: Use descriptive comments to provide context for AI suggestions
+3. **Consistent Patterns**: Follow established architectural patterns for better AI understanding
+4. **Type Safety**: Leverage TypeScript types to improve AI code generation accuracy
+5. **Incremental Development**: Build features step-by-step with AI assistance
 
 ## 🎨 Design System
 
@@ -312,6 +328,7 @@ export default nextConfig;
 - Write clear comments explaining complex business logic
 - Break down large functions into smaller, focused utilities
 - Leverage TypeScript types for better AI context understanding
+- Reference PRDs when implementing new features to maintain specification alignment
 
 ## 🚀 Deployment
 
@@ -369,10 +386,11 @@ We welcome contributions from the community! Here's how to get started:
 ### Development Setup
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Follow the coding standards and use AI assistance when helpful
-4. Commit your changes: `git commit -m 'Add amazing feature'`
-5. Push to the branch: `git push origin feature/amazing-feature`
-6. Open a Pull Request
+3. Review relevant PRDs in the `tasks/` directory for feature specifications
+4. Follow the coding standards and use AI assistance when helpful
+5. Commit your changes: `git commit -m 'Add amazing feature'`
+6. Push to the branch: `git push origin feature/amazing-feature`
+7. Open a Pull Request
 
 ### Coding Standards
 - **TypeScript**: Use strict typing throughout
@@ -380,12 +398,14 @@ We welcome contributions from the community! Here's how to get started:
 - **File Naming**: Use kebab-case for files
 - **Import Organization**: Group and sort imports logically
 - **Comments**: Use JSDoc for complex functions and components
+- **PRD Compliance**: Ensure implementations match PRD specifications
 
 ### AI Development Guidelines
 - Leverage GitHub Copilot for code suggestions
 - Use descriptive comments to guide AI assistance
 - Review AI-generated code for accuracy and efficiency
 - Maintain human oversight for critical business logic
+- Reference PRDs for context when working on specific features
 
 ## 📝 Changelog
 
@@ -397,4 +417,4 @@ This project is proprietary software. All rights reserved.
 
 ---
 
-**Built with ❤️ by the Labsy team using cutting-edge technologies and AI-powered development tools.**
+**Built with ❤️ by the Labsy team using cutting-edge technologies and AI-assisted development workflows.**
